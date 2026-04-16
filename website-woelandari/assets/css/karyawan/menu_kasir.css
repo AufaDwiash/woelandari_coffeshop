@@ -1,0 +1,129 @@
+/* =========================================
+   STYLE UNTUK SISTEM KASIR (POS)
+   ========================================= */
+
+.pos-wrapper {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    align-items: flex-start; /* Agar kolom kanan tidak ikut memanjang ke bawah kalau menu kiri banyak */
+}
+
+/* Bagian Kiri: Daftar Menu */
+.menu-container {
+    flex: 2;
+    background: #fff;
+    border: 3px solid var(--navy-ink, #002b5e);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    max-height: 70vh; /* Agar bisa di-scroll jika menu banyak */
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.menu-card {
+    border: 2px dashed #ccc;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: 'Courier Prime', monospace;
+    background: #fff;
+}
+
+.menu-card:hover {
+    border-color: var(--navy-ink, #002b5e);
+    background: #f0f4f8;
+}
+
+.menu-card img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 2px solid var(--navy-ink, #002b5e);
+}
+
+/* Bagian Kanan: Keranjang / Struk */
+.cart-container {
+    flex: 1;
+    background: #fff;
+    border: 3px solid var(--navy-ink, #002b5e);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    position: sticky;
+    top: 20px; /* Bikin keranjang melayang (sticky) kalau halaman di-scroll */
+}
+
+.cart-container h2 {
+    text-align: center;
+    border-bottom: 2px dashed #ccc;
+    padding-bottom: 10px;
+    font-family: 'Special Elite', cursive;
+    color: var(--navy-ink, #002b5e);
+    margin-top: 0;
+}
+
+.cart-items {
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.cart-total {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: right;
+    border-top: 2px dashed #ccc;
+    padding-top: 10px;
+    font-family: 'Courier Prime', monospace;
+    color: var(--navy-ink, #002b5e);
+}
+
+.form-group-kasir {
+    margin-top: 15px;
+}
+
+.form-group-kasir label {
+    font-family: 'Courier Prime', monospace;
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group-kasir select, .form-group-kasir input {
+    width: 100%;
+    padding: 10px;
+    font-family: 'Courier Prime', monospace;
+    border: 2px solid var(--navy-ink, #002b5e);
+    box-sizing: border-box;
+}
+
+.btn-pay {
+    width: 100%;
+    padding: 15px;
+    background: var(--navy-ink, #002b5e);
+    color: white;
+    font-size: 1.2rem;
+    font-family: 'Special Elite', cursive;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: 0.3s;
+}
+
+.btn-pay:hover {
+    opacity: 0.9;
+}

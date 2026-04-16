@@ -1,0 +1,319 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap');
+
+:root {
+    /* Skema Warna Cream/Beige */
+    --espresso: #3E2723;
+    --terracotta: #D35400;
+    --bg-cream: #EFEBE0;
+    --grid-line: #DCD5C4;
+    --card-surface: #FFFFFF;
+
+    /* Warna Status */
+    --status-done: #C0392B;
+    --status-soon: #27AE60;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier Prime', monospace;
+    background-color: var(--bg-cream);
+    background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 30px 30px;
+    color: var(--espresso);
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+/* Light Effect */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.4), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* --- HEADER --- */
+.header-gallery {
+    text-align: center;
+    width: 100%;
+    max-width: 1200px;
+    background: var(--card-surface);
+    border: 3px solid var(--espresso);
+    padding: 30px 20px;
+    margin-bottom: 40px;
+    box-shadow: 8px 8px 0 var(--terracotta);
+    position: relative;
+}
+
+.header-gallery::before {
+    content: "";
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    width: 150px;
+    height: 30px;
+    background: rgba(211, 84, 0, 0.8);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 5;
+}
+
+.doc-ref {
+    font-weight: bold;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.header-gallery h1 {
+    font-family: 'Special Elite', cursive;
+    font-size: 3rem;
+    color: var(--espresso);
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    font-weight: bold;
+    max-width: 600px;
+    margin: 0 auto 25px;
+    border-bottom: 2px dashed var(--espresso);
+    padding-bottom: 20px;
+    opacity: 0.8;
+}
+
+/* --- TAB CONTROLS --- */
+.tab-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-tab {
+    padding: 10px 25px;
+    background: var(--bg-cream);
+    border: 2px solid var(--espresso);
+    color: var(--espresso);
+    font-family: 'Special Elite', cursive;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+.btn-tab.active {
+    background: var(--espresso);
+    color: var(--card-surface);
+    box-shadow: 5px 5px 0 var(--terracotta);
+    transform: translateY(-2px);
+}
+
+.btn-tab:hover:not(.active) {
+    color: var(--terracotta);
+    border-color: var(--terracotta);
+}
+
+/* --- ✅ SOLUSI 1: GRID PONDASI RAPAT --- */
+.tab-content {
+    display: none;
+    width: 100%;
+    max-width: 1200px;
+    padding-top: 20px;
+}
+
+.tab-content.active {
+    display: grid;
+    /* Grid terkontrol, tidak akan saling menumpuk absolute */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 250px));
+    justify-content: center;
+    gap: 35px;
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- ✅ SOLUSI 6: POLAROID FEEL (KOTAK PUTIH) --- */
+.archive-card {
+    background: var(--card-surface);
+    border: 2px solid var(--espresso);
+    /* Padding bawah lebih tebal ala polaroid */
+    padding: 15px 15px 25px 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 3px 5px 15px rgba(0, 0, 0, 0.08);
+    transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    cursor: pointer;
+}
+
+/* --- ✅ SOLUSI 2 & 3: ACAK YANG TERKONTROL --- */
+.archive-card:nth-child(odd) {
+    transform: rotate(-2deg);
+}
+
+.archive-card:nth-child(even) {
+    transform: rotate(2deg);
+}
+
+.archive-card:nth-child(3n) {
+    transform: rotate(-1deg) scale(0.98);
+}
+
+.archive-card:nth-child(5n) {
+    transform: rotate(1.5deg) scale(1.02);
+}
+
+/* --- ✅ SOLUSI 7: HOVER BIAR HIDUP --- */
+.archive-card:hover {
+    transform: rotate(0deg) scale(1.05);
+    /* Lurus dan membesar */
+    z-index: 10;
+    /* Berada di atas saat di hover */
+    box-shadow: 8px 8px 0 var(--terracotta);
+    border-color: var(--terracotta);
+}
+
+/* --- ✅ SOLUSI 5: GAMBAR WAJIB PERSEGI (KONSISTEN) --- */
+.card-img-wrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    /* MEMAKSA GAMBAR JADI PERSEGI (KOTAK) */
+    border: 2px solid var(--espresso);
+    margin-bottom: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Mencegah gambar gepeng */
+    filter: sepia(20%);
+    transition: 0.5s;
+}
+
+.archive-card:hover .card-img-wrapper img {
+    filter: sepia(0%);
+    transform: scale(1.05);
+}
+
+/* STATUS BADGE */
+.event-status {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    font-family: 'Special Elite', cursive;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+    border: 2px solid var(--espresso);
+    z-index: 2;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+.status-selesai {
+    background-color: var(--status-done);
+}
+
+.status-mendatang {
+    background-color: var(--status-soon);
+}
+
+/* TEXT INFO */
+.card-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--espresso);
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    opacity: 0.7;
+}
+
+.card-title {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.1rem;
+    color: var(--espresso);
+    margin-bottom: 8px;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.archive-card:hover .card-title {
+    color: var(--terracotta);
+}
+
+.card-desc {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    line-height: 1.4;
+}
+
+.btn-back {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 12px 25px;
+    background: var(--espresso);
+    color: var(--card-surface);
+    text-decoration: none;
+    font-family: 'Special Elite', cursive;
+    border: 2px solid var(--espresso);
+    box-shadow: 5px 5px 0 var(--terracotta);
+    transition: 0.3s;
+}
+
+.btn-back:hover {
+    background: var(--card-surface);
+    color: var(--terracotta);
+    border-color: var(--terracotta);
+    box-shadow: 5px 5px 0 var(--espresso);
+    transform: translateY(-2px);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .tab-content.active {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .header-gallery h1 {
+        font-size: 2rem;
+    }
+}
