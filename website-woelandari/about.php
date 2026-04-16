@@ -77,22 +77,22 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-          
+            // Animasi hanya berjalan jika lebar layar lebih dari 992px (Desktop/Laptop)
             if (window.innerWidth > 992) {
                 const observerOptions = {
-                    threshold: 0.2 
+                    threshold: 0.2 // Animasi terpicu saat elemen terlihat 20% di layar
                 };
 
                 const observer = new IntersectionObserver((entries, observer) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
                             entry.target.classList.add('is-visible');
-                            observer.unobserve(entry.target);
+                            observer.unobserve(entry.target); // Hanya animasi 1 kali
                         }
                     });
                 }, observerOptions);
 
-              
+                // Pantau semua elemen yang punya class animasi ini
                 const animatedElements = document.querySelectorAll('.anim-fade-up, .anim-photo-right, .anim-photo-left');
                 animatedElements.forEach(el => observer.observe(el));
             }

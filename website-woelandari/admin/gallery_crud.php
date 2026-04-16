@@ -183,7 +183,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'gallery';
         <table class="aesthetic-table">
             <thead>
                 <tr>
-                    <th>FOTO</th>
+                    <th>FOTOO</th>
                     <th>INFO JUDUL</th>
                     <th>EVENT</th>
                     <th style="text-align: right;">AKSI</th>
