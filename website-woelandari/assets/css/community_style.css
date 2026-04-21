@@ -1,0 +1,147 @@
+:root {
+    --bg-white: #FFFFFF;
+    --navy-blue: #0F172A; /* Warna Navy Gelap */
+    --grid-grey: rgba(0, 0, 0, 0.05);
+    --grid-light: rgba(255, 255, 255, 0.05);
+    --text-dark: #2A1B18;
+    --text-white: #EFEBE0;
+    --accent: #D35400;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { 
+    overflow-x: hidden; 
+    background-color: var(--bg-white);
+}
+
+.tuku-style-section {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg-white);
+    background-image: 
+        linear-gradient(var(--grid-grey) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-grey) 1px, transparent 1px);
+    background-size: 30px 30px;
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.tuku-style-section:hover {
+    background-color: var(--navy-blue);
+    background-image: 
+        linear-gradient(var(--grid-light) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-light) 1px, transparent 1px);
+}
+
+.header-container {
+    padding: 0 5%;
+    margin-bottom: 30px;
+}
+
+.main-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 2.5rem;
+    line-height: 1.1;
+    color: var(--text-dark);
+    transition: color 0.6s;
+}
+
+.scroll-hint {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+    margin-top: 15px;
+    letter-spacing: 2px;
+}
+
+.tuku-style-section:hover .main-title { color: var(--text-white); }
+
+.horizontal-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto; 
+    padding: 0 5%;
+    scrollbar-width: none;
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar { display: none; } 
+
+.people-strip {
+    display: flex;
+    gap: 40px;
+    width: max-content;
+    align-items: flex-end;
+    padding-bottom: 100px;
+}
+
+/* --- KARTU ORANG --- */
+.person-card {
+    position: relative;
+    width: 350px;
+    flex-shrink: 0;
+}
+
+.person-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(100%);
+    transition: all 0.5s ease;
+    z-index: 2;
+    position: relative;
+}
+
+.tuku-style-section:hover .person-img {
+    filter: grayscale(0%);
+}
+
+/* Garis tepi putih (stroke) ala Tuku saat hover foto */
+.person-card:hover .person-img {
+    filter: 
+        drop-shadow(5px 0px 0px #FFF) 
+        drop-shadow(-5px 0px 0px #FFF) 
+        drop-shadow(0px 5px 0px #FFF) 
+        drop-shadow(0px -5px 0px #FFF);
+    transform: translateY(-20px) scale(1.05);
+    z-index: 10;
+}
+
+/* --- INFO POPUP (Orang ini di bagian apa) --- */
+.person-info {
+    position: absolute;
+    bottom: -60px;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+    text-align: center;
+    pointer-events: none; /* Agar tidak mengganggu kursor */
+}
+
+/* Munculkan info saat foto di-hover */
+.person-card:hover .person-info {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.role-tag {
+    font-family: 'Courier Prime', monospace;
+    background: var(--accent);
+    color: white;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.name-tag {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.5rem;
+    color: #FFF;
+    margin-top: 10px;
+    text-shadow: 2px 2px 0px var(--navy-blue);
+}

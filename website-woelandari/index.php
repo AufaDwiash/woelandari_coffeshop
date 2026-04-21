@@ -1,28 +1,22 @@
-<?php include "config/koneksi.php"; ?>
+<div class="frontpage-hero">
+    <div class="hero-typography">
+        <h3 class="hero-kicker">// EST. 2024 - JAKARTA SELATAN</h3>
+        <h1 class="hero-headline">WOELANDARI</h1>
+        <h1 class="hero-headline outline-text">COFFEE LAB.</h1>
+    </div>
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Woelandari</title>
-</head>
-<body>
+    <div class="hero-visual">
+        <img src="assets/images/background/about3.jpeg" alt="Woelandari Vibes" class="hero-img">
+    </div>
+</div>
 
-<section id="about">
-    <?php include "about.php"; ?>
-</section>
-
-<section id="menu">
-    <?php include "menu.php"; ?>
-</section>
-
-<section id="gallery">
-    <?php include "gallery.php"; ?>
-</section>
-
-<section id="lokasi">
-    <?php include "lokasi.php"; ?>
-</section>
-
-</body>
-</html>
+<div class="marquee-container">
+    <div class="marquee-content">
+        <span>// MENYEDUH UNTUK WARGA</span>
+        <span>// JAGA IKATAN PERTETANGGAAN</span>
+        <span>// 100% BEANS LOKAL</span>
+        <span>// MENYEDUH UNTUK WARGA</span>
+        <span>// JAGA IKATAN PERTETANGGAAN</span>
+        <span>// 100% BEANS LOKAL</span>
+    </div>
+</div>
