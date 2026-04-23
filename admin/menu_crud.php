@@ -316,7 +316,7 @@ if (isset($_GET['hapus'])) {
 
     <div class="table-container">
         <div class="tape-table"></div>
-        <h2>MENU_RECORDS_LIST</h2>
+        <h2>List Menu</h2>
         <table class="aesthetic-table">
             <thead>
                 <tr>
@@ -325,7 +325,7 @@ if (isset($_GET['hapus'])) {
                     <th>KATEGORI</th>
                     <th>HARGA</th>
                     <th>STOK</th>
-                    <th>OPERATIONS</th>
+                    <th>AKSI</th>
                 </tr>
             </thead>
             <tbody>
