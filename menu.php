@@ -10,7 +10,7 @@ $menu_json = json_encode($menu_data);
 ?>
 <!DOCTYPE html>
 <html lang="id">
-<head>
+<head
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu - Woelandari Coffee Lab</title>
