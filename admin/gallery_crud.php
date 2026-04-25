@@ -243,7 +243,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'gallery';
         <a href="menu_crud.php" class="nav-item"><span>Menu</span></a>
         <a href="gallery_crud.php" class="nav-item active"> <span>Gallery</span></a>
         <a href="#" class="nav-item"><span>Feedback</span></a>
-        <a href="user_manajemen.php" class="nav-item"><span>Kelola User</span></a>
+        <a href="user_manajemen.php" class="nav-item"><span>Kelola Akun User</span></a>
     </nav>
     <div style="margin-top: auto; border-top: 1px dashed #555; padding-top: 10px;">
         <a href="logout.php" class="nav-item" style="color: #ff6b6b;">>> <span>TERMINATE</span></a>
