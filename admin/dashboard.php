@@ -264,6 +264,7 @@ $jml_feedback = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total
 
 <body>
 
+ HEAD
     <aside class="sidebar">
         <div class="brand">WOELANDARI</div>
         <nav class="nav-list">
@@ -273,6 +274,22 @@ $jml_feedback = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total
             <a href="#" class="nav-item"><span>Feedback</span></a>
             <a href="user_manajemen.php" class="nav-item"><span>Kelola User</span></a>
         </nav>
+
+<aside class="sidebar">
+    <div class="brand">WOELANDARI</div>
+    <nav class="nav-list">
+        <a href="dashboard.php" class="nav-item active"> <span>Dashboard</span></a>
+        <a href="menu_crud.php" class="nav-item"><span>Menu</span></a>
+        <a href="gallery_crud.php" class="nav-item"> <span>Gallery</span></a>
+        <a href="#" class="nav-item"><span>Feedback</span></a>
+        <a href="user_manajemen.php" class="nav-item"><span>Kelolaa userr</span></a>
+    </nav>
+    
+    <div style="margin-top: auto; border-top: 1px dashed #555; padding-top: 10px;">
+        <a href="logout.php" class="nav-item" style="color: #ff6b6b;">>> <span>TERMINATE_SESSION</span></a>
+    </div>
+</aside>
+ 5536518 (halo fajarshter)
 
         <div style="margin-top: auto; border-top: 1px dashed #555; padding-top: 10px;">
             <a href="logout.php" class="nav-item" style="color: #ff6b6b;">>> <span>TERMINATE_SESSION</span></a>
