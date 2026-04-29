@@ -218,7 +218,7 @@ if (isset($_GET['hapus_user'])) {
         <a href="dashboard.php" class="nav-item "> <span>Dashboard</span></a>
         <a href="menu_crud.php" class="nav-item"><span>Menu</span></a>
         <a href="gallery_crud.php" class="nav-item"> <span>Gallery</span></a>
-        <a href="#" class="nav-item"><span>Feedback</span></a>
+        <a href="feedback.php" class="nav-item"><span>Feedback</span></a>
         <a href="user_manajemen.php" class="nav-item active"><span>Kelola User</span></a>
     </nav>
     <div style="margin-top: auto; border-top: 1px dashed #555; padding-top: 10px;">

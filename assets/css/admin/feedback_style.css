@@ -1,0 +1,175 @@
+/* BRUTALIST VINTAGE THEME */
+:root {
+  --black: #1a1a1a;
+  --white: #ffffff;
+  --grey: #e0e0e0;
+  --accent: #000000;
+  --pending-bg: #f5f5f5;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Courier Prime", monospace;
+  background-color: var(--grey);
+  color: var(--black);
+  padding: 20px;
+}
+
+.admin-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  background: var(--white);
+  border: 4px solid var(--black);
+  box-shadow: 12px 12px 0px var(--black);
+}
+
+/* HEADER */
+.admin-header {
+  padding: 30px;
+  border-bottom: 4px solid var(--black);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--black);
+  color: var(--white);
+  padding: 2px 8px;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+h1 {
+  font-family: "Special Elite", cursive;
+  font-size: 50px;
+  letter-spacing: -2px;
+}
+
+.btn-nav {
+  text-decoration: none;
+  color: var(--black);
+  border: 2px solid var(--black);
+  padding: 8px 15px;
+  font-weight: bold;
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.btn-nav:hover {
+  background: var(--black);
+  color: var(--white);
+}
+
+/* STATUS BAR */
+.status-bar {
+  background: var(--black);
+  color: var(--white);
+  padding: 10px 30px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* TABLE STYLES */
+.content {
+  padding: 30px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.brutalist-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.brutalist-table th {
+  background: var(--black);
+  color: var(--white);
+  text-align: left;
+  padding: 15px;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.brutalist-table td {
+  padding: 15px;
+  border-bottom: 2px solid var(--black);
+  font-size: 14px;
+}
+
+.row-pending {
+  background-color: var(--pending-bg);
+}
+
+.rating-cell {
+  color: #000;
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+.comment-cell {
+  max-width: 350px;
+  font-style: italic;
+}
+
+/* STATUS TAGS */
+.status-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: bold;
+  border: 2px solid var(--black);
+}
+
+.status-tag.tampil {
+  background: #00ff00;
+  color: #000;
+}
+.status-tag.pending {
+  background: #ffff00;
+  color: #000;
+}
+
+/* ACTION BUTTONS */
+.action-cell {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-action {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border: 2px solid var(--black);
+  color: var(--black);
+}
+
+.btn-action.approve:hover {
+  background: #00ff00;
+}
+.btn-action.reject:hover {
+  background: #ffff00;
+}
+.btn-action.delete:hover {
+  background: #ff0000;
+  color: #fff;
+}
+
+.admin-footer {
+  padding: 20px 30px;
+  border-top: 2px solid var(--black);
+  font-size: 11px;
+  text-align: right;
+  opacity: 0.7;
+}

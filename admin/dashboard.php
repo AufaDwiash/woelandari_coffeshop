@@ -281,7 +281,7 @@ $jml_feedback = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total
         <a href="dashboard.php" class="nav-item active"> <span>Dashboard</span></a>
         <a href="menu_crud.php" class="nav-item"><span>Menu</span></a>
         <a href="gallery_crud.php" class="nav-item"> <span>Gallery</span></a>
-        <a href="#" class="nav-item"><span>Feedback</span></a>
+        <a href="feedback.php" class="nav-item"><span>Feedback</span></a>
         <a href="user_manajemen.php" class="nav-item"><span>Kelolaa userr</span></a>
     </nav>
     

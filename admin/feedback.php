@@ -1,9 +1,42 @@
+ HEAD
+
+<?php
+session_start();
+require_once '../config/koneksi.php';
+
+// LOGIKA MODERASI
+if (isset($_GET['action']) && isset($_GET['id'])) {
+    $id = (int)$_GET['id'];
+    $action = $_GET['action'];
+    
+    if ($action === 'approve') {
+        $query = "UPDATE feedback SET status_moderasi = 'tampil' WHERE id_feedback = $id";
+    } elseif ($action === 'reject') {
+        $query = "UPDATE feedback SET status_moderasi = 'pending' WHERE id_feedback = $id";
+    } elseif ($action === 'delete') {
+        $query = "DELETE FROM feedback WHERE id_feedback = $id";
+    }
+    
+    if (isset($query) && mysqli_query($conn, $query)) {
+        header("Location: feedback.php?msg=success");
+        exit();
+    }
+}
+
+$query = "SELECT *, DATE_FORMAT(created_at, '%d %b %Y %H:%i') as tanggal 
+          FROM feedback 
+          ORDER BY created_at DESC";
+$result = mysqli_query($conn, $query);
+?>
+
+ 1a0171a (hai ganteng)
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ HEAD
     <title>Customer Reviews - Woelandari Coffee</title>
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap"
         rel="stylesheet">
@@ -24,10 +57,26 @@
         * {
             margin: 0;
             padding: 0;
+
+    <title>Feedback Moderation - Woelandari</title>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --red-ink: #9b2226;
+            --navy-ink: #001219;
+            --paper-bg: #e5e5e5;
+            --sidebar-width: 260px;
+        }
+
+        * {
+1a0171a (hai ganteng)
             box-sizing: border-box;
         }
 
         body {
+ HEAD
             font-family: "Courier Prime", monospace;
             background-color: var(--bg-cream);
             background-image:
@@ -524,6 +573,246 @@
                 </div>
             </aside>
 
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--paper-bg);
+            font-family: 'Courier Prime', monospace;
+            color: var(--navy-ink);
+            overflow-x: hidden; /* Mencegah scroll horizontal */
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--navy-ink);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            padding: 20px;
+            z-index: 100;
+        }
+
+        .brand {
+            font-family: 'Special Elite', cursive;
+            font-size: 1.6rem;
+            color: var(--red-ink);
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px double #444;
+            margin-bottom: 30px;
+        }
+
+        .nav-list { list-style: none; padding: 0; margin: 0; }
+        .nav-item {
+            display: block;
+            padding: 15px;
+            color: #bdc3c7;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-left: 4px solid transparent;
+            transition: 0.3s;
+            margin-bottom: 5px;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border-left: 4px solid var(--red-ink);
+        }
+
+        /* --- CONTENT AREA --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width); /* Kunci agar konten di kanan sidebar */
+            padding: 40px;
+            width: calc(100% - var(--sidebar-width)); /* Ukuran dinamis */
+        }
+
+        .page-header {
+            border-bottom: 2px solid var(--navy-ink);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-family: 'Special Elite', cursive;
+            font-size: 2.2rem;
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        /* --- BRUTALIST TABLE RESPONSIVE --- */
+        .table-container {
+            width: 100%;
+            overflow-x: auto; /* Scroll horizontal jika tabel terlalu lebar di layar kecil */
+            background: white;
+            border: 2px solid var(--navy-ink);
+            box-shadow: 8px 8px 0px var(--navy-ink);
+            margin-bottom: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px; /* Memastikan kolom tidak terlalu berhimpit */
+        }
+
+        th {
+            background: var(--navy-ink);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-family: 'Special Elite', cursive;
+            font-size: 0.85rem;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+            font-size: 0.9rem;
+        }
+
+        .row-pending { background: #fffde7; }
+
+        .status-tag {
+            padding: 4px 8px;
+            font-weight: bold;
+            border: 1px solid var(--navy-ink);
+            font-size: 0.65rem;
+            display: inline-block;
+        }
+        .TAMPIL { background: #d4edda; color: #155724; }
+        .PENDING { background: #fff3cd; color: #856404; }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--navy-ink);
+            color: var(--navy-ink);
+            text-decoration: none;
+            margin-right: 5px;
+            transition: 0.2s;
+        }
+        .btn-action:hover { 
+            background: var(--navy-ink); 
+            color: white; 
+            transform: translate(-2px, -2px);
+            box-shadow: 2px 2px 0px var(--red-ink);
+        }
+
+        .blink { animation: blinker 1.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        /* RESPONSIVE BREAKPOINTS */
+        @media (max-width: 992px) {
+            :root { --sidebar-width: 80px; }
+            .nav-item span { display: none; }
+            .brand { font-size: 0.7rem; }
+            .main-content { padding: 20px; }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar { width: 0; padding: 0; overflow: hidden; }
+            .main-content { margin-left: 0; width: 100%; padding: 15px; }
+            .page-header h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="brand">WOELANDARI</div>
+    <nav class="nav-list">
+        <a href="dashboard.php" class="nav-item"><span>Dashboard</span></a>
+        <a href="menu_crud.php" class="nav-item"><span>Menu</span></a>
+        <a href="gallery_crud.php" class="nav-item"><span>Gallery</span></a>
+        <a href="feedback.php" class="nav-item active"><span>Feedback</span></a>
+        <a href="user_manajemen.php" class="nav-item"><span>Kelola User</span></a>
+    </nav>
+    <div style="margin-top: auto; border-top: 1px dashed #555; padding-top: 10px;">
+        <a href="logout.php" class="nav-item" style="color: #ff6b6b;">>> <span>LOGOUT</span></a>
+    </div>
+</aside>
+
+<main class="main-content">
+    <header class="page-header">
+        <div style="color: var(--red-ink); font-weight: bold; font-size: 0.8rem;">
+            // <span class="blink">●</span> MODERATION_UNIT_LOG
+        </div>
+        <h1>FEEDBACK_SYSTEM</h1>
+    </header>
+
+    <?php if(isset($_GET['msg'])): ?>
+        <div style="background: var(--navy-ink); color: white; padding: 15px; margin-bottom: 20px; font-size: 0.8rem; border-left: 5px solid var(--red-ink);">
+            SYSTEM_MESSAGE: ACTION_SUCCESSFUL_EXECUTED_BY_ADMIN
+        </div>
+    <?php endif; ?>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th width="80">ID_REF</th>
+                    <th width="150">CUSTOMER</th>
+                    <th width="120">RATING</th>
+                    <th>MESSAGE_CONTENT</th>
+                    <th width="100">STATUS</th>
+                    <th width="120">OPERATIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while($row = mysqli_fetch_assoc($result)): ?>
+                <tr class="<?php echo $row['status_moderasi'] == 'pending' ? 'row-pending' : ''; ?>">
+                    <td>#<?php echo $row['id_feedback']; ?></td>
+                    <td><strong><?php echo strtoupper($row['nama_pelanggan']); ?></strong></td>
+                    <td style="color: #d4af37; letter-spacing: 2px;">
+                        <?php for($i=1; $i<=5; $i++) echo $i <= $row['rating'] ? '★' : '☆'; ?>
+                    </td>
+                    <td>
+                        <div style="max-width: 400px; line-height: 1.4;">
+                            <small><em>"<?php echo htmlspecialchars($row['komentar']); ?>"</em></small>
+                            <div style="font-size: 0.7rem; color: #777; margin-top: 5px;">TIMESTAMP: <?php echo $row['tanggal']; ?></div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-tag <?php echo strtoupper($row['status_moderasi']); ?>">
+                            <?php echo strtoupper($row['status_moderasi']); ?>
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display: flex;">
+                            <?php if($row['status_moderasi'] == 'pending'): ?>
+                                <a href="feedback.php?action=approve&id=<?php echo $row['id_feedback']; ?>" class="btn-action" title="Approve">
+                                    <i class="fa-solid fa-check"></i>
+                                </a>
+                            <?php else: ?>
+                                <a href="feedback.php?action=reject&id=<?php echo $row['id_feedback']; ?>" class="btn-action" title="Hide">
+                                    <i class="fa-solid fa-eye-slash"></i>
+                                </a>
+                            <?php endif; ?>
+                            
+                            <a href="feedback.php?action=delete&id=<?php echo $row['id_feedback']; ?>" 
+                               class="btn-action" style="border-color: var(--red-ink); color: var(--red-ink);"
+                               onclick="return confirm('WARNING: Permanently delete this record?')">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
+</main>
+ 1a0171a (hai ganteng)
+
             <section class="feed-container">
                 <div class="feed-controls">
                     <span id="totalReviews" class="doc-ref" style="margin-bottom:0;">0 ARSIP</span>
@@ -738,5 +1027,9 @@
         });
     </script>
 </body>
+ HEAD
 
 </html>
+
+</html>     
+ 1a0171a (hai ganteng)
