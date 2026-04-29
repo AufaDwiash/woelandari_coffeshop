@@ -237,7 +237,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'gallery';
 <body>
 
 <aside class="sidebar">
-    <div class="brand">WOELANDARI</div>
+    <div class="brand">WOEEEELANDARI</div>
      <nav class="nav-list">
         <a href="dashboard.php" class="nav-item "> <span>Dashboard</span></a>
         <a href="menu_crud.php" class="nav-item"><span>Menu</span></a>
