@@ -1,0 +1,64 @@
+@startuml
+left to right direction
+skinparam Monochrome true
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+actor "Pengguna" as P
+actor "Karyawan" as K
+actor "Admin" as A
+
+' Generalisasi Aktor: Admin mewarisi semua hak akses Karyawan
+A --|> K
+
+rectangle "Sistem Website Coffeeshop Woelandari" {
+
+    ' ===== Use Cases Pengguna =====
+    usecase "Lihat Struktur Perusahaan" as UC1
+    usecase "Lihat Menu & Detail Produk" as UC2
+    usecase "Lihat Gallery" as UC3
+    usecase "Lihat Event" as UC4
+    usecase "Melakukan Reservasi" as UC5
+    usecase "Memberikan Rating & Komentar" as UC6
+
+    ' ===== Proses Reservasi =====
+    usecase "Kirim Reservasi via WhatsApp" as UC_WA
+
+    ' ===== Use Cases Karyawan =====
+    usecase "Login" as UC_Login
+    usecase "Konfirmasi Reservasi" as UC_Konf
+    usecase "Kelola Menu (tb_menu)" as UC7
+    usecase "Kelola Gallery (tb_gallery)" as UC8
+    usecase "Kelola Event (tb_event)" as UC9
+
+    ' ===== Use Cases Admin =====
+    usecase "Kelola Akun (tb_user)" as UC10
+    usecase "Moderasi Rating & Komentar" as UC11
+
+    ' ===== Relasi Pengguna =====
+    P -- UC1
+    P -- UC2
+    P -- UC3
+    P -- UC4
+    P -- UC5
+    P -- UC6
+
+    ' ===== Include & Extend =====
+    UC5 ..> UC_WA : <<include>>
+    UC5 <.. UC6 : <<extend>>
+    UC6 ..> UC11 : <<include>>
+
+    ' ===== Relasi Karyawan =====
+    K -- UC_Login
+    K -- UC_Konf
+    K -- UC7
+    K -- UC8
+    K -- UC9
+
+    ' ===== Relasi Admin =====
+    A -- UC10
+    A -- UC11
+
+}
+
+@enduml
