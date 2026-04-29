@@ -2,23 +2,36 @@
 session_start();
 include "config/koneksi.php"; 
 
+// Kalau sudah login → langsung ke dashboard
+if (isset($_SESSION['status']) && $_SESSION['status'] == "login") {
+    header("Location: admin/dashboard.php");
+    exit;
+}
+
 $error = '';
 
 if (isset($_POST['login'])) {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $password = md5($_POST['password']); // Asumsi password di database menggunakan enkripsi MD5
+    $password = md5($_POST['password']);
 
     $query = mysqli_query($conn, "SELECT * FROM users WHERE username='$username' AND password='$password'");
     
     if (mysqli_num_rows($query) > 0) {
         $data = mysqli_fetch_assoc($query);
+
+        // ✅ SESSION
         $_SESSION['id_user']  = $data['id_user'];
         $_SESSION['username'] = $data['username'];
+        $_SESSION['role']     = $data['role'] ?? 'admin'; // tambahkan ini
         $_SESSION['status']   = "login";
-        
-        // Arahkan ke halaman admin/dashboard setelah berhasil login
+
+        // ✅ COOKIE (ingat user 1 jam)
+        setcookie('last_user', $data['username'], time() + 3600);
+
+        // Redirect
         header("Location: admin/dashboard.php"); 
         exit();
+
     } else {
         $error = "ACCESS_DENIED: Kredensial tidak valid.";
     }
