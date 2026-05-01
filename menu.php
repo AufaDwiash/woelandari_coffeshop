@@ -10,14 +10,20 @@ $menu_json = json_encode($menu_data);
 ?>
 <!DOCTYPE html>
 <html lang="id">
-<head
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu - Woelandari Coffee Lab</title>
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/public_nav.css">
     <link rel="stylesheet" href="assets/css/menu_style.css">
 </head>
 <body>
+<nav class="public-nav">
+    <a href="index.php">Beranda</a>
+    <a href="gallery.php">Gallery</a>
+    <a href="rating.php">Rating</a>
+</nav>
 
 <div class="blueprint-container">
 

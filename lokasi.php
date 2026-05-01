@@ -6,11 +6,17 @@
     <title>Cek Lokasi - Woelandari Coffee</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/public_nav.css">
     <link rel="stylesheet" href="assets/css/lokasi_style.css">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <nav class="public-nav">
+        <a href="index.php">Beranda</a>
+        <a href="menu.php">Menu</a>
+        <a href="gallery.php">Gallery</a>
+    </nav>
 
     <div class="tuku-mono-wrapper">
         <div class="mono-grid-container">

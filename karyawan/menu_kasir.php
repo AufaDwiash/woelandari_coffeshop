@@ -1,5 +1,5 @@
 <?php
-include "../config/koneksi.php"; // Sesuaikan jalur koneksinya
+require_once __DIR__ . '/auth.php';
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -81,6 +81,7 @@ include "../config/koneksi.php"; // Sesuaikan jalur koneksinya
                 </div>
 
                 <button type="submit" class="btn-pay" onclick="siapkanCheckout(event)">BAYAR & CETAK NOTA</button>
+                <a href="../admin/dashboard.php" class="btn-pay" style="display:block; text-align:center; text-decoration:none; margin-top:10px; background:#555;">KEMBALI DASHBOARD</a>
             </form>
         </div>
     </div>

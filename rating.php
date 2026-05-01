@@ -45,6 +45,7 @@ if ($result) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Reviews - Woelandari Coffee</title>
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/public_nav.css">
     <link rel="stylesheet" href="assets/css/rating_style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -96,6 +97,11 @@ if ($result) {
     </style>
 </head>
 <body>
+<nav class="public-nav">
+    <a href="index.php">Beranda</a>
+    <a href="menu.php">Menu</a>
+    <a href="gallery.php">Gallery</a>
+</nav>
 
 <div class="archive-wrapper">
     <header class="header-gallery">

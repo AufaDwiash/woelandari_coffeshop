@@ -1,0 +1,37 @@
+.public-nav {
+    position: sticky;
+    top: 0;
+    z-index: 2000;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.92);
+    border-bottom: 2px solid #0A1D37;
+}
+
+.public-nav a {
+    display: inline-block;
+    padding: 9px 13px;
+    background: #ffffff;
+    color: #0A1D37;
+    border: 2px solid #0A1D37;
+    box-shadow: 4px 4px 0 #D63D3D;
+    text-decoration: none;
+    font-family: 'Special Elite', 'Courier Prime', monospace;
+    font-size: 0.9rem;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.public-nav a:hover {
+    background: #0A1D37;
+    color: #ffffff;
+}
+
+@media (max-width: 700px) {
+    .public-nav {
+        padding: 12px;
+    }
+}

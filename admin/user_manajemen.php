@@ -1,5 +1,5 @@
 <?php
-include "../config/koneksi.php";
+require_once __DIR__ . '/auth.php';
 
 $current_file = basename($_SERVER['PHP_SELF']); 
 
@@ -22,7 +22,7 @@ if (isset($_GET['edit_user'])) {
 if (isset($_POST['simpan_user'])) {
     $nama = mysqli_real_escape_string($conn, $_POST['nama_lengkap']);
     $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $password = md5($_POST['password']); 
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); 
     $role = $_POST['role'];
     $cek_user = mysqli_query($conn, "SELECT username FROM users WHERE username='$username'");
     if (mysqli_num_rows($cek_user) > 0) {
@@ -45,7 +45,7 @@ if (isset($_POST['update_user'])) {
         exit;
     }
     if (!empty($_POST['password'])) {
-        $password = md5($_POST['password']);
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
         mysqli_query($conn, "UPDATE users SET username='$username', password='$password', nama_lengkap='$nama', role='$role' WHERE id_user='$id_user'");
     } else {
         mysqli_query($conn, "UPDATE users SET username='$username', nama_lengkap='$nama', role='$role' WHERE id_user='$id_user'");
@@ -222,7 +222,7 @@ if (isset($_GET['hapus_user'])) {
         <a href="user_manajemen.php" class="nav-item active"><span>Kelola User</span></a>
     </nav>
     <div style="margin-top: auto; border-top: 1px dashed #555; padding-top: 10px;">
-        <a href="logout.php" class="nav-item" style="color: #ff6b6b;">>> <span>TERMINATE</span></a>
+        <a href="../logout.php" class="nav-item" style="color: #ff6b6b;">>> <span>TERMINATE</span></a>
     </div>
 </aside>
 

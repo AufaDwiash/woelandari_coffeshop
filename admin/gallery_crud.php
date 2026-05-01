@@ -1,359 +1,251 @@
 <?php
-include "../config/koneksi.php";
+require_once __DIR__ . '/auth.php';
 
-// --- LOGIKA PHP (Tetap Sama Seperti Sebelumnya) ---
-$edit_event_mode = false;
-$ev_id = ""; $ev_judul = ""; $ev_tanggal = ""; $ev_deskripsi = ""; $ev_status = ""; $ev_foto = "";
+function upload_image(string $field, string $folder, string $fallback = 'default.jpg'): string
+{
+    if (empty($_FILES[$field]['name']) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
+        return $fallback;
+    }
+
+    $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+    $ext = strtolower(pathinfo($_FILES[$field]['name'], PATHINFO_EXTENSION));
+    if (!in_array($ext, $allowed, true)) {
+        return $fallback;
+    }
+
+    $file = uniqid($folder . '_', true) . '.' . $ext;
+    $target = __DIR__ . '/../assets/images/' . $folder . '/' . $file;
+    return move_uploaded_file($_FILES[$field]['tmp_name'], $target) ? $file : $fallback;
+}
+
+function delete_image(string $folder, ?string $file): void
+{
+    if (!$file || $file === 'default.jpg') {
+        return;
+    }
+
+    $path = __DIR__ . '/../assets/images/' . $folder . '/' . $file;
+    if (is_file($path)) {
+        unlink($path);
+    }
+}
+
+if (isset($_POST['save_event'])) {
+    $id = (int) ($_POST['id_event'] ?? 0);
+    $judul = mysqli_real_escape_string($conn, $_POST['judul_event'] ?? '');
+    $tanggal = mysqli_real_escape_string($conn, $_POST['tanggal_event'] ?? date('Y-m-d'));
+    $deskripsi = mysqli_real_escape_string($conn, $_POST['deskripsi_event'] ?? '');
+    $status = mysqli_real_escape_string($conn, $_POST['status_event'] ?? 'active');
+    $foto_lama = $_POST['foto_lama'] ?? 'default.jpg';
+    $foto = upload_image('foto_cover', 'events', $foto_lama);
+
+    if ($id > 0) {
+        if ($foto !== $foto_lama) delete_image('events', $foto_lama);
+        mysqli_query($conn, "UPDATE events SET judul_event='$judul', tanggal_event='$tanggal', deskripsi_event='$deskripsi', status_event='$status', foto_cover='$foto' WHERE id_event=$id");
+    } else {
+        mysqli_query($conn, "INSERT INTO events (judul_event, tanggal_event, deskripsi_event, status_event, foto_cover) VALUES ('$judul', '$tanggal', '$deskripsi', '$status', '$foto')");
+    }
+
+    header('Location: gallery_crud.php?tab=event&msg=saved');
+    exit;
+}
+
+if (isset($_POST['save_gallery'])) {
+    $id = (int) ($_POST['id_gallery'] ?? 0);
+    $id_event = $_POST['id_event'] === '' ? 'NULL' : (int) $_POST['id_event'];
+    $judul = mysqli_real_escape_string($conn, $_POST['judul'] ?? '');
+    $deskripsi = mysqli_real_escape_string($conn, $_POST['deskripsi'] ?? '');
+    $foto_lama = $_POST['foto_lama'] ?? 'default.jpg';
+    $foto = upload_image('file_foto', 'gallery', $foto_lama);
+
+    if ($id > 0) {
+        if ($foto !== $foto_lama) delete_image('gallery', $foto_lama);
+        mysqli_query($conn, "UPDATE gallery SET id_event=$id_event, judul='$judul', deskripsi='$deskripsi', file_foto='$foto' WHERE id_gallery=$id");
+    } else {
+        mysqli_query($conn, "INSERT INTO gallery (id_event, judul, deskripsi, file_foto) VALUES ($id_event, '$judul', '$deskripsi', '$foto')");
+    }
+
+    header('Location: gallery_crud.php?tab=gallery&msg=saved');
+    exit;
+}
+
+if (isset($_GET['hapus_gallery'])) {
+    $id = (int) $_GET['hapus_gallery'];
+    $old = mysqli_fetch_assoc(mysqli_query($conn, "SELECT file_foto FROM gallery WHERE id_gallery=$id"));
+    delete_image('gallery', $old['file_foto'] ?? null);
+    mysqli_query($conn, "DELETE FROM gallery WHERE id_gallery=$id");
+    header('Location: gallery_crud.php?tab=gallery&msg=deleted');
+    exit;
+}
+
+if (isset($_GET['hapus_event'])) {
+    $id = (int) $_GET['hapus_event'];
+    $old = mysqli_fetch_assoc(mysqli_query($conn, "SELECT foto_cover FROM events WHERE id_event=$id"));
+    delete_image('events', $old['foto_cover'] ?? null);
+    mysqli_query($conn, "DELETE FROM events WHERE id_event=$id");
+    header('Location: gallery_crud.php?tab=event&msg=deleted');
+    exit;
+}
+
+$active_tab = $_GET['tab'] ?? 'gallery';
+$edit_event = null;
+$edit_gallery = null;
+
 if (isset($_GET['edit_event'])) {
-    $edit_event_mode = true;
-    $ev_id = $_GET['edit_event'];
-    $q_ev = mysqli_query($conn, "SELECT * FROM events WHERE id_event='$ev_id'");
-    $d_ev = mysqli_fetch_assoc($q_ev);
-    $ev_judul = $d_ev['judul_event'];
-    $ev_tanggal = $d_ev['tanggal_event'];
-    $ev_deskripsi = $d_ev['deskripsi_event'];
-    $ev_status = $d_ev['status_event'];
-    $ev_foto = $d_ev['foto_cover'];
+    $id = (int) $_GET['edit_event'];
+    $edit_event = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM events WHERE id_event=$id"));
+    $active_tab = 'event';
 }
 
-$edit_gal_mode = false;
-$gal_id = ""; $gal_event = ""; $gal_foto = ""; $gal_judul = ""; $gal_deskripsi = "";
 if (isset($_GET['edit_gallery'])) {
-    $edit_gal_mode = true;
-    $gal_id = $_GET['edit_gallery'];
-    $q_gal = mysqli_query($conn, "SELECT * FROM gallery WHERE id_gallery='$gal_id'");
-    $d_gal = mysqli_fetch_assoc($q_gal);
-    $gal_event = $d_gal['id_event'];
-    $gal_foto = $d_gal['file_foto'];
-    $gal_judul = $d_gal['judul'];
-    $gal_deskripsi = $d_gal['deskripsi'];
+    $id = (int) $_GET['edit_gallery'];
+    $edit_gallery = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM gallery WHERE id_gallery=$id"));
+    $active_tab = 'gallery';
 }
-$active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'gallery';
-?>
 
+$events = mysqli_query($conn, "SELECT * FROM events ORDER BY tanggal_event DESC");
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Gallery & Event</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --red-ink: #9b2226;
-            --navy-ink: #001219;
-            --paper-bg: #e5e5e5;
-            --sidebar-width: 260px;
-        }
-
+        :root { --red:#9b2226; --navy:#001219; --paper:#e5e5e5; --side:260px; }
         * { box-sizing: border-box; }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--paper-bg);
-            font-family: 'Courier Prime', monospace;
-            color: var(--navy-ink);
-            display: flex; /* Memungkinkan sidebar dan main berdampingan */
-        }
-
-        /* --- SIDEBAR (Sama Persis Dashboard) --- */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--navy-ink);
-            color: white;
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            padding: 20px;
-            z-index: 1000;
-        }
-
-        .brand {
-            font-family: 'Special Elite', cursive;
-            font-size: 1.6rem;
-            color: var(--red-ink);
-            text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 2px double #444;
-            margin-bottom: 30px;
-        }
-
-        .nav-list { list-style: none; padding: 0; margin: 0; }
-
-        .nav-item {
-            display: block;
-            padding: 15px;
-            color: #bdc3c7;
-            text-decoration: none;
-            font-size: 0.9rem;
-            border-left: 4px solid transparent;
-            transition: all 0.3s ease;
-            margin-bottom: 5px;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: rgba(255,255,255,0.05);
-            color: white;
-            border-left: 4px solid var(--red-ink);
-        }
-
-        /* --- MAIN CONTENT (Penyesuaian Lebar) --- */
-        .main-content {
-            margin-left: var(--sidebar-width); /* KUNCI SIMETRI: Dorong konten ke kanan */
-            width: calc(100% - var(--sidebar-width)); /* Isi sisa layar */
-            padding: 40px;
-            min-height: 100vh;
-        }
-
-        .page-header {
-            margin-bottom: 40px;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 20px;
-        }
-
-        .page-header h1 {
-            font-family: 'Special Elite', cursive;
-            margin: 0;
-            font-size: 2.2rem;
-            letter-spacing: -1px;
-        }
-
-        /* Tab Control */
-        .tab-wrapper {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .tab-btn {
-            font-family: 'Special Elite', cursive;
-            padding: 12px 25px;
-            border: 2px solid var(--navy-ink);
-            background: white;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .tab-btn.active {
-            background: var(--navy-ink);
-            color: white;
-            box-shadow: 5px 5px 0px var(--red-ink);
-        }
-
-        /* Container Table */
-        .card-system {
-            background: #fff;
-            border: 2px solid var(--navy-ink);
-            padding: 30px;
-            position: relative;
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.05);
-        }
-
-        .tape-deco {
-            position: absolute;
-            width: 80px;
-            height: 30px;
-            background: rgba(0,0,0,0.1);
-            top: -15px;
-            left: 20px;
-            transform: rotate(-2deg);
-            border: 1px dashed rgba(0,0,0,0.2);
-        }
-
-        /* Table Styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th {
-            background: #f8f8f8;
-            padding: 15px;
-            text-align: left;
-            border-bottom: 2px solid var(--navy-ink);
-            font-family: 'Special Elite', cursive;
-            font-size: 0.9rem;
-        }
-
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            font-size: 0.9rem;
-        }
-
-        .img-preview {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border: 2px solid var(--navy-ink);
-        }
-
-        .btn-add {
-            background: var(--red-ink);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-family: 'Special Elite', cursive;
-            cursor: pointer;
-            box-shadow: 3px 3px 0px var(--navy-ink);
-        }
-
-        .action-link {
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.8rem;
-            margin-right: 10px;
-        }
-
-        .edit { color: var(--navy-ink); }
-        .delete { color: var(--red-ink); }
-
-        /* Modal Simple Style */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,18,25,0.9);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .modal-box {
-            background: white;
-            width: 100%;
-            max-width: 700px;
-            padding: 30px;
-            border: 5px solid var(--red-ink);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
+        body { margin:0; background:var(--paper); font-family:'Courier Prime', monospace; color:var(--navy); display:flex; }
+        .sidebar { width:var(--side); background:var(--navy); color:#fff; min-height:100vh; padding:20px; position:fixed; }
+        .brand { font-family:'Special Elite', cursive; font-size:1.5rem; color:var(--red); padding-bottom:20px; border-bottom:2px double #444; margin-bottom:25px; }
+        .nav-item { display:block; color:#bdc3c7; text-decoration:none; padding:14px; border-left:4px solid transparent; margin-bottom:4px; }
+        .nav-item:hover, .nav-item.active { color:#fff; background:rgba(255,255,255,.06); border-left-color:var(--red); }
+        .main { margin-left:var(--side); width:calc(100% - var(--side)); padding:40px; }
+        h1, h2 { font-family:'Special Elite', cursive; }
+        .tabs { display:flex; gap:12px; margin-bottom:25px; }
+        .tabs a, .btn { background:#fff; border:2px solid var(--navy); color:var(--navy); padding:10px 16px; text-decoration:none; font-weight:bold; cursor:pointer; }
+        .tabs a.active, .btn.primary { background:var(--navy); color:#fff; box-shadow:4px 4px 0 var(--red); }
+        .grid { display:grid; grid-template-columns:360px 1fr; gap:25px; align-items:start; }
+        .card { background:#fff; border:2px solid var(--navy); padding:24px; box-shadow:8px 8px 0 rgba(0,0,0,.08); }
+        label { display:block; font-weight:bold; margin-top:14px; font-size:.85rem; }
+        input, select, textarea { width:100%; padding:10px; border:1px solid #aaa; font-family:inherit; }
+        table { width:100%; border-collapse:collapse; }
+        th, td { padding:12px; border-bottom:1px solid #ddd; text-align:left; vertical-align:top; }
+        th { border-bottom:2px solid var(--navy); font-family:'Special Elite', cursive; }
+        .preview { width:72px; height:72px; object-fit:cover; border:2px solid var(--navy); }
+        .actions a { margin-right:10px; color:var(--navy); font-weight:bold; }
+        .actions a.delete { color:var(--red); }
+        .notice { padding:12px 16px; background:var(--navy); color:#fff; margin-bottom:20px; }
+        @media (max-width:900px) { .sidebar{position:static;width:100%;min-height:auto}.main{margin-left:0;width:100%;padding:20px}.grid{grid-template-columns:1fr} body{display:block} }
     </style>
 </head>
 <body>
-
 <aside class="sidebar">
-    <div class="brand">WOEEEELANDARI</div>
-     <nav class="nav-list">
-        <a href="dashboard.php" class="nav-item "> <span>Dashboard</span></a>
-        <a href="menu_crud.php" class="nav-item"><span>Menu</span></a>
-        <a href="gallery_crud.php" class="nav-item active"> <span>Gallery</span></a>
-        <a href="feedback.php" class="nav-item"><span>Feedback</span></a>
-        <a href="user_manajemen.php" class="nav-item"><span>Kelola Akun User</span></a>
-    </nav>
-    <div style="margin-top: auto; border-top: 1px dashed #555; padding-top: 10px;">
-        <a href="logout.php" class="nav-item" style="color: #ff6b6b;">>> <span>TERMINATE</span></a>
-    </div>
+    <div class="brand">WOELANDARI</div>
+    <a href="dashboard.php" class="nav-item">Dashboard</a>
+    <a href="menu_crud.php" class="nav-item">Menu</a>
+    <a href="gallery_crud.php" class="nav-item active">Gallery</a>
+    <a href="feedback.php" class="nav-item">Feedback</a>
+    <a href="user_manajemen.php" class="nav-item">Kelola User</a>
+    <a href="../logout.php" class="nav-item">Logout</a>
 </aside>
 
-<main class="main-content">
-    <header class="page-header">
-        <h1>Kelola Gallery dan Event</h1>
+<main class="main">
+    <h1>GALLERY & EVENT CONTROL</h1>
+    <?php if (isset($_GET['msg'])): ?><div class="notice">SYSTEM_MESSAGE: ACTION_SUCCESS</div><?php endif; ?>
 
-    </header>
+    <nav class="tabs">
+        <a href="gallery_crud.php?tab=gallery" class="<?php echo $active_tab === 'gallery' ? 'active' : ''; ?>">Kelola Gallery</a>
+        <a href="gallery_crud.php?tab=event" class="<?php echo $active_tab === 'event' ? 'active' : ''; ?>">Kelola Event</a>
+    </nav>
 
-    <div class="tab-wrapper">
-        <button class="tab-btn <?php echo ($active_tab == 'gallery') ? 'active' : ''; ?>" 
-                onclick="window.location='gallery_crud.php?tab=gallery'">Kelola Gallery </button>
-        <button class="tab-btn <?php echo ($active_tab == 'event') ? 'active' : ''; ?>" 
-                onclick="window.location='gallery_crud.php?tab=event'">Kelola Event </button>
-    </div>
+    <?php if ($active_tab === 'event'): ?>
+        <section class="grid">
+            <form class="card" method="POST" enctype="multipart/form-data">
+                <h2><?php echo $edit_event ? 'Edit Event' : 'Tambah Event'; ?></h2>
+                <input type="hidden" name="id_event" value="<?php echo (int) ($edit_event['id_event'] ?? 0); ?>">
+                <input type="hidden" name="foto_lama" value="<?php echo htmlspecialchars($edit_event['foto_cover'] ?? 'default.jpg'); ?>">
+                <label>Judul Event</label>
+                <input type="text" name="judul_event" required value="<?php echo htmlspecialchars($edit_event['judul_event'] ?? ''); ?>">
+                <label>Tanggal</label>
+                <input type="date" name="tanggal_event" required value="<?php echo htmlspecialchars($edit_event['tanggal_event'] ?? date('Y-m-d')); ?>">
+                <label>Status</label>
+                <input type="text" name="status_event" value="<?php echo htmlspecialchars($edit_event['status_event'] ?? 'active'); ?>">
+                <label>Deskripsi</label>
+                <textarea name="deskripsi_event" rows="5"><?php echo htmlspecialchars($edit_event['deskripsi_event'] ?? ''); ?></textarea>
+                <label>Cover</label>
+                <input type="file" name="foto_cover" accept="image/*">
+                <button class="btn primary" name="save_event" style="margin-top:18px;">Simpan Event</button>
+            </form>
 
-    <div class="card-system">
-        <div class="tape-deco"></div>
-        
-        <?php if ($active_tab == 'gallery'): ?>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 style="font-family: 'Special Elite';">Kelola Gallery </h2>
-                <button class="btn-add" onclick="bukaModal('modalGallery')"> + Tambah Foto Baru</button>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Foto</th>
-                        <th>Judul</th>
-                        <th>Keterangan</th>
-                        <th style="text-align: right;">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $q_g = mysqli_query($conn, "SELECT g.*, e.judul_event FROM gallery g LEFT JOIN events e ON g.id_event = e.id_event ORDER BY g.id_gallery DESC");
-                    while ($r_g = mysqli_fetch_assoc($q_g)):
-                    ?>
-                    <tr>
-                        <td><img src="../assets/images/gallery/<?php echo $r_g['file_foto']; ?>" class="img-preview"></td>
-                        <td><strong><?php echo strtoupper($r_g['judul']); ?></strong></td>
-                        <td><?php echo $r_g['judul_event'] ? strtoupper($r_g['judul_event']) : '<span style="color:#ccc;">(NULL)</span>'; ?></td>
-                        <td style="text-align: right;">
-                            <a href="?tab=gallery&edit_gallery=<?php echo $r_g['id_gallery']; ?>" class="action-link edit">[EDIT]</a>
-                            <a href="?tab=gallery&hapus_gallery=<?php echo $r_g['id_gallery']; ?>" class="action-link delete" onclick="return confirm('Hapus data?');">[DEL]</a>
-                        </td>
-                    </tr>
+            <div class="card">
+                <h2>Daftar Event</h2>
+                <table>
+                    <thead><tr><th>Cover</th><th>Event</th><th>Tanggal</th><th>Aksi</th></tr></thead>
+                    <tbody>
+                    <?php mysqli_data_seek($events, 0); while ($row = mysqli_fetch_assoc($events)): ?>
+                        <tr>
+                            <td><img class="preview" src="../assets/images/events/<?php echo htmlspecialchars($row['foto_cover']); ?>" alt=""></td>
+                            <td><strong><?php echo htmlspecialchars($row['judul_event']); ?></strong><br><?php echo htmlspecialchars($row['status_event']); ?></td>
+                            <td><?php echo date('d-m-Y', strtotime($row['tanggal_event'])); ?></td>
+                            <td class="actions">
+                                <a href="gallery_crud.php?tab=event&edit_event=<?php echo (int) $row['id_event']; ?>">EDIT</a>
+                                <a class="delete" href="gallery_crud.php?tab=event&hapus_event=<?php echo (int) $row['id_event']; ?>" onclick="return confirm('Hapus event ini?')">DEL</a>
+                            </td>
+                        </tr>
                     <?php endwhile; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 style="font-family: 'Special Elite';">EVENT_SCHEDULER_LOG</h2>
-                <button class="btn-add" onclick="bukaModal('modalEvent')">+ CREATE_NEW_EVENT</button>
+                    </tbody>
+                </table>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>COVER</th>
-                        <th>EVENT_NAME</th>
-                        <th>DATE_STAMP</th>
-                        <th style="text-align: right;">OPERATIONS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $q_eve = mysqli_query($conn, "SELECT * FROM events ORDER BY tanggal_event DESC");
-                    while ($r_eve = mysqli_fetch_assoc($q_eve)):
-                    ?>
-                    <tr>
-                        <td><img src="../assets/images/events/<?php echo $r_eve['foto_cover']; ?>" class="img-preview"></td>
-                        <td><strong><?php echo strtoupper($r_eve['judul_event']); ?></strong></td>
-                        <td><?php echo date('d-m-Y', strtotime($r_eve['tanggal_event'])); ?></td>
-                        <td style="text-align: right;">
-                            <a href="?tab=event&edit_event=<?php echo $r_eve['id_event']; ?>" class="action-link edit">[EDIT]</a>
-                            <a href="?tab=event&hapus_event=<?php echo $r_eve['id_event']; ?>" class="action-link delete" onclick="return confirm('Hapus data?');">[DEL]</a>
-                        </td>
-                    </tr>
+        </section>
+    <?php else: ?>
+        <section class="grid">
+            <form class="card" method="POST" enctype="multipart/form-data">
+                <h2><?php echo $edit_gallery ? 'Edit Gallery' : 'Tambah Gallery'; ?></h2>
+                <input type="hidden" name="id_gallery" value="<?php echo (int) ($edit_gallery['id_gallery'] ?? 0); ?>">
+                <input type="hidden" name="foto_lama" value="<?php echo htmlspecialchars($edit_gallery['file_foto'] ?? 'default.jpg'); ?>">
+                <label>Event Terkait</label>
+                <select name="id_event">
+                    <option value="">Tanpa event</option>
+                    <?php mysqli_data_seek($events, 0); while ($ev = mysqli_fetch_assoc($events)): ?>
+                        <option value="<?php echo (int) $ev['id_event']; ?>" <?php echo (isset($edit_gallery['id_event']) && (int) $edit_gallery['id_event'] === (int) $ev['id_event']) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($ev['judul_event']); ?>
+                        </option>
                     <?php endwhile; ?>
-                </tbody>
-            </table>
-        <?php endif; ?>
-    </div>
+                </select>
+                <label>Judul</label>
+                <input type="text" name="judul" required value="<?php echo htmlspecialchars($edit_gallery['judul'] ?? ''); ?>">
+                <label>Deskripsi</label>
+                <textarea name="deskripsi" rows="5"><?php echo htmlspecialchars($edit_gallery['deskripsi'] ?? ''); ?></textarea>
+                <label>Foto</label>
+                <input type="file" name="file_foto" accept="image/*">
+                <button class="btn primary" name="save_gallery" style="margin-top:18px;">Simpan Gallery</button>
+            </form>
+
+            <div class="card">
+                <h2>Daftar Gallery</h2>
+                <table>
+                    <thead><tr><th>Foto</th><th>Judul</th><th>Event</th><th>Aksi</th></tr></thead>
+                    <tbody>
+                    <?php
+                    $galleries = mysqli_query($conn, "SELECT g.*, e.judul_event FROM gallery g LEFT JOIN events e ON g.id_event=e.id_event ORDER BY g.id_gallery DESC");
+                    while ($row = mysqli_fetch_assoc($galleries)):
+                    ?>
+                        <tr>
+                            <td><img class="preview" src="../assets/images/gallery/<?php echo htmlspecialchars($row['file_foto']); ?>" alt=""></td>
+                            <td><strong><?php echo htmlspecialchars($row['judul']); ?></strong><br><?php echo htmlspecialchars($row['deskripsi']); ?></td>
+                            <td><?php echo htmlspecialchars($row['judul_event'] ?? '-'); ?></td>
+                            <td class="actions">
+                                <a href="gallery_crud.php?tab=gallery&edit_gallery=<?php echo (int) $row['id_gallery']; ?>">EDIT</a>
+                                <a class="delete" href="gallery_crud.php?tab=gallery&hapus_gallery=<?php echo (int) $row['id_gallery']; ?>" onclick="return confirm('Hapus foto ini?')">DEL</a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    <?php endif; ?>
 </main>
-
-<div class="modal-overlay" id="modalGallery">
-    <div class="modal-box">
-        <h2 style="font-family: 'Special Elite'; border-bottom: 2px solid var(--red-ink); padding-bottom: 10px;">FORM_GALLERY_UPLOAD</h2>
-        <button class="btn-add" onclick="tutupModal('modalGallery')" style="background:#555;">CANCEL</button>
-    </div>
-</div>
-
-<div class="modal-overlay" id="modalEvent">
-    <div class="modal-box">
-        <h2 style="font-family: 'Special Elite'; border-bottom: 2px solid var(--red-ink); padding-bottom: 10px;">FORM_EVENT_ENTRY</h2>
-        <button class="btn-add" onclick="tutupModal('modalEvent')" style="background:#555;">CANCEL</button>
-    </div>
-</div>
-
-<script>
-    function bukaModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
-    
-    // Auto open modal jika mode edit
-    <?php if ($edit_gal_mode): ?> bukaModal('modalGallery'); <?php endif; ?>
-    <?php if ($edit_event_mode): ?> bukaModal('modalEvent'); <?php endif; ?>
-</script>
-
 </body>
 </html>

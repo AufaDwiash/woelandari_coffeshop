@@ -6,9 +6,15 @@
     <title>Archive: About - Woelandari Coffee Lab</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/public_nav.css">
     <link rel="stylesheet" href="assets/css/about_style.css">
 </head>
 <body>
+    <nav class="public-nav">
+        <a href="index.php">Beranda</a>
+        <a href="menu.php">Menu</a>
+        <a href="gallery.php">Gallery</a>
+    </nav>
     <main class="blueprint-canvas">
         
         <section class="dossier-split section-navy">

@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&display=swap');
 
 :root {
-    --navy: #002B5B;      
-    --navy-light: #003b7a;
-    --red: #e63946;     
+    --navy: #001219;      
+    --navy-light: #0A2A35;
+    --red: #9b2226;     
     --white: #FFFFFF;     
-    --grid-line: #D0E1F9; 
-    --bg-color: #6291d8;  
+    --grid-line: #d2d2d2; 
+    --bg-color: #e5e5e5;  
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; text-decoration: none; list-style: none; }
@@ -27,13 +27,13 @@ body {
 /* 💎 Premium Lighting & Noise */
 body::after {
     content: ""; position: fixed; inset: 0;
-    background: radial-gradient(circle at 60% 20%, rgba(255, 255, 255, 0.25), transparent 70%);
-    pointer-events: none; z-index: 998;
+    background: radial-gradient(circle at 60% 20%, rgba(255, 255, 255, 0.35), transparent 70%);
+    pointer-events: none; z-index: 0;
 }
 body::before {
     content: ""; position: fixed; inset: 0;
     background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>');
-    opacity: 0.05; pointer-events: none; z-index: 999;
+    opacity: 0.05; pointer-events: none; z-index: 0;
 }
 
 .text-red { color: var(--red); }
@@ -49,8 +49,8 @@ body::before {
     display: flex;
     flex-direction: column;
     position: relative;
-    z-index: 1000;
-    box-shadow: 10px 0 30px rgba(0, 43, 91, 0.3);
+    z-index: 2;
+    box-shadow: 10px 0 30px rgba(0, 18, 25, 0.22);
 }
 
 /* Blueprint pattern di sidebar */
@@ -103,7 +103,7 @@ body::before {
     flex: 1;
     padding: 40px;
     position: relative;
-    z-index: 10;
+    z-index: 1;
     height: 100vh;
     overflow-y: auto;
 }
@@ -128,7 +128,7 @@ body::before {
 .stat-card {
     background: var(--white); border: 2px solid var(--navy); border-radius: 4px;
     padding: 20px; position: relative;
-    box-shadow: 6px 8px 0 rgba(0, 43, 91, 0.1);
+    box-shadow: 8px 8px 0 rgba(0, 18, 25, 0.12);
     transition: all 0.3s ease;
     transform: rotate(-0.5deg); /* Imperfection */
 }

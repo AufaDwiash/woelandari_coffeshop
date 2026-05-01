@@ -1,5 +1,5 @@
 <?php
-include "../config/koneksi.php";
+require_once __DIR__ . '/auth.php';
 
 // --- LOGIKA PHP (Tetap Sama Persis) ---
 $edit_mode = false;
@@ -234,7 +234,7 @@ if (isset($_GET['hapus'])) {
         <a href="user_manajemen.php" class="nav-item"><span>Kelola User</span></a>
     </nav>
     <div style="margin-top: auto; border-top: 1px dashed #555; padding-top: 10px;">
-        <a href="logout.php" class="nav-item" style="color: #ff6b6b;">>> <span>TERMINATE</span></a>
+        <a href="../logout.php" class="nav-item" style="color: #ff6b6b;">>> <span>TERMINATE</span></a>
     </div>
 </aside>
 

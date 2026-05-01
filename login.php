@@ -1,9 +1,8 @@
 <?php
 session_start();
-include "config/koneksi.php"; 
+include "config/koneksi.php";
 
-// Kalau sudah login → langsung ke dashboard
-if (isset($_SESSION['status']) && $_SESSION['status'] == "login") {
+if (isset($_SESSION['status']) && $_SESSION['status'] === "login") {
     header("Location: admin/dashboard.php");
     exit;
 }
@@ -12,32 +11,36 @@ $error = '';
 
 if (isset($_POST['login'])) {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $password = md5($_POST['password']);
+    $password_input = $_POST['password'];
 
-    $query = mysqli_query($conn, "SELECT * FROM users WHERE username='$username' AND password='$password'");
-    
+    $query = mysqli_query($conn, "SELECT * FROM users WHERE username='$username' LIMIT 1");
+
     if (mysqli_num_rows($query) > 0) {
         $data = mysqli_fetch_assoc($query);
+        $stored_password = $data['password'];
+        $password_valid = password_verify($password_input, $stored_password) || md5($password_input) === $stored_password;
 
-        // ✅ SESSION
-        $_SESSION['id_user']  = $data['id_user'];
-        $_SESSION['username'] = $data['username'];
-        $_SESSION['role']     = $data['role'] ?? 'admin'; // tambahkan ini
-        $_SESSION['status']   = "login";
+        if ($password_valid) {
+            if (md5($password_input) === $stored_password) {
+                $new_hash = password_hash($password_input, PASSWORD_DEFAULT);
+                $id_user = (int) $data['id_user'];
+                mysqli_query($conn, "UPDATE users SET password='$new_hash' WHERE id_user=$id_user");
+            }
 
-        // ✅ COOKIE (ingat user 1 jam)
-        setcookie('last_user', $data['username'], time() + 3600);
+            $_SESSION['id_user']  = $data['id_user'];
+            $_SESSION['username'] = $data['username'];
+            $_SESSION['role']     = $data['role'] ?? 'admin';
+            $_SESSION['status']   = "login";
 
-        // Redirect
-        header("Location: admin/dashboard.php"); 
-        exit();
-
-    } else {
-        $error = "ACCESS_DENIED: Kredensial tidak valid.";
+            setcookie('last_user', $data['username'], time() + 3600, '/');
+            header("Location: admin/dashboard.php");
+            exit;
+        }
     }
+
+    $error = "ACCESS_DENIED: Kredensial tidak valid.";
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -60,9 +63,9 @@ if (isset($_POST['login'])) {
         
         <h1 class="login-title">AUTHORIZED<br>ACCESS ONLY</h1>
 
-        <?php if($error != ''): ?>
+        <?php if ($error !== ''): ?>
             <div class="error-box">
-                > ERROR: <?php echo $error; ?>
+                &gt; ERROR: <?php echo htmlspecialchars($error); ?>
             </div>
         <?php endif; ?>
 
@@ -103,7 +106,7 @@ if (isset($_POST['login'])) {
         });
         
         input.addEventListener('blur', () => {
-            if(document.getElementById('username').value === '' && document.getElementById('password').value === '') {
+            if (document.getElementById('username').value === '' && document.getElementById('password').value === '') {
                 statusBox.innerText = 'SYSTEM_LOCKED';
                 statusBox.style.color = 'var(--red)';
                 statusBox.classList.add('blink');

@@ -1,0 +1,15 @@
+.vscode/
+*.log
+*.tmp
+Thumbs.db
+.DS_Store
+output/
+
+# Local uploads generated while testing
+assets/images/gallery/gallery_*
+assets/images/events/events_*
+assets/images/menu/menu_*
+!assets/images/menu/menu_1772017150_543.jpg
+!assets/images/menu/menu_69cd43e48b44a.jpg
+!assets/images/menu/menu_69cd443227012.jpg
+!assets/images/menu/menu_69e826a6daef2.jpg

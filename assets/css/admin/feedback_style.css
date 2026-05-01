@@ -1,10 +1,8 @@
-/* BRUTALIST VINTAGE THEME */
 :root {
-  --black: #1a1a1a;
+  --red-ink: #9b2226;
+  --navy-ink: #001219;
+  --paper-bg: #e5e5e5;
   --white: #ffffff;
-  --grey: #e0e0e0;
-  --accent: #000000;
-  --pending-bg: #f5f5f5;
 }
 
 * {
@@ -15,70 +13,74 @@
 
 body {
   font-family: "Courier Prime", monospace;
-  background-color: var(--grey);
-  color: var(--black);
-  padding: 20px;
+  background-color: var(--paper-bg);
+  color: var(--navy-ink);
+  min-height: 100vh;
+  padding: 40px;
+  overflow-x: hidden;
 }
 
 .admin-container {
-  max-width: 1300px;
+  max-width: 1240px;
   margin: 0 auto;
-  background: var(--white);
-  border: 4px solid var(--black);
-  box-shadow: 12px 12px 0px var(--black);
 }
 
-/* HEADER */
 .admin-header {
-  padding: 30px;
-  border-bottom: 4px solid var(--black);
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  gap: 24px;
+  border-bottom: 2px solid var(--navy-ink);
+  padding-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .tag {
   display: inline-block;
-  background: var(--black);
-  color: var(--white);
-  padding: 2px 8px;
-  font-size: 12px;
-  margin-bottom: 10px;
+  color: var(--red-ink);
+  font-weight: 700;
+  font-size: 0.8rem;
+  margin-bottom: 8px;
 }
 
 h1 {
   font-family: "Special Elite", cursive;
-  font-size: 50px;
-  letter-spacing: -2px;
+  font-size: 2.4rem;
+  letter-spacing: -1px;
 }
 
 .btn-nav {
+  display: inline-block;
   text-decoration: none;
-  color: var(--black);
-  border: 2px solid var(--black);
-  padding: 8px 15px;
-  font-weight: bold;
-  margin-left: 10px;
-  font-size: 14px;
+  color: var(--navy-ink);
+  border: 2px solid var(--navy-ink);
+  background: var(--white);
+  padding: 9px 13px;
+  font-family: "Special Elite", cursive;
+  margin: 4px;
 }
 
 .btn-nav:hover {
-  background: var(--black);
+  background: var(--navy-ink);
   color: var(--white);
+  box-shadow: 4px 4px 0 var(--red-ink);
 }
 
-/* STATUS BAR */
 .status-bar {
-  background: var(--black);
+  background: var(--navy-ink);
   color: var(--white);
-  padding: 10px 30px;
-  font-size: 12px;
-  font-weight: bold;
+  padding: 13px 18px;
+  margin-bottom: 28px;
+  border-left: 6px solid var(--red-ink);
+  font-weight: 700;
+  font-size: 0.85rem;
 }
 
-/* TABLE STYLES */
 .content {
-  padding: 30px;
+  background: var(--white);
+  border: 2px solid var(--navy-ink);
+  box-shadow: 8px 8px 0 rgba(0, 18, 25, 0.16);
+  padding: 24px;
 }
 
 .table-wrapper {
@@ -88,88 +90,96 @@ h1 {
 .brutalist-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 850px;
 }
 
 .brutalist-table th {
-  background: var(--black);
-  color: var(--white);
   text-align: left;
-  padding: 15px;
-  font-size: 13px;
-  text-transform: uppercase;
+  padding: 14px;
+  border-bottom: 2px solid var(--navy-ink);
+  font-family: "Special Elite", cursive;
 }
 
 .brutalist-table td {
-  padding: 15px;
-  border-bottom: 2px solid var(--black);
-  font-size: 14px;
+  padding: 14px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: top;
 }
 
 .row-pending {
-  background-color: var(--pending-bg);
+  background: #fffde7;
 }
 
 .rating-cell {
-  color: #000;
-  font-size: 18px;
+  color: #d4af37;
+  letter-spacing: 2px;
   white-space: nowrap;
 }
 
 .comment-cell {
-  max-width: 350px;
-  font-style: italic;
+  max-width: 420px;
+  line-height: 1.5;
 }
 
-/* STATUS TAGS */
 .status-tag {
   display: inline-block;
-  padding: 4px 10px;
-  font-size: 11px;
-  font-weight: bold;
-  border: 2px solid var(--black);
+  border: 1px solid var(--navy-ink);
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
 .status-tag.tampil {
-  background: #00ff00;
-  color: #000;
-}
-.status-tag.pending {
-  background: #ffff00;
-  color: #000;
+  background: #d4edda;
+  color: #155724;
 }
 
-/* ACTION BUTTONS */
+.status-tag.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
 .action-cell {
   display: flex;
   gap: 8px;
 }
 
 .btn-action {
-  width: 35px;
-  height: 35px;
-  display: flex;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  border: 2px solid var(--navy-ink);
+  color: var(--navy-ink);
   text-decoration: none;
-  border: 2px solid var(--black);
-  color: var(--black);
 }
 
-.btn-action.approve:hover {
-  background: #00ff00;
+.btn-action:hover {
+  background: var(--navy-ink);
+  color: var(--white);
+  box-shadow: 3px 3px 0 var(--red-ink);
 }
-.btn-action.reject:hover {
-  background: #ffff00;
-}
-.btn-action.delete:hover {
-  background: #ff0000;
-  color: #fff;
+
+.btn-action.delete {
+  border-color: var(--red-ink);
+  color: var(--red-ink);
 }
 
 .admin-footer {
-  padding: 20px 30px;
-  border-top: 2px solid var(--black);
-  font-size: 11px;
   text-align: right;
-  opacity: 0.7;
+  font-size: 0.75rem;
+  margin-top: 18px;
+  opacity: 0.75;
+}
+
+@media (max-width: 760px) {
+  body {
+    padding: 20px;
+  }
+
+  .admin-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

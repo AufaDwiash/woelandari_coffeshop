@@ -11,9 +11,15 @@ $today = date('Y-m-d');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visual Archives - Woelandari Coffee Lab</title>
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/public_nav.css">
     <link rel="stylesheet" href="assets/css/gallery_style.css?v=<?php echo time(); ?>">
 </head>
 <body>
+    <nav class="public-nav">
+        <a href="index.php">Beranda</a>
+        <a href="menu.php">Menu</a>
+        <a href="rating.php">Rating</a>
+    </nav>
 
     <div class="header-gallery">
         <p class="doc-ref">WOELANDARI EXPERIENCE</p>
