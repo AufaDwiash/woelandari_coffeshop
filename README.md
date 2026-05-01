@@ -2,6 +2,14 @@
 
 Website coffeeshop berbasis PHP native dan MySQL untuk Woelandari Coffee Lab.
 
+## Demo
+
+Lihat rekaman demo penggunaan website:
+
+<video src="docs/woelandari-demo.mp4" controls width="720"></video>
+
+Jika video tidak tampil di GitHub, buka langsung file ini: [docs/woelandari-demo.mp4](docs/woelandari-demo.mp4).
+
 ## Fitur
 
 - Halaman publik: homepage, about, menu, gallery/event, lokasi, community, dan rating pelanggan.
