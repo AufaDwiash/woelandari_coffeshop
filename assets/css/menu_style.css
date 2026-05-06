@@ -13,7 +13,7 @@
 /* Menjaga layar tidak geser saat pindah menu */
 html { overflow-y: scroll; }
 
-body {
+#menu {
     position: relative;
     font-family: 'Courier Prime', monospace;
     background-color: var(--bg-color);

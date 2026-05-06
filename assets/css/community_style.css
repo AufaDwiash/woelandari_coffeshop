@@ -1,147 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap');
+
 :root {
     --bg-white: #FFFFFF;
-    --navy-blue: #0F172A; /* Warna Navy Gelap */
+    --navy-blue: #002B5B; /* Samakan dengan Home */
+    --accent-red: #EA4335; /* Samakan dengan Home */
+    --black: #000000;
     --grid-grey: rgba(0, 0, 0, 0.05);
     --grid-light: rgba(255, 255, 255, 0.05);
-    --text-dark: #2A1B18;
-    --text-white: #EFEBE0;
-    --accent: #D35400;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body { 
-    overflow-x: hidden; 
-    background-color: var(--bg-white);
-}
-
-.tuku-style-section {
+#community-section {
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
     background-color: var(--bg-white);
     background-image: 
         linear-gradient(var(--grid-grey) 1px, transparent 1px),
         linear-gradient(90deg, var(--grid-grey) 1px, transparent 1px);
     background-size: 30px 30px;
-    padding-top: 80px;
-    display: flex;
-    flex-direction: column;
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    overflow: hidden; 
+    transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.tuku-style-section:hover {
+/* Background hanya berubah jadi Navy jika ada .person-card yang di-hover */
+#community-section:has(.person-card:hover) {
     background-color: var(--navy-blue);
     background-image: 
         linear-gradient(var(--grid-light) 1px, transparent 1px),
         linear-gradient(90deg, var(--grid-light) 1px, transparent 1px);
 }
 
-.header-container {
+/* =========================================
+   HEADER (JUDUL KIRI & HINT TENGAH)
+========================================= */
+.header-overlay {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
     padding: 0 5%;
-    margin-bottom: 30px;
+    z-index: 10;
+    pointer-events: none;
 }
 
 .main-title {
     font-family: 'Montserrat', sans-serif;
     font-weight: 900;
-    font-size: 2.5rem;
-    line-height: 1.1;
-    color: var(--text-dark);
+    font-size: 3.5rem;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--black);
     transition: color 0.6s;
 }
 
 .scroll-hint {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.8rem;
-    color: var(--accent);
-    margin-top: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--accent-red);
     letter-spacing: 2px;
+    position: absolute;
+    top: 130px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-.tuku-style-section:hover .main-title { color: var(--text-white); }
+#community-section:has(.person-card:hover) .main-title { 
+    color: var(--bg-white); 
+}
 
+/* =========================================
+   AREA SCROLL FOTO (ANTI MENUMPUK)
+========================================= */
 .horizontal-scroll-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
     overflow-x: auto; 
-    padding: 0 5%;
-    scrollbar-width: none;
+    overflow-y: hidden;
+    scrollbar-width: none; /* Firefox */
+    z-index: 5;
 }
-
-.horizontal-scroll-wrapper::-webkit-scrollbar { display: none; } 
+.horizontal-scroll-wrapper::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
 .people-strip {
     display: flex;
-    gap: 40px;
-    width: max-content;
-    align-items: flex-end;
-    padding-bottom: 100px;
+    flex-wrap: nowrap; /* MEMAKSA ELEMEN TETAP DALAM 1 BARIS */
+    width: max-content; /* MEMAKSA WADAH MEMANJANG SESUAI ISI FOTO */
+    height: 100%;
+    align-items: flex-end; /* Semua kaki menapak di garis bawah layar */
+    padding-left: 5vw;
+    gap: -10px; /* Jarak rapat, bisa diubah jika kurang rapat/renggang */
 }
 
-/* --- KARTU ORANG --- */
-.person-card {
-    position: relative;
-    width: 350px;
+.scroll-spacer {
+    width: 15vw; /* Ruang kosong ekstra di kanan saat di-scroll mentok */
     flex-shrink: 0;
 }
 
-.person-img {
-    width: 100%;
-    height: auto;
-    display: block;
-    filter: grayscale(100%);
-    transition: all 0.5s ease;
-    z-index: 2;
+/* =========================================
+   KARTU & FOTO KARAKTER
+========================================= */
+.person-card {
+    flex: 0 0 auto; /* Kunci ukuran, tidak boleh mengecil/membesar */
+    height: 70vh; /* Tinggi seragam agar tidak berantakan */
     position: relative;
+    cursor: pointer;
 }
 
-.tuku-style-section:hover .person-img {
-    filter: grayscale(0%);
+.person-img {
+    height: 100%;
+    width: auto; /* Lebar menyesuaikan tinggi (aspect ratio terjaga) */
+    object-fit: contain;
+    filter: grayscale(100%);
+    transition: all 0.4s ease;
+    position: relative;
+    z-index: 2;
+    display: block;
 }
 
-/* Garis tepi putih (stroke) ala Tuku saat hover foto */
+/* EFEK HOVER: Warna nyala & Garis putih (TIDAK TERANGKAT) */
 .person-card:hover .person-img {
     filter: 
-        drop-shadow(5px 0px 0px #FFF) 
-        drop-shadow(-5px 0px 0px #FFF) 
-        drop-shadow(0px 5px 0px #FFF) 
-        drop-shadow(0px -5px 0px #FFF);
-    transform: translateY(-20px) scale(1.05);
+        grayscale(0%)
+        drop-shadow(4px 0px 0px #FFF) 
+        drop-shadow(-4px 0px 0px #FFF) 
+        drop-shadow(0px 4px 0px #FFF) 
+        drop-shadow(0px -4px 0px #FFF);
     z-index: 10;
 }
 
-/* --- INFO POPUP (Orang ini di bagian apa) --- */
+/* =========================================
+   KOTAK LABEL NAMA BRUTALIST
+========================================= */
 .person-info {
     position: absolute;
-    bottom: -60px;
-    left: 0;
-    width: 100%;
+    bottom: 50%; /* Muncul tepat di area dada/perut karakter */
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.4s ease;
-    text-align: center;
-    pointer-events: none; /* Agar tidak mengganggu kursor */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    z-index: 20;
+    width: max-content;
 }
 
-/* Munculkan info saat foto di-hover */
 .person-card:hover .person-info {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
 }
 
-.role-tag {
+/* Gaya Kotak Brutalist ala Home */
+.brutalist-badge {
+    background-color: var(--bg-white);
+    border: 2px solid var(--black);
+    padding: 10px 20px;
+    box-shadow: 6px 6px 0 var(--accent-red); /* Bayangan merah */
+    text-align: center;
+    position: relative;
+}
+
+/* Segitiga Penunjuk ke Bawah */
+.brutalist-badge::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 12px 12px 0;
+    border-style: solid;
+    border-color: var(--black) transparent transparent transparent;
+}
+
+.brutalist-badge .role {
+    display: block;
     font-family: 'Courier Prime', monospace;
-    background: var(--accent);
-    color: white;
-    padding: 4px 12px;
     font-size: 0.75rem;
-    font-weight: bold;
+    font-weight: 700;
+    color: var(--black);
+    margin-bottom: 4px;
+    letter-spacing: 1px;
 }
 
-.name-tag {
-    font-family: 'Special Elite', cursive;
-    font-size: 1.5rem;
-    color: #FFF;
-    margin-top: 10px;
-    text-shadow: 2px 2px 0px var(--navy-blue);
+.brutalist-badge .name {
+    display: block;
+    font-family: 'Montserrat', sans-serif; /* FONT LEBIH JELAS */
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--black);
+}
+
+/* Responsif Layar HP */
+@media (max-width: 768px) {
+    .main-title { font-size: 2.2rem; }
+    .scroll-hint { top: 110px; font-size: 0.7rem; width: 100%; text-align: center; }
+    .person-card { height: 60vh; }
 }

@@ -1,18 +1,5 @@
-<?php // about.php ?>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - Woelandari Coffee Lab</title>
-    <!-- Import Font yang dipakai di CSS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Montserrat:wght@700;900&family=Special+Elite&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/about_style.css?v=<?php echo time(); ?>">
-</head>
-<body>
+<?php // about.php - VERSI BERSIH TANPA TAG HTML/BODY ?>
 
-<!-- SECTION 1: NAVY -->
 <section class="section-navy">
     <div class="dossier-split">
         <div class="split-col text-col">
@@ -36,7 +23,6 @@
         <div class="split-col image-col">
             <div class="pinned-photo tilt-right anim-photo-right">
                 <div class="red-tape"></div>
-                <!-- Ganti src sesuai path foto asli -->
                 <img src="assets/images/gambar-mentahan/about1.jpg" alt="Lab Setup Woelandari">
                 <div class="photo-meta">
                     <span>REF: PHI_01</span>
@@ -47,7 +33,6 @@
     </div>
 </section>
 
-<!-- SECTION 2: CREAM -->
 <section class="section-cream">
     <div class="dossier-split" style="flex-direction: row-reverse;">
         <div class="split-col text-col">
@@ -82,7 +67,6 @@
     </div>
 </section>
 
-<!-- JS: Scroll Animation Trigger -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const observer = new IntersectionObserver((entries) => {
@@ -99,5 +83,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 </script>
-</body>
-</html>

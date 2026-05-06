@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Special+Elite&family=Caveat:wght@700&display=swap');
-
 :root {
     --navy: #002B5B;
     --red: #EA4335;
@@ -11,20 +9,22 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
+/* GANTI BODY MENJADI #home */
+#home {
     font-family: 'Montserrat', sans-serif;
     background-color: var(--cream);
     background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), 
                       linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
     background-size: 40px 40px;
-    overflow: hidden;
     height: 100vh;
-    width: 100vw;
+    width: 100%; /* Ganti 100vw jadi 100% agar tidak lari ke kiri */
+    overflow: hidden; /* Mengunci karakter di home saja */
+    position: relative;
 }
 
 .interactive-scene {
     position: relative;
-    width: 100vw;
+    width: 100%; /* Ganti 100vw jadi 100% */
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -45,7 +45,6 @@ body {
 .layer-bg { z-index: 1; }
 .layer-pagar { z-index: 10; }
 
-/* GRUP KARAKTER */
 .character-group {
     position: absolute;
     bottom: 0%; 
@@ -56,10 +55,9 @@ body {
     flex-direction: column;
     align-items: center;
     pointer-events: none;
-    will-change: transform; /* Optimasi hardware acceleration */
+    will-change: transform;
 }
 
-/* Aktif hanya saat mouse keluar layar */
 .character-group.smooth-reset {
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
@@ -70,7 +68,6 @@ body {
     object-fit: contain;
 }
 
-/* DIALOG BRUTALIST */
 .lab-note {
     background: var(--white);
     color: var(--black);
