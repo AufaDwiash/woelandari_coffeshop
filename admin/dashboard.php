@@ -1,355 +1,288 @@
 <?php
+ob_start();
 session_start();
+// Tetap menggunakan path asli Anda
 include "../config/koneksi.php";
 
-// CEK LOGIN
+// Proteksi halaman tetap sama
 if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit;
 }
 
-// Ambil data session
 $username = $_SESSION['username'];
-$role = $_SESSION['role'] ?? 'guest';
 
-// Set cookie (simpan username selama 1 jam)
-setcookie('last_user', $username, time() + 3600);
-$last_user = $_COOKIE['last_user'] ?? 'Tidak ada data';
-
-// Query Statistik
-$jml_menu = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM menu"))['total'] ?? 0;
+// Query statistik tetap sesuai database Anda
+$jml_menu      = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM menu"))['total'] ?? 0;
 $jml_penjualan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM penjualan"))['total'] ?? 0;
-$jml_event = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM events"))['total'] ?? 0;
-$jml_feedback = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM feedback"))['total'] ?? 0;
+$jml_event     = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM events"))['total'] ?? 0;
+$jml_feedback  = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM feedback"))['total'] ?? 0;
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - System Overview</title>
-    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap"
-        rel="stylesheet">
+    <title>dashboard-Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --red-ink: #9b2226;
-            --navy-ink: #001219;
-            --paper-bg: #e5e5e5;
+            --navy: #002B5B;
+            --red: #EA4335;
+            --white: #F8F9FA;
+            --grid-line: rgba(208, 225, 249, 0.4);
+            --bg-color: #6291d8;
             --sidebar-width: 260px;
+            --shadow-clean: 8px 8px 0 rgba(0, 43, 91, 0.15);
+            --border-thick: 2px solid var(--navy);
+            --gap-section: 35px;
         }
 
-        * {
-            box-sizing: border-box;
-            /* Kunci agar layout tidak berantakan */
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            /* Membuat Sidebar & Main bersandingan */
-            min-height: 100vh;
-            background-color: var(--paper-bg);
             font-family: 'Courier Prime', monospace;
-            color: var(--navy-ink);
+            background-color: var(--bg-color);
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--navy);
+            min-height: 100vh;
+            display: flex;
         }
 
-        /* --- SIDEBAR AREA --- */
+        /* --- SIDEBAR --- */
         .sidebar {
             width: var(--sidebar-width);
-            background: var(--navy-ink);
-            color: white;
+            background: var(--white);
+            border-right: 3px solid var(--navy);
+            height: 100vh;
+            position: fixed;
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
-            position: fixed;
-            /* Tetap di tempat saat scroll */
-            height: 100vh;
-            padding: 20px;
             z-index: 100;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.05);
         }
 
         .brand {
             font-family: 'Special Elite', cursive;
             font-size: 1.6rem;
-            color: var(--red-ink);
-            text-align: center;
+            border-bottom: 3px double var(--navy);
             padding-bottom: 20px;
-            border-bottom: 2px double #444;
             margin-bottom: 30px;
-        }
-
-        .nav-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+            color: var(--red);
+            text-align: center;
         }
 
         .nav-item {
             display: block;
-            padding: 15px;
-            color: #bdc3c7;
+            padding: 14px 18px;
+            color: var(--navy);
             text-decoration: none;
-            font-size: 0.9rem;
-            border-left: 4px solid transparent;
-            transition: all 0.3s ease;
-            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
         }
 
-        .nav-item:hover,
-        .nav-item.active {
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            border-left: 4px solid var(--red-ink);
+        .nav-item:hover, .nav-item.active {
+            background: var(--navy);
+            color: var(--white);
+            transform: translateX(5px);
+            box-shadow: 4px 4px 0 var(--red);
         }
 
-        /* --- MAIN CONTENT AREA --- */
-        .main-content {
-            flex: 1;
-            /* Mengambil sisa ruang kosong di kanan */
+        /* --- MAIN WRAPPER --- */
+        .main-wrapper {
             margin-left: var(--sidebar-width);
-            /* Agar tidak tertutup sidebar yang fixed */
+            padding: var(--gap-section);
+            width: calc(100% - var(--sidebar-width));
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap-section);
+        }
+
+        .paper {
+            background: var(--white);
+            border: var(--border-thick);
             padding: 40px;
+            position: relative;
+            box-shadow: var(--shadow-clean);
             width: 100%;
+            overflow: hidden;
         }
 
-        /* Header Styling */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 40px;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 20px;
-        }
+        .paper-style-1 { transform: rotate(-0.3deg); }
+        .paper-style-2 { transform: rotate(0.3deg); }
 
-        .header-title h1 {
-            font-family: 'Special Elite', cursive;
-            margin: 0;
-            font-size: 2.2rem;
-            letter-spacing: -1px;
-        }
-
-        .status-badge {
-            color: var(--red-ink);
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
-
-        /* Stats Grid (Simetri 4 Kolom) */
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .stat-card {
-            background: #fff;
-            border: 2px solid var(--navy-ink);
-            padding: 20px;
-            box-shadow: 6px 6px 0px var(--navy-ink);
-            position: relative;
-        }
-
-        .stat-label {
-            font-family: 'Special Elite', cursive;
-            font-size: 0.75rem;
-            color: var(--red-ink);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .stat-value {
-            font-size: 2.8rem;
-            font-weight: bold;
-            line-height: 1;
-        }
-
-        /* Activity Chart Box */
-        .activity-box {
-            background: #fff;
-            border: 2px solid var(--navy-ink);
-            padding: 30px;
-            position: relative;
-        }
-
-        .chart-container {
-            display: flex;
-            align-items: flex-end;
-            gap: 20px;
-            height: 200px;
-            margin-top: 30px;
-            padding: 10px;
-            border-left: 2px solid #ccc;
-            border-bottom: 2px solid #ccc;
-        }
-
-        .chart-bar {
-            flex: 1;
-            background: var(--navy-ink);
-            position: relative;
-            min-width: 30px;
-        }
-
-        .chart-bar:hover {
-            background: var(--red-ink);
-        }
-
-        .chart-bar::after {
-            content: attr(data-val);
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.7rem;
-        }
-
-        /* Tape Decoration (Khas menu_crud) */
         .tape {
-            position: absolute;
-            width: 80px;
-            height: 30px;
-            background: rgba(0, 0, 0, 0.1);
-            top: -15px;
-            left: 20px;
-            transform: rotate(-2deg);
-            border: 1px dashed rgba(0, 0, 0, 0.2);
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            width: 140px; height: 35px; 
+            background: rgba(234, 67, 53, 0.7);
+            border: 1px dashed rgba(255,255,255,0.4);
+            z-index: 2;
         }
 
         .sticky-note {
-            background: #fffa90;
-            padding: 15px;
-            transform: rotate(1deg);
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
-            display: inline-block;
-            margin-bottom: 20px;
+            position: absolute; top: 25px; right: 25px;
+            background: #fff9c4;
+            padding: 12px 18px;
+            width: 170px;
+            transform: rotate(2deg);
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.08);
+            font-family: 'Caveat', cursive;
+            font-size: 1.15rem;
+            border: 1px solid #f0e68c;
+            z-index: 5;
+        }
+
+        .spec-header {
+            display: flex; justify-content: space-between; font-size: 11px; font-weight: 900;
+            border-bottom: 2px solid var(--navy); padding-bottom: 10px; margin-bottom: 35px;
+            text-transform: uppercase;
+        }
+
+        .title-main {
             font-family: 'Special Elite', cursive;
-            font-size: 0.8rem;
-            border: 1px solid #ede76d;
+            font-size: 2.2rem; margin-bottom: 30px;
+            color: var(--navy);
+            border-left: 8px solid var(--red);
+            padding-left: 20px;
         }
 
-        .blink {
-            animation: blinker 1.5s linear infinite;
+        /* --- STAT GRID --- */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
         }
 
-        @keyframes blinker {
-            50% {
-                opacity: 0;
-            }
+        .stat-card {
+            background: rgba(0, 43, 91, 0.02);
+            border: 2px solid var(--navy);
+            padding: 25px 15px;
+            text-align: center;
+            transition: 0.3s;
         }
 
-        @media (max-width: 992px) {
-            .sidebar {
-                width: 80px;
-                padding: 10px;
-            }
+        .stat-card:hover {
+            background: white;
+            box-shadow: 6px 6px 0 var(--navy);
+            transform: translateY(-5px);
+        }
 
-            .brand {
-                font-size: 0.8rem;
-            }
+        .stat-label { font-size: 0.75rem; font-weight: 800; display: block; margin-bottom: 12px; opacity: 0.7; }
+        .stat-value { font-family: 'Special Elite', cursive; font-size: 3.5rem; color: var(--red); line-height: 1; }
 
-            .nav-item span {
-                display: none;
-            }
+        /* --- CHART --- */
+        .chart-frame {
+            margin-top: 20px;
+            border: 1px solid #e0e0e0;
+            background: linear-gradient(to bottom, #f9f9f9 1px, transparent 1px);
+            background-size: 100% 40px;
+            padding: 20px 20px 0 20px;
+        }
 
-            .main-content {
-                margin-left: 80px;
-            }
+        .chart-box {
+            height: 220px;
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            border-bottom: 3px solid var(--navy);
+            border-left: 3px solid var(--navy);
+            padding: 0 15px;
+        }
+
+        .bar-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
+        .bar-element { width: 100%; max-width: 60px; background: var(--navy); transition: 0.4s; }
+        .bar-element:hover { background: var(--red); }
+        .bar-tag { font-size: 11px; font-weight: bold; margin-top: 10px; padding-bottom: 10px; }
+
+        .blink { animation: pulse 1.5s infinite; color: var(--red); }
+        @keyframes pulse { 50% { opacity: 0.3; } }
+
+        @media (max-width: 1024px) {
+            .sidebar { width: 80px; }
+            .sidebar .brand, .nav-item span { display: none; }
+            .main-wrapper { margin-left: 80px; width: calc(100% - 80px); }
         }
     </style>
 </head>
-
 <body>
 
- HEAD
-    <aside class="sidebar">
-        <div class="brand">WOELANDARI</div>
-        <nav class="nav-list">
-            <a href="dashboard.php" class="nav-item active"> <span>Dashboard</span></a>
-            <a href="menu_crud.php" class="nav-item"><span>Menu</span></a>
-            <a href="gallery_crud.php" class="nav-item"> <span>Gallery</span></a>
-            <a href="#" class="nav-item"><span>Feedback</span></a>
-            <a href="user_manajemen.php" class="nav-item"><span>Kelola User</span></a>
-        </nav>
-
 <aside class="sidebar">
-    <div class="brand">WOELANDARI</div>
+    <div class="brand">WOELANDARI STAFF</div>
     <nav class="nav-list">
-        <a href="dashboard.php" class="nav-item active"> <span>Dashboard</span></a>
-        <a href="menu_crud.php" class="nav-item"><span>Menu</span></a>
-        <a href="gallery_crud.php" class="nav-item"> <span>Gallery</span></a>
-        <a href="feedback.php" class="nav-item"><span>Feedback</span></a>
-        <a href="user_manajemen.php" class="nav-item"><span>Kelolaa userr</span></a>
+        <a href="dashboard.php" class="nav-item active"><span>> DASHBOARD</span></a>
+        <a href="menu_crud.php" class="nav-item"><span>> KELOLA MENU</span></a>
+        <a href="gallery_crud.php" class="nav-item"><span>> KELOLA GALLERY & EVENT</span></a>
+        <a href="feedback.php" class="nav-item"><span>> KELOLA FEEDBACK & RATING</span></a>
+        <a href="user_manajemen.php" class="nav-item"><span>> KELOLA USER</span></a>
+        <div style="margin-top: auto;">
+            <a href="../logout.php" class="nav-item" style="color: var(--red);"><span>KELUAR</span></a>
+        </div>
     </nav>
-    
-    <div style="margin-top: auto; border-top: 1px dashed #555; padding-top: 10px;">
-        <a href="logout.php" class="nav-item" style="color: #ff6b6b;">>> <span>TERMINATE_SESSION</span></a>
-    </div>
 </aside>
- 5536518 (halo fajarshter)
 
-        <div style="margin-top: auto; border-top: 1px dashed #555; padding-top: 10px;">
-            <a href="logout.php" class="nav-item" style="color: #ff6b6b;">>> <span>TERMINATE_SESSION</span></a>
-        </div>
-    </aside>
-
-    <main class="main-content">
+<main class="main-wrapper">
+    <!-- SECTION 1 -->
+    <section class="paper paper-style-1">
+        <div class="tape"></div>
         <div class="sticky-note">
-            * SYSTEM_REPORT: OPTIMAL <br>
-            * ENCRYPTION: ACTIVE <br>
-            * DATE: <?php echo date('d/m/Y'); ?>
+            <p>USER: <?php echo $username; ?></p>
+            <p>STATUS: <span class="blink">ONLINE</span></p>
+        </div>
+        
+        <div class="spec-header">
+           
+            <span>DATE: <?php echo date('d/m/Y'); ?></span>
         </div>
 
-        <header class="page-header">
-            <div class="header-title">
-                <div class="status-badge">// <span class="blink">●</span> LIVE_MONITORING</div>
-                <h1>ADMIN DASHBOARD</h1>
-            </div>
-            <div style="text-align: right; font-size: 0.8rem;">
-                OPERATOR: <?php echo strtoupper($username); ?><br>
-                ROLE: <?php echo strtoupper($role); ?><br>
-                LAST LOGIN: <?php echo $last_user; ?><br>
-                TIME: <?php echo date('H:i:s'); ?>
-            </div>
-        </header>
-
+        <h1 class="title-main">Ringkasan Data</h1>
+        
         <div class="stat-grid">
             <div class="stat-card">
-                <span class="stat-label">TOTAL_MENU</span>
+                <span class="stat-label">Total Menu</span>
                 <div class="stat-value"><?php echo $jml_menu; ?></div>
             </div>
+        
             <div class="stat-card">
-                <span class="stat-label">SALES_OUTPUT</span>
-                <div class="stat-value"><?php echo $jml_penjualan; ?></div>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">EVENT_LOGS</span>
+                <span class="stat-label">Event</span>
                 <div class="stat-value"><?php echo $jml_event; ?></div>
             </div>
             <div class="stat-card">
-                <span class="stat-label">USER_FEEDBACK</span>
+                <span class="stat-label">Rating</span>
                 <div class="stat-value"><?php echo $jml_feedback; ?></div>
             </div>
         </div>
+    </section>
 
-        <div class="activity-box">
-            <div class="tape"></div>
-            <h3 style="font-family: 'Special Elite', cursive; margin: 0;">ACTIVITY_WEEKLY_DIAGRAM</h3>
-            <div class="chart-container">
-                <div class="chart-bar" style="height: 40%;" data-val="40"></div>
-                <div class="chart-bar" style="height: 70%;" data-val="70"></div>
-                <div class="chart-bar" style="height: 55%;" data-val="55"></div>
-                <div class="chart-bar" style="height: 90%; background: var(--red-ink);" data-val="PEAK"></div>
-                <div class="chart-bar" style="height: 65%;" data-val="65"></div>
-                <div class="chart-bar" style="height: 35%;" data-val="35"></div>
-                <div class="chart-bar" style="height: 50%;" data-val="50"></div>
+    <!-- SECTION 2 -->
+    <section class="paper paper-style-2">
+        <div class="spec-header">
+            <!-- <span>MODULE: TRAFFIC_LOG</span>
+            <span>REF: WLDRI-001</span> -->
+        </div>
+
+        <h2 class="title-main" style="font-size: 1.8rem;">ACTIVITY_GRAPH</h2>
+        
+        <div class="chart-frame">
+            <div class="chart-box">
+                <div class="bar-wrapper"><div class="bar-element" style="height: 40%;"></div><span class="bar-tag">MON</span></div>
+                <div class="bar-wrapper"><div class="bar-element" style="height: 70%;"></div><span class="bar-tag">TUE</span></div>
+                <div class="bar-wrapper"><div class="bar-element" style="height: 55%;"></div><span class="bar-tag">WED</span></div>
+                <div class="bar-wrapper"><div class="bar-element" style="height: 90%; background: var(--red);"></div><span class="bar-tag">THU</span></div>
+                <div class="bar-wrapper"><div class="bar-element" style="height: 65%;"></div><span class="bar-tag">FRI</span></div>
+                <div class="bar-wrapper"><div class="bar-element" style="height: 80%;"></div><span class="bar-tag">SAT</span></div>
+                <div class="bar-wrapper"><div class="bar-element" style="height: 45%;"></div><span class="bar-tag">SUN</span></div>
             </div>
         </div>
-    </main>
+    </section>
+</main>
 
 </body>
-
 </html>
+<?php ob_end_flush(); ?>

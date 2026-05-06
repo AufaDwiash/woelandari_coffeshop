@@ -10,12 +10,12 @@ $menu_json = json_encode($menu_data);
 ?>
 <!DOCTYPE html>
 <html lang="id">
-<head
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu - Woelandari Coffee Lab</title>
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/menu_style.css">
+    <link rel="stylesheet" href="assets/css/menu_style.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
@@ -25,7 +25,6 @@ $menu_json = json_encode($menu_data);
         <div class="tape-top"></div>
         
         <div class="menu-detail show" id="menu-detail">
-            
             <div class="spec-header">
                 <span class="spec-id" id="detail-id">// REF: SELECT_ITEM</span>
                 <span class="spec-status text-red" id="detail-status">SYSTEM_READY</span>
@@ -39,26 +38,10 @@ $menu_json = json_encode($menu_data);
             </div>
 
             <div class="spec-table">
-                <div class="spec-row">
-                    <span class="spec-label">Name</span>
-                    <span class="spec-value" id="spec-name">-</span>
-                    <div class="spec-line"></div>
-                </div>
-                <div class="spec-row">
-                    <span class="spec-label">Category</span>
-                    <span class="spec-value" id="spec-category">-</span>
-                    <div class="spec-line"></div>
-                </div>
-                <div class="spec-row">
-                    <span class="spec-label">Stock</span>
-                    <span class="spec-value" id="spec-stock">-</span>
-                    <div class="spec-line"></div>
-                </div>
-                <div class="spec-row">
-                    <span class="spec-label">Price</span>
-                    <span class="spec-value text-red bold" id="spec-price">-</span>
-                    <div class="spec-line"></div>
-                </div>
+                <div class="spec-row"><span class="spec-label">Name</span><span class="spec-value" id="spec-name">-</span><div class="spec-line"></div></div>
+                <div class="spec-row"><span class="spec-label">Category</span><span class="spec-value" id="spec-category">-</span><div class="spec-line"></div></div>
+                <div class="spec-row"><span class="spec-label">Stock</span><span class="spec-value" id="spec-stock">-</span><div class="spec-line"></div></div>
+                <div class="spec-row"><span class="spec-label">Price</span><span class="spec-value text-red bold" id="spec-price">-</span><div class="spec-line"></div></div>
             </div>
 
             <div class="notebook-note">
@@ -69,48 +52,46 @@ $menu_json = json_encode($menu_data);
     </div>
 
     <div class="list-section">
-        
+        <div class="search-wrapper">
+            <input type="text" id="menuSearch" class="search-input" placeholder="> CARI MENU...">
+        </div>
+
         <div class="filter-tabs">
-            <span class="filter-label">LIST MENU</span>
             <button class="filter-btn active" onclick="filterCategory('all', this)">ALL UNITS</button>
-            <button class="filter-btn" onclick="filterCategory('Coffee', this)">COFFEE</button>
-            <button class="filter-btn" onclick="filterCategory('Non-Coffee', this)">NON-COFFEE</button>
-            <button class="filter-btn" onclick="filterCategory('Snack', this)">SNACKS</button>
+            <button class="filter-btn" onclick="filterCategory('Kopi', this)">COFFEE</button>
+            <button class="filter-btn" onclick="filterCategory('Non-Kopi', this)">NON-COFFEE</button>
+            <button class="filter-btn" onclick="filterCategory('Snack', this)">SNACK</button>
             <button class="filter-btn" onclick="filterCategory('Main Course', this)">MAIN COURSE</button>
         </div>
 
-        <div class="menu-list-container">
-            <?php foreach($menu_data as $index => $item): 
-                $is_sold_out = ($item['stok'] <= 0);
+        <div class="menu-list-container" id="menuContainer">
+            <div id="empty-state" class="empty-state">// ERROR: Menu tidak ditemukan di inventaris.</div>
+
+            <?php foreach($menu_data as $item): 
+                $is_sold_out = (isset($item['stok']) && $item['stok'] <= 0) || (isset($item['status']) && $item['status'] == 'Habis');
             ?>
                 <div class="menu-item <?php echo $is_sold_out ? 'sold-out' : ''; ?>" 
-                     data-index="<?php echo $index; ?>"
-                     data-category="<?php echo htmlspecialchars($item['kategori']); ?>">
+                     data-id="<?php echo $item['id_menu']; ?>"
+                     data-category="<?php echo htmlspecialchars($item['kategori']); ?>"
+                     tabindex="0" role="button">
                     
+                    <?php if($is_sold_out): ?><div class="badge">EMPTY</div><?php endif; ?>
+
                     <div class="item-thumb">
-                        <img src="assets/images/menu/<?php echo htmlspecialchars($item['foto']); ?>" 
-                             onerror="this.src='assets/images/default.jpg'" 
-                             alt="<?php echo htmlspecialchars($item['nama_menu']); ?>">
+                        <img src="assets/images/menu/<?php echo htmlspecialchars($item['foto'] ?? 'default.jpg'); ?>" 
+                             onerror="this.src='assets/images/default.jpg'" loading="lazy">
                     </div>
 
                     <div class="item-info">
                         <h3><?php echo htmlspecialchars(strtoupper($item['nama_menu'])); ?></h3>
-                        <div class="item-meta">
-                            <span class="item-cat">[<?php echo htmlspecialchars($item['kategori']); ?>]</span>
-                            <?php if($is_sold_out): ?>
-                                <span class="item-stock text-red">QTY: 0</span>
-                            <?php else: ?>
-                                <span class="item-stock">QTY: <?php echo htmlspecialchars($item['stok']); ?></span>
-                            <?php endif; ?>
-                        </div>
                     </div>
                     
-                    <div class="price">IDR <?php echo number_format($item['harga']/1000, 0); ?>K</div>
+                    <div class="price">Rp <?php echo number_format($item['harga'], 0, ',', '.'); ?></div>
                 </div>
             <?php endforeach; ?>
         </div>
         
-        <a href="index.php" class="btn-back">← RETURN TO MAIN MENU</a>
+        <a href="index.php" class="btn-return">← RETURN TO MAIN MENU</a>
     </div>
 
 </div>
@@ -118,101 +99,133 @@ $menu_json = json_encode($menu_data);
 <script>
     const menuData = <?php echo $menu_json; ?>;
     const items = document.querySelectorAll('.menu-item');
-    const detail = document.getElementById('menu-detail');
+    const searchInput = document.getElementById('menuSearch');
+    const emptyState = document.getElementById('empty-state');
 
-    const detailId = document.getElementById('detail-id');
-    const detailStatus = document.getElementById('detail-status');
-    const detailTitle = document.getElementById('detail-title');
-    const detailImg = document.getElementById('detail-img');
-    const specName = document.getElementById('spec-name');
-    const specCat = document.getElementById('spec-category');
-    const specPrice = document.getElementById('spec-price');
-    const specStock = document.getElementById('spec-stock');
-    const detailDesc = document.getElementById('detail-desc');
-    const soldOutStamp = document.getElementById('sold-out-stamp');
+    function updateLeftDetail(id) {
+        const data = menuData.find(m => m.id_menu == id);
+        if(!data) return;
 
-    function updateLeftDetail(index) {
-        const data = menuData[index];
-        const isSoldOut = parseInt(data.stok) <= 0;
+        const isSoldOut = (data.stok <= 0) || (data.status === 'Habis');
+        const detail = document.getElementById('menu-detail');
+        const imgEl = document.getElementById('detail-img');
+        const stamp = document.getElementById('sold-out-stamp');
 
         detail.classList.remove('show');
 
         setTimeout(() => {
-            detailId.innerText = `// REF: M-00${data.id_menu}`;
-            detailTitle.innerText = data.nama_menu.toUpperCase();
+            document.getElementById('detail-id').innerText = `// REF: M-00${data.id_menu}`;
+            document.getElementById('detail-title').innerText = data.nama_menu.toUpperCase();
             
-            detailImg.src = `assets/images/menu/${data.foto}`;
-            detailImg.onerror = function() { this.src = 'assets/images/default.jpg'; };
-
-            specName.innerText = data.nama_menu;
-            specCat.innerText = data.kategori;
-            specPrice.innerText = `Rp ${parseInt(data.harga).toLocaleString('id-ID')}`;
-            specStock.innerText = isSoldOut ? '0 (Empty)' : `${data.stok} Units`;
+            const imgFile = data.foto ? data.foto : 'default.jpg';
+            const newSrc = `assets/images/menu/${imgFile}`;
             
-            detailDesc.innerText = data.deskripsi ? data.deskripsi : "Deskripsi tidak tersedia.";
+            imgEl.style.opacity = '0';
+            imgEl.classList.remove('animate-photo'); 
+            
+            const tempImg = new Image();
+            tempImg.onload = function() {
+                imgEl.src = newSrc;
+                imgEl.style.filter = isSoldOut ? 'grayscale(100%)' : 'none';
+                void imgEl.offsetWidth; 
+                imgEl.classList.add('animate-photo');
+            };
+            tempImg.onerror = function() {
+                imgEl.src = 'assets/images/default.jpg';
+                imgEl.style.filter = isSoldOut ? 'grayscale(100%)' : 'none';
+                void imgEl.offsetWidth;
+                imgEl.classList.add('animate-photo');
+            };
+            tempImg.src = newSrc;
 
-            // LOGIKA HITAM PUTIH (GRAYSCALE) UNTUK GAMBAR DETAIL UTAMA
+            document.getElementById('spec-name').innerText = data.nama_menu;
+            document.getElementById('spec-category').innerText = data.kategori;
+            document.getElementById('spec-price').innerText = new Intl.NumberFormat('id-ID', {
+                style: 'currency', currency: 'IDR', minimumFractionDigits: 0
+            }).format(data.harga);
+            
+            document.getElementById('spec-stock').innerText = isSoldOut ? '0 (Empty)' : (data.stok ? `${data.stok} Units` : 'Available');
+            document.getElementById('detail-desc').innerText = data.deskripsi ? data.deskripsi : "Deskripsi tidak tersedia.";
+
             if(isSoldOut) {
-                soldOutStamp.classList.remove('hidden');
-                setTimeout(() => { soldOutStamp.style.opacity = '1'; }, 50); 
-                detailStatus.innerText = 'DEPLETED';
-                detailStatus.style.color = 'var(--red)';
-                
-                detailImg.style.filter = 'grayscale(100%)';
-                detailImg.style.opacity = '0.8';
+                stamp.classList.remove('hidden');
+                document.getElementById('detail-status').innerText = 'DEPLETED';
+                document.getElementById('detail-status').style.color = 'var(--red)';
             } else {
-                soldOutStamp.classList.add('hidden');
-                soldOutStamp.style.opacity = '0';
-                detailStatus.innerText = 'AVAILABLE';
-                detailStatus.style.color = 'var(--navy)';
-                
-                detailImg.style.filter = 'none';
-                detailImg.style.opacity = '1';
+                stamp.classList.add('hidden');
+                document.getElementById('detail-status').innerText = 'AVAILABLE';
+                document.getElementById('detail-status').style.color = 'var(--navy)';
             }
 
             detail.classList.add('show');
-        }, 300); 
+        }, 200); 
     }
 
-    function filterCategory(category, btnElement) {
-        const buttons = document.querySelectorAll('.filter-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
-        btnElement.classList.add('active');
+    function applyFilters() {
+        const activeBtn = document.querySelector('.filter-btn.active');
+        const category = activeBtn ? activeBtn.innerText.toLowerCase() : 'all';
+        const searchTerm = searchInput.value.toLowerCase();
+        let visibleCount = 0;
 
         items.forEach(item => {
-            const itemCat = item.getAttribute('data-category');
+            const itemCat = item.getAttribute('data-category').toLowerCase();
+            const itemName = item.querySelector('h3').innerText.toLowerCase();
             
-            if (category === 'all' || itemCat === category) {
+            let matchCategory = false;
+            if (activeBtn.getAttribute('onclick').includes('all')) matchCategory = true;
+            // Pengecekan kategori berdasarkan nama data yang di-klik
+            else if (activeBtn.getAttribute('onclick').toLowerCase().includes(itemCat)) matchCategory = true;
+
+            const matchSearch = itemName.includes(searchTerm);
+
+            if (matchCategory && matchSearch) {
                 item.style.display = 'flex';
+                visibleCount++;
                 item.animate([
-                    { opacity: 0, transform: 'scale(0.95)' },
-                    { opacity: 1, transform: 'scale(1)' }
-                ], { duration: 300, fill: 'forwards', easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
+                    { opacity: 0, transform: 'translateY(10px)' },
+                    { opacity: 1, transform: 'translateY(0)' }
+                ], { duration: 300, fill: 'forwards' });
             } else {
                 item.style.display = 'none';
             }
         });
+
+        emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
     }
+
+    window.filterCategory = function(cat, btnElement) {
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        btnElement.classList.add('active');
+        applyFilters();
+    };
+
+    searchInput.addEventListener('input', function() {
+        const activeBtn = document.querySelector('.filter-btn.active');
+        if (this.value.trim() !== '' && activeBtn && !activeBtn.getAttribute('onclick').includes('all')) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.filter-btn[onclick*="all"]').classList.add('active');
+        }
+        applyFilters();
+    });
 
     items.forEach(item => {
         item.addEventListener('click', () => {
             items.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
-            const index = item.getAttribute('data-index');
-            updateLeftDetail(index);
+            updateLeftDetail(item.getAttribute('data-id'));
             
             if (window.innerWidth <= 992) {
-                document.querySelector('.detail-section').scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start' 
-                });
+                setTimeout(() => {
+                    document.querySelector('.detail-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
             }
         });
+        
+        item.addEventListener('keypress', function(e) { if (e.key === 'Enter') this.click(); });
     });
     
-    if(items.length > 0) {
-        items[0].click();
-    }
+    const firstAvailable = Array.from(items).find(i => !i.classList.contains('sold-out')) || items[0];
+    if(firstAvailable) firstAvailable.click();
 </script>
 
 </body>

@@ -14,7 +14,7 @@ if (isset($_GET['edit'])) {
     $edit_stok = $data_edit['stok']; $edit_deskripsi = $data_edit['deskripsi']; $edit_foto = $data_edit['foto'];
 }
 
-// ... (Logika simpan, update, hapus tetap sama seperti code Anda) ...
+// ... Logika simpan, update, hapus ...
 if (isset($_POST['simpan'])) {
     $nama_menu = mysqli_real_escape_string($conn, $_POST['nama_menu']);
     $kategori = mysqli_real_escape_string($conn, $_POST['kategori']);
@@ -69,231 +69,266 @@ if (isset($_GET['hapus'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Database Menu</title>
+    <title>menu-admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --red-ink: #9b2226;
-            --navy-ink: #001219;
-            --paper-bg: #e5e5e5;
+            --navy: #002B5B;
+            --red: #EA4335;
+            --white: #F8F9FA;
+            --grid-line: rgba(208, 225, 249, 0.4);
+            --bg-color: #6291d8;
             --sidebar-width: 260px;
+            --shadow-clean: 8px 8px 0 rgba(0, 43, 91, 0.15);
+            --border-thick: 2px solid var(--navy);
         }
 
-        * { box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--paper-bg);
             font-family: 'Courier Prime', monospace;
-            color: var(--navy-ink);
-            display: flex; /* Gabungkan sidebar dan main */
+            background-color: var(--bg-color);
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--navy);
+            display: flex;
         }
 
-        /* --- SIDEBAR STYLE (Sama Persis Dashboard) --- */
+        /* --- SIDEBAR --- */
         .sidebar {
             width: var(--sidebar-width);
-            background: var(--navy-ink);
-            color: white;
+            background: var(--white);
+            border-right: 3px solid var(--navy);
             height: 100vh;
             position: fixed;
-            left: 0;
-            top: 0;
-            padding: 20px;
-            z-index: 1000;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
         }
 
         .brand {
             font-family: 'Special Elite', cursive;
             font-size: 1.6rem;
-            color: var(--red-ink);
-            text-align: center;
+            border-bottom: 3px double var(--navy);
             padding-bottom: 20px;
-            border-bottom: 2px double #444;
             margin-bottom: 30px;
+            color: var(--red);
+            text-align: center;
         }
-
-        .nav-list { list-style: none; padding: 0; margin: 0; }
 
         .nav-item {
             display: block;
-            padding: 15px;
-            color: #bdc3c7;
+            padding: 14px 18px;
+            color: var(--navy);
             text-decoration: none;
-            font-size: 0.9rem;
-            border-left: 4px solid transparent;
-            transition: 0.3s;
-            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
         }
 
         .nav-item:hover, .nav-item.active {
-            background: rgba(255,255,255,0.05);
-            color: white;
-            border-left: 4px solid var(--red-ink);
+            background: var(--navy);
+            color: var(--white);
+            box-shadow: 4px 4px 0 var(--red);
         }
 
-        /* --- MAIN CONTENT ADJUSTMENT --- */
-        .main-content {
+        /* --- MAIN CONTENT --- */
+        .main-wrapper {
             margin-left: var(--sidebar-width);
-            width: calc(100% - var(--sidebar-width));
             padding: 40px;
-            min-height: 100vh;
+            width: calc(100% - var(--sidebar-width));
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
 
-        .page-header {
-            margin-bottom: 30px;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 15px;
-        }
-
-        .page-header h1 {
-            font-family: 'Special Elite', cursive;
-            margin: 0;
-            font-size: 2rem;
-        }
-
-        /* Form & Table Container Penyesuaian */
-        .form-container, .table-container {
-            background: white;
-            border: 2px solid var(--navy-ink);
-            padding: 25px;
-            margin-bottom: 30px;
+        .paper {
+            background: var(--white);
+            border: var(--border-thick);
+            padding: 40px;
             position: relative;
-            box-shadow: 8px 8px 0px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-clean);
         }
 
-        .tape-table {
-            position: absolute;
-            width: 80px; height: 30px;
-            background: rgba(0,0,0,0.05);
-            top: -15px; left: 20px;
-            transform: rotate(-2deg);
-            border: 1px dashed rgba(0,0,0,0.1);
+        .tape {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            width: 140px; height: 35px; 
+            background: rgba(234, 67, 53, 0.7);
+            border: 1px dashed rgba(255,255,255,0.4);
         }
 
-        h2 { font-family: 'Special Elite', cursive; margin-top: 0; }
+        .title-main {
+            font-family: 'Special Elite', cursive;
+            font-size: 2.2rem; margin-bottom: 25px;
+            border-left: 8px solid var(--red);
+            padding-left: 20px;
+        }
 
-        /* Tombol-tombol */
+        /* --- FORM STYLING --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--navy);
+            background: transparent;
+            font-family: 'Courier Prime', monospace;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        label {
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
         .btn-submit {
             font-family: 'Special Elite', cursive;
-            background: var(--red-ink);
+            background: var(--navy);
             color: white;
-            border: 2px solid var(--red-ink);
-            padding: 12px 20px;
+            border: none;
+            padding: 15px 30px;
             cursor: pointer;
-            transition: 0.2s;
+            margin-top: 20px;
+            transition: 0.3s;
         }
 
-        .btn-submit:hover { background: var(--navy-ink); border-color: var(--navy-ink); }
-
-        .btn-action {
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.8rem;
-            padding: 5px 10px;
-            border: 1px solid;
-            margin-right: 5px;
+        .btn-submit:hover {
+            background: var(--red);
+            transform: translate(-3px, -3px);
+            box-shadow: 5px 5px 0 var(--navy);
         }
-        .btn-edit { color: var(--navy-ink); border-color: var(--navy-ink); }
-        .btn-delete { color: var(--red-ink); border-color: var(--red-ink); }
 
-        /* Table Aesthetics */
+        /* --- TABLE STYLING --- */
         .aesthetic-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         .aesthetic-table th {
+            background: var(--navy);
+            color: white;
+            padding: 15px;
             text-align: left;
-            padding: 12px;
-            border-bottom: 2px solid var(--navy-ink);
-            font-family: 'Special Elite';
+            font-family: 'Special Elite', cursive;
+            font-size: 0.9rem;
         }
-        .aesthetic-table td { padding: 12px; border-bottom: 1px solid #eee; }
 
-        .img-preview { border: 2px solid var(--navy-ink); object-fit: cover; }
-        .img-3x4 { width: 60px; height: 80px; }
+        .aesthetic-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 43, 91, 0.1);
+            font-size: 0.9rem;
+        }
 
-        /* Modal / Crop container */
+        .img-3x4 {
+            width: 70px;
+            height: 90px;
+            object-fit: cover;
+            border: 2px solid var(--navy);
+        }
+
+        .btn-action {
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.75rem;
+            padding: 6px 10px;
+            border: 2px solid var(--navy);
+            margin-right: 5px;
+            display: inline-block;
+        }
+
+        .btn-edit { color: var(--navy); }
+        .btn-edit:hover { background: var(--navy); color: white; }
+        .btn-delete { color: var(--red); border-color: var(--red); }
+        .btn-delete:hover { background: var(--red); color: white; }
+
         .crop-container {
             display: none; width: 100%; max-width: 400px; 
-            margin: 15px 0; border: 1px solid #ccc;
+            margin: 15px 0; border: 2px solid var(--navy);
         }
+
+        .blink { animation: pulse 1.5s infinite; color: var(--red); }
+        @keyframes pulse { 50% { opacity: 0.3; } }
     </style>
 </head>
 <body>
 
 <aside class="sidebar">
-    <div class="brand">WOELANDARI</div>
+    <div class="brand">WOELANDARI STAFF</div>
     <nav class="nav-list">
-        <a href="dashboard.php" class="nav-item "> <span>Dashboard</span></a>
-        <a href="menu_crud.php" class="nav-item active"><span>Menu</span></a>
-        <a href="gallery_crud.php" class="nav-item"> <span>Gallery</span></a>
-        <a href="feedback.php" class="nav-item"><span>Feedback</span></a>
-        <a href="user_manajemen.php" class="nav-item"><span>Kelola User</span></a>
+  <a href="dashboard.php" class="nav-item"><span>> DASHBOARD</span></a>
+<a href="menu_crud.php" class="nav-item active"><span>> KELOLA MENU</span></a> <!-- AKTIF DI SINI -->
+<a href="gallery_crud.php" class="nav-item"><span>> KELOLA GALLERY & EVENT</span></a>
+        <a href="feedback.php" class="nav-item"><span>> KELOLA FEEDBACK & RATING</span></a>
+        <a href="user_manajemen.php" class="nav-item"><span>> KELOLA USER</span></a>
+        <div style="margin-top: auto;">
+            <a href="../logout.php" class="nav-item" style="color: var(--red);"><span>KELUAR</span></a>
+        </div>
     </nav>
-    <div style="margin-top: auto; border-top: 1px dashed #555; padding-top: 10px;">
-        <a href="logout.php" class="nav-item" style="color: #ff6b6b;">>> <span>TERMINATE</span></a>
-    </div>
 </aside>
 
-<main class="main-content">
-    <header class="page-header">
-        <h1>INVENTORY_MANAGEMENT</h1>
-        <div style="font-size: 0.8rem; color: var(--red-ink); font-weight: bold;">// MODULE: MENU_DATABASE_ACCESS</div>
+<main class="main-wrapper">
+    <header>
+        <h1 class="title-main">DATA PENYIMPANAN MENU</h1>
+        <p style="font-weight: bold; font-size: 0.8rem; margin-top: -15px; margin-left: 20px;">
+            DATA: <span class="blink">ARSIP MENU</span>
+        </p>
     </header>
 
-    <div style="margin-bottom: 25px;">
-        <?php if(!$edit_mode): ?>
-            <button id="btnToggleForm" class="btn-submit">+ TAMBAH MENU BARU</button>
-        <?php else: ?>
-            <h3 style="font-family: 'Special Elite', cursive; color: var(--red-ink);">* MODE_EDIT: ON_PROGRESS</h3>
-        <?php endif; ?>
-    </div>
+    <!-- FORM SECTION -->
+    <section class="paper" id="boxForm" style="<?php echo $edit_mode ? 'display: block;' : 'display: none;'; ?>">
+        <div class="tape"></div>
+        <h2 style="font-family: 'Special Elite'; margin-bottom: 20px;">
+            <?php echo $edit_mode ? "[ MODE: EDIT_ENTRY ]" : "Tambahkan Menu Baru"; ?>
+        </h2>
 
-    <div class="form-container" id="boxForm" style="<?php echo $edit_mode ? 'display: block;' : 'display: none;'; ?>">
-        <h2><?php echo $edit_mode ? "UPDATE_ENTRY" : "NEW_ENTRY"; ?></h2>
         <form id="formMenu" method="POST" enctype="multipart/form-data">
             <?php if($edit_mode): ?>
                 <input type="hidden" name="id_menu" value="<?php echo $edit_id; ?>">
                 <input type="hidden" name="foto_lama" value="<?php echo $edit_foto; ?>">
             <?php endif; ?>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="form-grid">
                 <div>
-                    <label style="display:block; font-weight:bold; margin-bottom:5px;">NAMA MENU:</label>
-                    <input type="text" name="nama_menu" required style="width:100%; padding:10px;" value="<?php echo $edit_nama; ?>">
+                    <label>Nama Menu</label>
+                    <input type="text" name="nama_menu" required value="<?php echo $edit_nama; ?>">
                 </div>
                 <div>
-                    <label style="display:block; font-weight:bold; margin-bottom:5px;">KATEGORI:</label>
-                    <select name="kategori" required style="width:100%; padding:10px;">
+                    <label>Kategori Menu</label>
+                    <select name="kategori" required>
                         <option value="Coffee" <?php echo ($edit_kategori == 'Coffee') ? 'selected' : ''; ?>>Coffee</option>
                         <option value="Non-Coffee" <?php echo ($edit_kategori == 'Non-Coffee') ? 'selected' : ''; ?>>Non-Coffee</option>
                         <option value="Snack" <?php echo ($edit_kategori == 'Snack') ? 'selected' : ''; ?>>Snack</option>
                         <option value="Main Course" <?php echo ($edit_kategori == 'Main Course') ? 'selected' : ''; ?>>Main Course</option>
                     </select>
                 </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top:15px;">
                 <div>
-                    <label style="display:block; font-weight:bold; margin-bottom:5px;">HARGA (Rp):</label>
-                    <input type="number" name="harga" required style="width:100%; padding:10px;" value="<?php echo $edit_harga; ?>">
+                    <label>HARGA (Rp)</label>
+                    <input type="number" name="harga" required value="<?php echo $edit_harga; ?>">
                 </div>
-                <div>
-                    <label style="display:block; font-weight:bold; margin-bottom:5px;">STOK:</label>
-                    <input type="number" name="stok" required style="width:100%; padding:10px;" value="<?php echo $edit_stok; ?>">
-                </div>
+                <!-- <div>
+                    <label>STOCK_LEVEL</label>
+                    <input type="number" name="stok" required value="<?php echo $edit_stok; ?>">
+                </div> -->
             </div>
 
-            <div style="margin-top:15px;">
-                <label style="display:block; font-weight:bold; margin-bottom:5px;">DESKRIPSI:</label>
-                <textarea name="deskripsi" rows="3" required style="width:100%; padding:10px;"><?php echo $edit_deskripsi; ?></textarea>
+            <div style="margin-top: 20px;">
+                <label>Deskripsi Menu</label>
+                <textarea name="deskripsi" rows="3" required><?php echo $edit_deskripsi; ?></textarea>
             </div>
 
-            <div style="margin-top:15px;">
-                <label style="display:block; font-weight:bold; margin-bottom:5px;">FOTO MENU (3:4):</label>
+            <div style="margin-top: 20px;">
+                <label>UPLOAD FOTO (3:4 Ratio Required)</label>
                 <input type="file" id="inputFoto" accept="image/*">
             </div>
 
@@ -302,30 +337,36 @@ if (isset($_GET['hapus'])) {
             </div>
             <input type="hidden" name="foto_cropped" id="foto_cropped">
 
-            <div style="margin-top:20px;">
+            <div style="margin-top: 30px;">
                 <button type="button" class="btn-submit" id="btnSimpan">
-                    <?php echo $edit_mode ? "COMMIT_CHANGES" : "SAVE_RECORD"; ?>
+                    <?php echo $edit_mode ? "EXECUTE_UPDATE" : "Tambahkan"; ?>
                 </button>
                 <button type="submit" name="<?php echo $edit_mode ? 'update' : 'simpan'; ?>" id="btnSubmitAsli" style="display:none;"></button>
                 <?php if($edit_mode): ?>
-                    <a href="menu_crud.php" style="margin-left:10px; color:var(--red-ink);">[CANCEL]</a>
+                    <a href="menu_crud.php" style="margin-left: 15px; color: var(--red); font-weight: bold; text-decoration: none;">[ CANCEL_PROCESS ]</a>
                 <?php endif; ?>
             </div>
         </form>
-    </div>
+    </section>
 
-    <div class="table-container">
-        <div class="tape-table"></div>
-        <h2>List Menu</h2>
+    <!-- TABLE SECTION -->
+    <section class="paper">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="font-family: 'Special Elite';">LIST MENU YG DITAMPILKAN</h2>
+            <?php if(!$edit_mode): ?>
+                <button id="btnToggleForm" class="btn-action" style="padding: 10px 20px; background: var(--navy); color: white;">TAMBAHKAN MENU</button>
+            <?php endif; ?>
+        </div>
+
         <table class="aesthetic-table">
             <thead>
                 <tr>
-                    <th>FOTO</th>
-                    <th>NAMA MENU</th>
-                    <th>KATEGORI</th>
-                    <th>HARGA</th>
-                    <th>STOK</th>
-                    <th>AKSI</th>
+                    <th>PREVIEW</th>
+                    <th>Nama Produk</th>
+                    <th>Kategori</th>
+                    <th>Harga</th>
+                    <th>STOCK</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -334,36 +375,36 @@ if (isset($_GET['hapus'])) {
                 while ($row = mysqli_fetch_assoc($query)) :
                 ?>
                 <tr>
-                    <td><img src="../assets/images/menu/<?php echo $row['foto']; ?>" class="img-preview img-3x4"></td>
-                    <td><strong><?php echo strtoupper($row['nama_menu']); ?></strong></td>
-                    <td><?php echo $row['kategori']; ?></td>
+                    <td><img src="../assets/images/menu/<?php echo $row['foto']; ?>" class="img-3x4"></td>
+                    <td><strong style="letter-spacing: 1px;"><?php echo strtoupper($row['nama_menu']); ?></strong></td>
+                    <td><span style="font-size: 0.75rem; background: #eee; padding: 3px 8px; border: 1px solid var(--navy);"><?php echo $row['kategori']; ?></span></td>
                     <td>Rp <?php echo number_format($row['harga'], 0, ',', '.'); ?></td>
                     <td><?php echo $row['stok']; ?></td>
                     <td>
                         <a href="?edit=<?php echo $row['id_menu']; ?>" class="btn-action btn-edit">EDIT</a>
-                        <a href="?hapus=<?php echo $row['id_menu']; ?>" class="btn-action btn-delete" onclick="return confirm('Hapus menu ini?');">DELETE</a>
+                        <a href="?hapus=<?php echo $row['id_menu']; ?>" class="btn-action btn-delete" onclick="return confirm('Hapus record ini?');">DELETE</a>
                     </td>
                 </tr>
                 <?php endwhile; ?>
             </tbody>
         </table>
-    </div>
+    </section>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 <script>
-    // Script Toggle Form
+    // Toggle Form
     const btnToggle = document.getElementById('btnToggleForm');
     const boxForm = document.getElementById('boxForm');
     if(btnToggle) {
         btnToggle.addEventListener('click', () => {
             const isHidden = boxForm.style.display === 'none';
             boxForm.style.display = isHidden ? 'block' : 'none';
-            btnToggle.innerHTML = isHidden ? '− BATAL / TUTUP' : '+ TAMBAH MENU BARU';
+            btnToggle.innerHTML = isHidden ? '- Tutup Form' : '+ ADD_NEW_RECORD';
         });
     }
 
-    // Script Cropper
+    // Cropper Logic
     let cropper;
     const inputFoto = document.getElementById('inputFoto');
     const imageToCrop = document.getElementById('image-to-crop');

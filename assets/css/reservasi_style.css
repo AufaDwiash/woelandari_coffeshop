@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&display=swap');
+
+:root {
+    --navy: #002B5B;
+    --red: #EA4335;
+    --white: #FFFFFF;
+    --grid-line: #D0E1F9;
+    --bg-color: #6291d8;
+    --dark: #121212;
+    --wa-green: #25D366;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Courier Prime', monospace;
+    background-color: var(--bg-color);
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 30px 30px;
+    color: var(--navy);
+    min-height: 100vh;
+    padding: 20px;
+    display: flex; flex-direction: column; align-items: center;
+}
+
+body::after {
+    content: ""; position: fixed; inset: 0;
+    background: radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.25), transparent 60%);
+    pointer-events: none; z-index: 1;
+}
+
+.text-red { color: var(--red); }
+.bold { font-weight: bold; }
+
+.blueprint-container {
+    display: grid;
+    grid-template-columns: 1fr 450px;
+    gap: 25px;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 40px;
+    opacity: 0; 
+    animation: masuk 0.6s ease-out forwards;
+    align-items: start; 
+    position: relative;
+    z-index: 10;
+}
+
+@keyframes masuk { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- SEKSI KIRI: INFO --- */
+.info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.hero-box {
+    background: var(--navy);
+    color: var(--white);
+    padding: 30px;
+    border: 3px solid var(--navy);
+    box-shadow: 8px 8px 0 var(--red);
+}
+
+.spec-title {
+    font-family: 'Special Elite', cursive;
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+    line-height: 1.1;
+    color: var(--white);
+}
+
+.subtitle { font-size: 1.1rem; opacity: 0.9; }
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.info-card {
+    background: var(--white);
+    border: 3px solid var(--navy);
+    padding: 20px;
+    box-shadow: 6px 6px 0 rgba(0, 43, 91, 0.15);
+}
+
+.info-card h3 {
+    font-family: 'Special Elite';
+    border-bottom: 2px dashed var(--navy);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.spec-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.spec-list li { display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(0,43,91,0.2); padding-bottom: 5px; }
+.spec-label { font-weight: bold; opacity: 0.8; }
+
+/* --- SEKSI AREA PICKER (CLEAN WHITE) --- */
+.area-options { display: flex; flex-direction: column; gap: 12px; }
+
+.area-item.selectable {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa; /* Warna dasar sedikit abu-abu agar terlihat beda dengan card */
+    border: 2px solid var(--navy);
+    cursor: pointer;
+    position: relative;
+    transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Hover Effect */
+.area-item.selectable:hover {
+    background: var(--white);
+    transform: translateX(5px);
+}
+
+/* Status Ketika Kartu Dipilih */
+.area-item.selectable.active {
+    background: var(--white);
+    border: 2px solid var(--red);
+    box-shadow: -6px 0 0 var(--red);
+    transform: translateX(10px);
+}
+
+.area-item.selectable.active h4 { color: var(--red); }
+
+.area-desc h4 { font-family: 'Special Elite'; font-size: 1.2rem; margin-bottom: 3px; color: var(--navy); }
+.area-desc p { font-size: 0.9rem; opacity: 0.7; color: var(--navy); }
+
+/* Status Terpilih (Label) */
+.area-item.active::after {
+    content: "✓ SELECTED";
+    position: absolute;
+    bottom: 8px;
+    right: 15px;
+    font-family: 'Special Elite';
+    font-size: 0.65rem;
+    color: var(--red);
+    font-weight: bold;
+}
+
+/* --- SEKSI KANAN: FORM --- */
+.form-section {
+    background: var(--white);
+    border: 3px solid var(--navy);
+    padding: 30px 25px;
+    position: sticky; 
+    top: 20px; 
+    box-shadow: 10px 10px 0 rgba(0, 43, 91, 0.15);
+}
+
+.tape-top {
+    position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+    width: 120px; height: 35px; background: rgba(234, 67, 53, 0.9);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15); z-index: 5;
+}
+
+.spec-header { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: bold; border-bottom: 2px dashed var(--navy); padding-bottom: 10px; margin-bottom: 20px; }
+.form-title { font-family: 'Special Elite', cursive; font-size: 2rem; margin-bottom: 25px; line-height: 1.1; text-align: center; }
+
+.brutalist-form { display: flex; flex-direction: column; gap: 15px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group label { font-weight: bold; font-size: 0.9rem; opacity: 0.9; }
+
+.brutalist-form input, 
+.brutalist-form select, 
+.brutalist-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--navy);
+    background: #f8f9fa;
+    font-family: 'Courier Prime', monospace;
+    font-weight: bold;
+    outline: none;
+    color: var(--navy);
+    transition: 0.2s;
+}
+
+.brutalist-form input:focus, 
+.brutalist-form select:focus, 
+.brutalist-form textarea:focus {
+    border-color: var(--red);
+    box-shadow: 4px 4px 0 var(--navy);
+    background: var(--white);
+    transform: translate(-2px, -2px);
+}
+
+.btn-wa {
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 10px; padding: 15px; background: var(--wa-green);
+    color: var(--white); border: 3px solid var(--navy);
+    font-family: 'Special Elite', cursive; font-size: 1.2rem;
+    font-weight: bold; cursor: pointer; box-shadow: 6px 6px 0 var(--navy);
+    transition: 0.3s;
+}
+
+.btn-wa:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--navy); }
+
+.btn-return {
+    display: inline-block; padding: 12px 25px; background: var(--navy);
+    color: var(--white); text-decoration: none; font-family: 'Special Elite', cursive;
+    font-weight: bold; font-size: 1rem; border: 2px solid var(--navy);
+    box-shadow: 4px 4px 0 var(--red); transition: 0.3s;
+}
+
+.rules-box {
+    background: #fcfcf5; border: 2px solid var(--navy);
+    padding: 20px; box-shadow: 6px 6px 0 rgba(0,0,0,0.05);
+}
+.handwritten-text { font-family: 'Caveat', cursive; font-size: 1.4rem; line-height: 1.2; transform: rotate(-1deg); color: var(--red); }
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+    .blueprint-container { grid-template-columns: 1fr; align-items: stretch; }
+    .form-section { position: relative; top: 0; }
+    .info-grid { grid-template-columns: 1fr; }
+}

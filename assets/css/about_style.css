@@ -1,18 +1,14 @@
-/* =========================================
-   WOELANDARI: DUAL THEME BLUEPRINT
-========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Montserrat:wght@700;900&family=Special+Elite&display=swap');
+
 :root {
     --ink-navy: #0A1D37;
-    /* Warna Biru Navy Atas */
     --paper-cream: #FDF6E3;
-    /* Warna Cream Bawah */
     --accent-red: #D63D3D;
-    /* Aksen Selotip Merah */
     --grid-dark: rgba(10, 29, 55, 0.08);
     --grid-light: rgba(255, 255, 255, 0.05);
 }
 
-* {
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -21,6 +17,7 @@
 body {
     font-family: 'Courier Prime', monospace;
     overflow-x: hidden;
+    background-color: var(--paper-cream);
 }
 
 /* =========================================

@@ -33,10 +33,12 @@ $today = date('Y-m-d');
         
         if(mysqli_num_rows($query_gal) > 0):
             while($g = mysqli_fetch_assoc($query_gal)):
+                // Render gambar BLOB ke Base64 (jika kosong, gunakan default)
+                $img_src = !empty($g['file_foto']) ? 'data:image/jpeg;base64,' . base64_encode($g['file_foto']) : 'assets/images/default.jpg';
         ?>
             <div class="archive-card">
                 <div class="card-img-wrapper">
-                    <img src="assets/images/gallery/<?php echo $g['file_foto']; ?>" alt="Collection" onerror="this.src='assets/images/default.jpg'">
+                    <img src="<?php echo $img_src; ?>" alt="Collection" onerror="this.src='assets/images/default.jpg'">
                 </div>
                 <div class="card-info">
                     <div class="card-meta">
@@ -70,11 +72,14 @@ $today = date('Y-m-d');
                     $status_class = "status-mendatang";
                     $status_text = "AKAN DATANG";
                 }
+
+                // Render gambar BLOB ke Base64 (jika kosong, gunakan default)
+                $img_ev_src = !empty($ev['foto_cover']) ? 'data:image/jpeg;base64,' . base64_encode($ev['foto_cover']) : 'assets/images/default.jpg';
         ?>
             <div class="archive-card">
                 <div class="card-img-wrapper">
                     <span class="event-status <?php echo $status_class; ?>"><?php echo $status_text; ?></span>
-                    <img src="assets/images/events/<?php echo $ev['foto_cover']; ?>" alt="Event" onerror="this.src='assets/images/default.jpg'">
+                    <img src="<?php echo $img_ev_src; ?>" alt="Event" onerror="this.src='assets/images/default.jpg'">
                 </div>
                 <div class="card-info">
                     <div class="card-meta">
