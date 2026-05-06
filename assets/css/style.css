@@ -1,0 +1,14 @@
+ html { scroll-behavior: smooth; }
+
+    /* Hanya targetkan pembungkus halaman utama */
+    .main-page {
+        border-bottom: 4px solid #000000; /* Garis hitam tegas */
+        position: relative;
+        display: block;
+        width: 100%;
+    }
+
+    /* Hilangkan garis di section paling bawah (Menu) */
+    .main-page:last-of-type {
+        border-bottom: none;
+    }

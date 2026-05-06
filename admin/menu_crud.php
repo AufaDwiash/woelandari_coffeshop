@@ -1,44 +1,57 @@
 <?php
 include "../config/koneksi.php";
 
-// --- LOGIKA PHP (Tetap Sama Persis) ---
+// --- LOGIKA PHP ---
 $edit_mode = false;
 $edit_id = ""; $edit_nama = ""; $edit_kategori = ""; $edit_harga = ""; $edit_stok = ""; $edit_deskripsi = ""; $edit_foto = "";
+$edit_status = "Tersedia"; // Variabel baru untuk status
 
 if (isset($_GET['edit'])) {
     $edit_mode = true;
     $edit_id = $_GET['edit'];
     $query_edit = mysqli_query($conn, "SELECT * FROM menu WHERE id_menu='$edit_id'");
     $data_edit = mysqli_fetch_assoc($query_edit);
-    $edit_nama = $data_edit['nama_menu']; $edit_kategori = $data_edit['kategori']; $edit_harga = $data_edit['harga'];
-    $edit_stok = $data_edit['stok']; $edit_deskripsi = $data_edit['deskripsi']; $edit_foto = $data_edit['foto'];
+    $edit_nama = $data_edit['nama_menu']; 
+    $edit_kategori = $data_edit['kategori']; 
+    $edit_harga = $data_edit['harga'];
+    $edit_stok = $data_edit['stok']; 
+    $edit_deskripsi = $data_edit['deskripsi']; 
+    $edit_foto = $data_edit['foto'];
+    $edit_status = $data_edit['status']; // Ambil status dari DB
 }
 
-// ... Logika simpan, update, hapus ...
 if (isset($_POST['simpan'])) {
     $nama_menu = mysqli_real_escape_string($conn, $_POST['nama_menu']);
     $kategori = mysqli_real_escape_string($conn, $_POST['kategori']);
-    $harga = $_POST['harga']; $stok = $_POST['stok'];
+    $harga = $_POST['harga']; 
+    $stok = $_POST['stok'];
+    $status = $_POST['status']; // Tangkap status
     $deskripsi = mysqli_real_escape_string($conn, $_POST['deskripsi']);
     $foto_nama = "default.jpg"; 
+    
     if (!empty($_POST['foto_cropped'])) {
         $img_parts = explode(";base64,", $_POST['foto_cropped']);
         $img_base64 = base64_decode($img_parts[1]);
         $foto_nama = 'menu_' . uniqid() . '.jpg';
         file_put_contents('../assets/images/menu/' . $foto_nama, $img_base64);
     }
-    $query = "INSERT INTO menu (nama_menu, kategori, harga, stok, deskripsi, foto) VALUES ('$nama_menu', '$kategori', '$harga', '$stok', '$deskripsi', '$foto_nama')";
+    // Tambahkan status ke query INSERT
+    $query = "INSERT INTO menu (nama_menu, kategori, harga, stok, status, deskripsi, foto) VALUES ('$nama_menu', '$kategori', '$harga', '$stok', '$status', '$deskripsi', '$foto_nama')";
     mysqli_query($conn, $query);
     echo "<script>alert('Menu baru berhasil ditambahkan!'); window.location='menu_crud.php';</script>";
 }
+
 if (isset($_POST['update'])) {
     $id_menu = $_POST['id_menu'];
     $nama_menu = mysqli_real_escape_string($conn, $_POST['nama_menu']);
     $kategori = mysqli_real_escape_string($conn, $_POST['kategori']);
-    $harga = $_POST['harga']; $stok = $_POST['stok'];
+    $harga = $_POST['harga']; 
+    $stok = $_POST['stok'];
+    $status = $_POST['status']; // Tangkap status
     $deskripsi = mysqli_real_escape_string($conn, $_POST['deskripsi']);
     $foto_lama = $_POST['foto_lama'];
     $foto_nama = $foto_lama; 
+
     if (!empty($_POST['foto_cropped'])) {
         $img_parts = explode(";base64,", $_POST['foto_cropped']);
         $img_base64 = base64_decode($img_parts[1]);
@@ -48,10 +61,12 @@ if (isset($_POST['update'])) {
             unlink('../assets/images/menu/' . $foto_lama);
         }
     }
-    $query = "UPDATE menu SET nama_menu='$nama_menu', kategori='$kategori', harga='$harga', stok='$stok', deskripsi='$deskripsi', foto='$foto_nama' WHERE id_menu='$id_menu'";
+    // Tambahkan status ke query UPDATE
+    $query = "UPDATE menu SET nama_menu='$nama_menu', kategori='$kategori', harga='$harga', stok='$stok', status='$status', deskripsi='$deskripsi', foto='$foto_nama' WHERE id_menu='$id_menu'";
     mysqli_query($conn, $query);
     echo "<script>alert('Data menu berhasil diperbarui!'); window.location='menu_crud.php';</script>";
 }
+
 if (isset($_GET['hapus'])) {
     $id_hapus = $_GET['hapus']; 
     $query_foto = mysqli_query($conn, "SELECT foto FROM menu WHERE id_menu='$id_hapus'");
@@ -74,191 +89,46 @@ if (isset($_GET['hapus'])) {
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --navy: #002B5B;
-            --red: #EA4335;
-            --white: #F8F9FA;
-            --grid-line: rgba(208, 225, 249, 0.4);
-            --bg-color: #6291d8;
-            --sidebar-width: 260px;
-            --shadow-clean: 8px 8px 0 rgba(0, 43, 91, 0.15);
+            --navy: #002B5B; --red: #EA4335; --white: #F8F9FA;
+            --grid-line: rgba(208, 225, 249, 0.4); --bg-color: #6291d8;
+            --sidebar-width: 260px; --shadow-clean: 8px 8px 0 rgba(0, 43, 91, 0.15);
             --border-thick: 2px solid var(--navy);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            font-family: 'Courier Prime', monospace;
-            background-color: var(--bg-color);
-            background-image:
-                linear-gradient(var(--grid-line) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-            background-size: 30px 30px;
-            color: var(--navy);
-            display: flex;
+            font-family: 'Courier Prime', monospace; background-color: var(--bg-color);
+            background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 30px 30px; color: var(--navy); display: flex;
         }
-
-        /* --- SIDEBAR --- */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--white);
-            border-right: 3px solid var(--navy);
-            height: 100vh;
-            position: fixed;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            z-index: 100;
-        }
-
-        .brand {
-            font-family: 'Special Elite', cursive;
-            font-size: 1.6rem;
-            border-bottom: 3px double var(--navy);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-            color: var(--red);
-            text-align: center;
-        }
-
-        .nav-item {
-            display: block;
-            padding: 14px 18px;
-            color: var(--navy);
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: var(--navy);
-            color: var(--white);
-            box-shadow: 4px 4px 0 var(--red);
-        }
-
-        /* --- MAIN CONTENT --- */
-        .main-wrapper {
-            margin-left: var(--sidebar-width);
-            padding: 40px;
-            width: calc(100% - var(--sidebar-width));
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .paper {
-            background: var(--white);
-            border: var(--border-thick);
-            padding: 40px;
-            position: relative;
-            box-shadow: var(--shadow-clean);
-        }
-
-        .tape {
-            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-            width: 140px; height: 35px; 
-            background: rgba(234, 67, 53, 0.7);
-            border: 1px dashed rgba(255,255,255,0.4);
-        }
-
-        .title-main {
-            font-family: 'Special Elite', cursive;
-            font-size: 2.2rem; margin-bottom: 25px;
-            border-left: 8px solid var(--red);
-            padding-left: 20px;
-        }
-
-        /* --- FORM STYLING --- */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--navy);
-            background: transparent;
-            font-family: 'Courier Prime', monospace;
-            font-weight: bold;
-            margin-top: 5px;
-        }
-
-        label {
-            font-size: 0.8rem;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .btn-submit {
-            font-family: 'Special Elite', cursive;
-            background: var(--navy);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: 0.3s;
-        }
-
-        .btn-submit:hover {
-            background: var(--red);
-            transform: translate(-3px, -3px);
-            box-shadow: 5px 5px 0 var(--navy);
-        }
-
-        /* --- TABLE STYLING --- */
-        .aesthetic-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .aesthetic-table th {
-            background: var(--navy);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-family: 'Special Elite', cursive;
-            font-size: 0.9rem;
-        }
-
-        .aesthetic-table td {
-            padding: 15px;
-            border-bottom: 1px solid rgba(0, 43, 91, 0.1);
-            font-size: 0.9rem;
-        }
-
-        .img-3x4 {
-            width: 70px;
-            height: 90px;
-            object-fit: cover;
-            border: 2px solid var(--navy);
-        }
-
-        .btn-action {
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.75rem;
-            padding: 6px 10px;
-            border: 2px solid var(--navy);
-            margin-right: 5px;
-            display: inline-block;
-        }
-
+        .sidebar { width: var(--sidebar-width); background: var(--white); border-right: 3px solid var(--navy); height: 100vh; position: fixed; padding: 40px 20px; display: flex; flex-direction: column; z-index: 100; }
+        .brand { font-family: 'Special Elite', cursive; font-size: 1.6rem; border-bottom: 3px double var(--navy); padding-bottom: 20px; margin-bottom: 30px; color: var(--red); text-align: center; }
+        .nav-item { display: block; padding: 14px 18px; color: var(--navy); text-decoration: none; font-weight: bold; font-size: 0.85rem; margin-bottom: 8px; }
+        .nav-item:hover, .nav-item.active { background: var(--navy); color: var(--white); box-shadow: 4px 4px 0 var(--red); }
+        .main-wrapper { margin-left: var(--sidebar-width); padding: 40px; width: calc(100% - var(--sidebar-width)); display: flex; flex-direction: column; gap: 30px; }
+        .paper { background: var(--white); border: var(--border-thick); padding: 40px; position: relative; box-shadow: var(--shadow-clean); }
+        .tape { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); width: 140px; height: 35px; background: rgba(234, 67, 53, 0.7); border: 1px dashed rgba(255,255,255,0.4); }
+        .title-main { font-family: 'Special Elite', cursive; font-size: 2.2rem; margin-bottom: 25px; border-left: 8px solid var(--red); padding-left: 20px; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 2px solid var(--navy); background: transparent; font-family: 'Courier Prime', monospace; font-weight: bold; margin-top: 5px; }
+        label { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }
+        .btn-submit { font-family: 'Special Elite', cursive; background: var(--navy); color: white; border: none; padding: 15px 30px; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .btn-submit:hover { background: var(--red); transform: translate(-3px, -3px); box-shadow: 5px 5px 0 var(--navy); }
+        .aesthetic-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .aesthetic-table th { background: var(--navy); color: white; padding: 15px; text-align: left; font-family: 'Special Elite', cursive; font-size: 0.9rem; }
+        .aesthetic-table td { padding: 15px; border-bottom: 1px solid rgba(0, 43, 91, 0.1); font-size: 0.9rem; }
+        .img-3x4 { width: 70px; height: 90px; object-fit: cover; border: 2px solid var(--navy); }
+        .btn-action { text-decoration: none; font-weight: bold; font-size: 0.75rem; padding: 6px 10px; border: 2px solid var(--navy); margin-right: 5px; display: inline-block; }
         .btn-edit { color: var(--navy); }
         .btn-edit:hover { background: var(--navy); color: white; }
         .btn-delete { color: var(--red); border-color: var(--red); }
         .btn-delete:hover { background: var(--red); color: white; }
-
-        .crop-container {
-            display: none; width: 100%; max-width: 400px; 
-            margin: 15px 0; border: 2px solid var(--navy);
-        }
-
+        .crop-container { display: none; width: 100%; max-width: 400px; margin: 15px 0; border: 2px solid var(--navy); }
         .blink { animation: pulse 1.5s infinite; color: var(--red); }
         @keyframes pulse { 50% { opacity: 0.3; } }
+        /* Badge Status */
+        .badge { font-size: 0.7rem; padding: 4px 8px; border: 1px solid var(--navy); font-weight: bold; }
+        .badge-tersedia { background: #d4edda; color: #155724; }
+        .badge-habis { background: #f8d7da; color: #721c24; border-color: var(--red); }
     </style>
 </head>
 <body>
@@ -266,9 +136,9 @@ if (isset($_GET['hapus'])) {
 <aside class="sidebar">
     <div class="brand">WOELANDARI STAFF</div>
     <nav class="nav-list">
-  <a href="dashboard.php" class="nav-item"><span>> DASHBOARD</span></a>
-<a href="menu_crud.php" class="nav-item active"><span>> KELOLA MENU</span></a> <!-- AKTIF DI SINI -->
-<a href="gallery_crud.php" class="nav-item"><span>> KELOLA GALLERY & EVENT</span></a>
+        <a href="dashboard.php" class="nav-item"><span>> DASHBOARD</span></a>
+        <a href="menu_crud.php" class="nav-item active"><span>> KELOLA MENU</span></a>
+        <a href="gallery_crud.php" class="nav-item"><span>> KELOLA GALLERY & EVENT</span></a>
         <a href="feedback.php" class="nav-item"><span>> KELOLA FEEDBACK & RATING</span></a>
         <a href="user_manajemen.php" class="nav-item"><span>> KELOLA USER</span></a>
         <div style="margin-top: auto;">
@@ -285,7 +155,6 @@ if (isset($_GET['hapus'])) {
         </p>
     </header>
 
-    <!-- FORM SECTION -->
     <section class="paper" id="boxForm" style="<?php echo $edit_mode ? 'display: block;' : 'display: none;'; ?>">
         <div class="tape"></div>
         <h2 style="font-family: 'Special Elite'; margin-bottom: 20px;">
@@ -316,10 +185,13 @@ if (isset($_GET['hapus'])) {
                     <label>HARGA (Rp)</label>
                     <input type="number" name="harga" required value="<?php echo $edit_harga; ?>">
                 </div>
-                <!-- <div>
-                    <label>STOCK_LEVEL</label>
-                    <input type="number" name="stok" required value="<?php echo $edit_stok; ?>">
-                </div> -->
+                <div>
+                    <label>STATUS KETERSEDIAAN</label>
+                    <select name="status" required>
+                        <option value="Tersedia" <?php echo ($edit_status == 'Tersedia') ? 'selected' : ''; ?>>Tersedia</option>
+                        <option value="Tidak Tersedia" <?php echo ($edit_status == 'Tidak Tersedia') ? 'selected' : ''; ?>>Tidak Tersedia</option>
+                    </select>
+                    <input type="hidden" name="stok" value="0"> </div>
             </div>
 
             <div style="margin-top: 20px;">
@@ -349,7 +221,6 @@ if (isset($_GET['hapus'])) {
         </form>
     </section>
 
-    <!-- TABLE SECTION -->
     <section class="paper">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h2 style="font-family: 'Special Elite';">LIST MENU YG DITAMPILKAN</h2>
@@ -365,7 +236,7 @@ if (isset($_GET['hapus'])) {
                     <th>Nama Produk</th>
                     <th>Kategori</th>
                     <th>Harga</th>
-                    <th>STOCK</th>
+                    <th>STATUS</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -379,7 +250,11 @@ if (isset($_GET['hapus'])) {
                     <td><strong style="letter-spacing: 1px;"><?php echo strtoupper($row['nama_menu']); ?></strong></td>
                     <td><span style="font-size: 0.75rem; background: #eee; padding: 3px 8px; border: 1px solid var(--navy);"><?php echo $row['kategori']; ?></span></td>
                     <td>Rp <?php echo number_format($row['harga'], 0, ',', '.'); ?></td>
-                    <td><?php echo $row['stok']; ?></td>
+                    <td>
+                        <span class="badge <?php echo ($row['status'] == 'Tersedia') ? 'badge-tersedia' : 'badge-habis'; ?>">
+                            <?php echo strtoupper($row['status']); ?>
+                        </span>
+                    </td>
                     <td>
                         <a href="?edit=<?php echo $row['id_menu']; ?>" class="btn-action btn-edit">EDIT</a>
                         <a href="?hapus=<?php echo $row['id_menu']; ?>" class="btn-action btn-delete" onclick="return confirm('Hapus record ini?');">DELETE</a>
@@ -393,7 +268,7 @@ if (isset($_GET['hapus'])) {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 <script>
-    // Toggle Form
+    // Logika JS tetap sama seperti kode awalmu
     const btnToggle = document.getElementById('btnToggleForm');
     const boxForm = document.getElementById('boxForm');
     if(btnToggle) {
@@ -404,7 +279,6 @@ if (isset($_GET['hapus'])) {
         });
     }
 
-    // Cropper Logic
     let cropper;
     const inputFoto = document.getElementById('inputFoto');
     const imageToCrop = document.getElementById('image-to-crop');

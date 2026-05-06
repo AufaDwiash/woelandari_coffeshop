@@ -1,6 +1,7 @@
 <?php 
 include "config/koneksi.php"; 
 
+// Mengambil data terbaru untuk dicocokkan dengan struktur database menu_crud.php
 $query = mysqli_query($conn, "SELECT * FROM menu ORDER BY kategori ASC, nama_menu ASC");
 $menu_data = [];
 while($row = mysqli_fetch_assoc($query)) {
@@ -8,16 +9,6 @@ while($row = mysqli_fetch_assoc($query)) {
 }
 $menu_json = json_encode($menu_data);
 ?>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu - Woelandari Coffee Lab</title>
-    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/menu_style.css?v=<?php echo time(); ?>">
-</head>
-<body>
 
 <div class="blueprint-container">
 
@@ -68,7 +59,8 @@ $menu_json = json_encode($menu_data);
             <div id="empty-state" class="empty-state">// ERROR: Menu tidak ditemukan di inventaris.</div>
 
             <?php foreach($menu_data as $item): 
-                $is_sold_out = (isset($item['stok']) && $item['stok'] <= 0) || (isset($item['status']) && $item['status'] == 'Habis');
+                // Disinkronkan dengan logika pengecekan di menu_crud.php
+                $is_sold_out = (isset($item['stok']) && $item['stok'] <= 0) || (isset($item['status']) && $item['status'] == 'Tidak Tersedia');
             ?>
                 <div class="menu-item <?php echo $is_sold_out ? 'sold-out' : ''; ?>" 
                      data-id="<?php echo $item['id_menu']; ?>"
@@ -106,7 +98,8 @@ $menu_json = json_encode($menu_data);
         const data = menuData.find(m => m.id_menu == id);
         if(!data) return;
 
-        const isSoldOut = (data.stok <= 0) || (data.status === 'Habis');
+        // Disinkronkan dengan kondisi status database "Tidak Tersedia"
+        const isSoldOut = (data.stok <= 0) || (data.status === 'Tidak Tersedia');
         const detail = document.getElementById('menu-detail');
         const imgEl = document.getElementById('detail-img');
         const stamp = document.getElementById('sold-out-stamp');
@@ -144,6 +137,7 @@ $menu_json = json_encode($menu_data);
                 style: 'currency', currency: 'IDR', minimumFractionDigits: 0
             }).format(data.harga);
             
+            // Integrasi penulisan stok & status sesuai data CRUD
             document.getElementById('spec-stock').innerText = isSoldOut ? '0 (Empty)' : (data.stok ? `${data.stok} Units` : 'Available');
             document.getElementById('detail-desc').innerText = data.deskripsi ? data.deskripsi : "Deskripsi tidak tersedia.";
 
@@ -173,7 +167,6 @@ $menu_json = json_encode($menu_data);
             
             let matchCategory = false;
             if (activeBtn.getAttribute('onclick').includes('all')) matchCategory = true;
-            // Pengecekan kategori berdasarkan nama data yang di-klik
             else if (activeBtn.getAttribute('onclick').toLowerCase().includes(itemCat)) matchCategory = true;
 
             const matchSearch = itemName.includes(searchTerm);
@@ -227,6 +220,3 @@ $menu_json = json_encode($menu_data);
     const firstAvailable = Array.from(items).find(i => !i.classList.contains('sold-out')) || items[0];
     if(firstAvailable) firstAvailable.click();
 </script>
-
-</body>
-</html>

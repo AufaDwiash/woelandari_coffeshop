@@ -7,29 +7,19 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Courier+Prime:wght@400;700&family=Montserrat:wght@400;700;900&family=Special+Elite&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
     
+
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/home_style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/about_style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/menu_style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/reservasi_style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="assets/css/community_style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/lokasi_style.css?v=<?php echo time(); ?>">
 
-    <style>
-    html { scroll-behavior: smooth; }
-
-    /* Hanya targetkan pembungkus halaman utama */
-    .main-page {
-        border-bottom: 4px solid #000000; /* Garis hitam tegas */
-        position: relative;
-        display: block;
-        width: 100%;
-    }
-
-    /* Hilangkan garis di section paling bawah (Menu) */
-    .main-page:last-of-type {
-        border-bottom: none;
-    }
-</style>
 
 </head>
     <body>
@@ -42,12 +32,20 @@
             <?php include 'about.php'; ?>
         </section>
 
-        <section id="community" class="main-page">
+        <section id="menu" class="main-page">
+            <?php include 'menu.php'; ?>
+        </section>
+
+         <section id="community" class="main-page">
             <?php include 'community.php'; ?>
         </section>
 
-        <section id="menu" class="main-page">
-            <?php include 'menu.php'; ?>
+        <section id="reservasi" class="main-page">
+            <?php include 'reservasi.php'; ?>
+        </section>
+
+        <section id="lokasi" class="main-page">
+            <?php include 'lokasi.php'; ?>
         </section>
 
     </body>

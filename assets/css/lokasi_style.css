@@ -1,317 +1,211 @@
 /* =========================================
-   WOELANDARI: MONOCHROME GRID LAYOUT (ANIMATED)
+   WOELANDARI: FINAL PURE CSS LAB LOCATION (RATA ATAS & BERJUDUL)
 ========================================= */
 :root {
-    --black: #000000;
+    --navy: #002B5B;
+    --red: #EA4335;
+    --bg-clean: #fcfcfc;
     --white: #FFFFFF;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
-body {
-    background-color: var(--white);
-    color: var(--black);
+#lokasi-container {
+    width: 100%;
+    min-height: 45vh; 
+    background-color: var(--bg-clean);
     font-family: 'Courier Prime', monospace;
-    overflow-x: hidden;
-}
-
-/* --- ANIMASI KEYFRAMES --- */
-@keyframes fadeUp {
-    0% { opacity: 0; transform: translateY(40px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideRight {
-    0% { transform: translateX(-10px); opacity: 0; }
-    100% { transform: translateX(0); opacity: 1; }
-}
-
-/* --- WRAPPER & GRID UTAMA --- */
-.tuku-mono-wrapper {
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 60px 40px;
-    min-height: 100vh;
+    color: var(--navy);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-}
-
-.mono-grid-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 40px;
-    margin-bottom: 60px;
-}
-
-/* Semua kolom kita set transparan dulu untuk animasi Fade Up */
-.mono-col {
-    display: flex;
-    flex-direction: column;
-    opacity: 0; 
-    animation: fadeUp 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-}
-
-/* Bikin animasinya muncul berurutan (Staggered) */
-.location-col { animation-delay: 0.1s; }
-.links-col:nth-child(2) { animation-delay: 0.3s; }
-.links-col:nth-child(3) { animation-delay: 0.5s; }
-.contact-col { animation-delay: 0.7s; }
-
-/* --- KOLOM 1: LOKASI --- */
-.location-col {
-    flex: 2;
-    min-width: 320px;
-    max-width: 400px;
-}
-
-.title-handwritten {
-    font-family: 'Special Elite', cursive;
-    font-size: 1.8rem;
-    text-transform: uppercase;
-    text-align: center;
-    margin-bottom: 20px;
-    letter-spacing: 1px;
-}
-
-.loc-image-wrapper {
-    width: 100%;
-    margin-bottom: 20px;
-    overflow: hidden; /* Biar efek zoom gak keluar kotak */
-    border: 2px solid transparent;
-    transition: border 0.4s ease;
-}
-
-/* Gambar dikasih efek zoom lembut & bisa balik berwarna pas di-hover */
-.loc-image {
-    width: 100%;
-    height: auto;
-    filter: grayscale(100%) contrast(1.2);
-    display: block;
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), filter 0.6s ease;
-}
-
-.loc-image-wrapper:hover {
-    border: 2px solid var(--black);
-}
-
-.loc-image-wrapper:hover .loc-image {
-    transform: scale(1.05);
-    filter: grayscale(0%) contrast(1.1); /* Opsional: Jadi berwarna kalau di-hover */
-}
-
-/* Navigasi Panah */
-.loc-nav-arrows {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.arrow-btn {
-    background: none;
-    border: none;
-    font-family: 'Special Elite', cursive;
-    font-size: 1.2rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.arrow-btn:hover { 
-    transform: scale(1.1) translateY(-2px); 
-    color: #555;
-}
-
-/* Kotak Info Lokasi */
-.loc-info-card {
-    border: 2px solid var(--black);
-    text-align: center;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.loc-info-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 8px 8px 0 var(--black);
-}
-
-.card-top-white {
-    background-color: var(--white);
-    padding: 20px 10px;
-}
-
-.loc-name {
-    font-family: 'Courier Prime', monospace;
-    font-size: 1.2rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.loc-city {
-    font-size: 1rem;
-    margin-top: 5px;
-}
-
-.card-bottom-black {
-    background-color: var(--black);
-    padding: 12px 10px;
-    display: flex;
-    justify-content: space-around;
-}
-
-.black-link {
-    color: var(--white);
-    text-decoration: none;
-    font-size: 0.85rem;
-    position: relative;
-    transition: color 0.3s ease;
-}
-
-.black-link:hover { color: #ccc; }
-
-.black-link::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-image: linear-gradient(to right, white 50%, transparent 50%);
-    background-size: 4px 1px;
-    background-repeat: repeat-x;
-}
-
-/* --- KOLOM 2 & 3: LINKS --- */
-.links-col {
-    flex: 1;
-    min-width: 150px;
-}
-
-.col-title {
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 30px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-
-.clean-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-/* Teks link bergeser dinamis ke kanan saat di-hover */
-.clean-list a {
-    color: var(--black);
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: bold;
-    display: inline-block;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.clean-list a:hover { 
-    transform: translateX(10px); 
-    text-decoration: underline;
-}
-
-/* --- KOLOM 4: CONTACTS --- */
-.contact-col {
-    flex: 1.5;
-    min-width: 250px;
-}
-
-.social-icons {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 40px;
-}
-
-.social-icons a {
-    color: var(--white);
-    background-color: var(--black);
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
     justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    font-size: 1.5rem;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s;
+    padding: 60px 5% 40px; 
 }
 
-.social-icons a:hover { 
-    transform: translateY(-5px) rotate(360deg); 
+/* =========================================
+   JUDUL GLOBAL (BARU)
+========================================= */
+.lok-header-global {
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto 30px auto; /* Memberi jarak antara judul dan kotak-kotak */
+    text-align: left;
+    border-bottom: 2px solid var(--navy);
+    padding-bottom: 10px;
+}
+.lok-site { 
+    font-size: 0.8rem; font-weight: bold; color: var(--red); 
+    margin-bottom: 5px; letter-spacing: 1.5px; 
+}
+.lok-title-global { 
+    font-family: 'Special Elite', cursive; font-size: 2rem; 
+    font-weight: bold; color: var(--navy); margin: 0;
 }
 
-/* Kotak Nomor Telepon (Efek Invert saat di-hover) */
-.contact-box-group {
+
+/* =========================================
+   GRID UTAMA
+========================================= */
+.lokasi-grid {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start; /* KUNCI RATA ATAS: Mengubah center jadi flex-start */
     gap: 30px;
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
 }
 
-.contact-box {
-    text-align: center;
-    cursor: pointer;
+/* --- Pengaturan Kolom Dasar --- */
+.lok-col { flex: 1; display: flex; flex-direction: column; }
+.lok-left { align-items: flex-start; }
+.lok-center { align-items: center; } 
+.lok-right { align-items: flex-end; }
+
+
+/* =========================================
+   KOLOM 1 (KIRI): FOTO & BARCODE LEBAR
+========================================= */
+.lok-photo-card {
+    background: var(--white); border: 2px solid var(--navy);
+    padding: 10px; margin-bottom: 15px; 
+    box-shadow: 6px 6px 0 rgba(0, 43, 91, 0.1);
+    width: 100%; max-width: 380px;
+}
+.card-header {
+    font-size: 0.65rem; font-weight: 900; color: var(--navy);
+    border-bottom: 1px solid var(--navy); margin-bottom: 10px;
+    padding-bottom: 5px; letter-spacing: 2px;
+}
+.lok-img-box { position: relative; width: 100%; height: 180px; overflow: hidden; border: 1px solid #eee; }
+.lok-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.2); transition: 0.5s ease; }
+.lok-photo-card:hover .lok-img { filter: grayscale(0%) contrast(1.1); transform: scale(1.05); }
+
+.lok-status {
+    position: absolute; bottom: 5px; right: 5px; background: var(--red); color: var(--white);
+    font-size: 0.65rem; font-weight: bold; padding: 3px 8px; font-family: 'Special Elite', cursive;
 }
 
-.contact-number {
-    border: 2px solid var(--black);
-    padding: 15px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    letter-spacing: 2px;
-    transition: all 0.3s ease;
+.lok-barcode { 
+    display: flex; flex-direction: column; align-items: stretch; 
+    opacity: 0.6; width: 100%; max-width: 380px; 
+}
+.barcode-lines {
+    width: 100%; height: 45px; margin-bottom: 8px; 
+    background: repeating-linear-gradient( to right, var(--navy), var(--navy) 2px, transparent 2px, transparent 6px, var(--navy) 6px, var(--navy) 9px, transparent 9px, transparent 13px, var(--navy) 13px, var(--navy) 15px, transparent 15px, transparent 19px );
+}
+.barcode-text { font-size: 0.85rem; font-weight: bold; letter-spacing: 5px; text-align: center; }
+
+
+/* =========================================
+   KOLOM 2 (TENGAH): ALAMAT & TOMBOL MAPS BESAR
+========================================= */
+.lok-address-card {
+    position: relative; background: var(--white); border: 2px solid var(--navy);
+    padding: 30px; overflow: hidden; box-shadow: 8px 8px 0 var(--navy);
+    width: 100%; max-width: 400px;
+}
+.map-grid-overlay {
+    position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+    background-image: 
+        linear-gradient(rgba(0, 43, 91, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 43, 91, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px; pointer-events: none;
+}
+.address-content { position: relative; z-index: 2; text-align: center; }
+
+.lok-label { font-size: 0.75rem; font-weight: 900; color: #888; letter-spacing: 2px; margin-bottom: 10px; }
+.lok-city { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 900; margin-bottom: 8px; color: var(--navy); }
+.lok-address { font-size: 0.85rem; line-height: 1.5; margin-bottom: 25px; color: #444; font-weight: bold; text-transform: uppercase; }
+
+.lok-btn-maps-large {
+    display: flex; justify-content: center; align-items: center; gap: 12px;
+    width: 100%; 
+    padding: 15px 20px; background: var(--navy); color: var(--white);
+    text-decoration: none; font-size: 0.9rem; font-weight: bold; border: none;
+    transition: 0.3s ease; letter-spacing: 1px;
+    box-shadow: 4px 4px 0 var(--red); 
+}
+.lok-btn-maps-large:hover {
+    background: var(--red); color: var(--white);
+    transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--navy);
 }
 
-.contact-label {
-    background-color: var(--black);
-    color: var(--white);
-    padding: 10px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    letter-spacing: 1px;
+
+/* =========================================
+   KOLOM 3 (KANAN): CONTACT, SOSMED, & HOURS
+========================================= */
+.lok-socmed { 
+    display: flex; 
+    justify-content: flex-end; 
+    gap: 15px; 
+    margin-bottom: 20px; 
+    width: 100%; 
+    max-width: 340px; /* Diseragamkan */
+}
+.lok-socmed a {
+    width: 48px; height: 48px; /* Sedikit dibesarkan agar proporsional */
+    border: 2px solid var(--navy);
+    display: flex; justify-content: center; align-items: center;
+    color: var(--navy); text-decoration: none; font-size: 1.3rem; transition: 0.3s;
+}
+.lok-socmed a:hover { background: var(--navy); color: var(--white); transform: translateY(-3px); }
+
+.lok-contacts { 
+    display: flex; flex-direction: column; gap: 15px; 
+    width: 100%; 
+    max-width: 340px; /* Diseragamkan */
+}
+.lok-wa-box {
+    display: flex; justify-content: space-between; align-items: center;
+    width: 100%; /* Memaksa kotak WA memenuhi lebar maksimal */
+    padding: 15px 20px; /* Padding dilegakan & diseragamkan */
+    border: 2px solid var(--navy); 
+    text-decoration: none; 
+    color: var(--navy); background: var(--white); transition: 0.3s;
+}
+.wa-text { display: flex; flex-direction: column; text-align: left; }
+.wa-label { font-size: 0.7rem; font-weight: bold; color: var(--red); letter-spacing: 1px; margin-bottom: 3px; }
+.wa-num { font-size: 0.95rem; font-weight: 900; }
+.wa-icon { font-size: 1.6rem; }
+
+.lok-wa-box:hover { background: var(--navy); color: var(--white); box-shadow: 4px 4px 0 var(--red); }
+.lok-wa-box:hover .wa-label { color: #ffb4ae; }
+
+.lok-hours {
+    width: 100%; 
+    max-width: 340px; /* Diseragamkan dengan kotak WA */
+    border: 2px dashed var(--navy); /* Ketebalan border disamakan jadi 2px */
+    padding: 15px 20px; /* Padding disamakan persis dengan kotak WA */
+    text-align: right; 
+    margin-top: 25px;
+}
+.hours-title { font-size: 0.75rem; font-weight: bold; color: var(--red); margin-bottom: 5px; letter-spacing: 1px; }
+.hours-val { font-size: 0.85rem; font-weight: bold; }
+
+/* =========================================
+   MINI FOOTER
+========================================= */
+.lok-footer {
+    display: flex; justify-content: space-between; width: 100%; max-width: 1300px; 
+    margin: 40px auto 0; padding-top: 15px; border-top: 1px dashed rgba(0, 43, 91, 0.3);
+    font-size: 0.8rem; font-weight: bold;
 }
 
-/* Invert warna pas nomor disorot */
-.contact-box:hover .contact-number {
-    background-color: var(--black);
-    color: var(--white);
-    transform: translateY(-4px);
-    box-shadow: 6px 6px 0 rgba(0,0,0,0.2);
-}
 
-/* --- FOOTER LEGAL --- */
-.mono-footer-legal {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(0,0,0,0.1);
-    font-size: 0.8rem;
-    font-weight: bold;
-    opacity: 0;
-    animation: fadeUp 1s ease 1s forwards; /* Muncul paling akhir */
-}
-
-.mono-footer-legal a {
-    color: var(--black);
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.mono-footer-legal a:hover { 
-    color: #777;
-    text-decoration: underline; 
-}
-
-/* RESPONSIVE */
+/* =========================================
+   RESPONSIVE LAYOUT (HP & TABLET)
+========================================= */
 @media (max-width: 900px) {
-    .mono-grid-container { gap: 50px; }
-    .location-col { max-width: 100%; flex: 100%; order: -1; }
+    .lok-header-global { text-align: center; }
+    .lokasi-grid { flex-direction: column; align-items: center; gap: 40px; }
+    .lok-left, .lok-center, .lok-right { align-items: center; text-align: center; width: 100%; }
+    .lok-address-card, .lok-contacts, .lok-hours, .lok-photo-card, .lok-barcode, .lok-socmed { max-width: 100%; }
+    .lok-socmed { justify-content: center; }
+    .lok-hours { text-align: center; }
+    .wa-text { text-align: center; }
+    .lok-footer { flex-direction: column; gap: 10px; text-align: center; margin-top: 30px; }
+    #lokasi-container { min-height: auto; padding: 50px 5%; }
 }

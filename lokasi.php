@@ -1,98 +1,73 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cek Lokasi - Woelandari Coffee</title>
+<div id="lokasi-container">
     
-    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/lokasi_style.css">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-
-    <div class="tuku-mono-wrapper">
-        <div class="mono-grid-container">
-            
-            <div class="mono-col location-col">
-                <h2 class="title-handwritten">CEK LOKASI WOELANDARI TERDEKAT</h2>
-                
-                <div class="loc-image-wrapper">
-                    <img src="assets/images/gambar-mentahan/about3.jpeg" alt="Ilustrasi Toko" class="loc-image">
-                </div>
-                
-                <div class="loc-nav-arrows">
-                    <button class="arrow-btn"><i class="fa-solid fa-arrow-left"></i> SEBELUMNYA</button>
-                    <button class="arrow-btn">SELANJUTNYA <i class="fa-solid fa-arrow-right"></i></button>
-                </div>
-                
-                <div class="loc-info-card">
-                    <div class="card-top-white">
-                        <h3 class="loc-name">WOELANDARI CIPETE LAB</h3>
-                        <p class="loc-city">JAKARTA SELATAN</p>
-                    </div>
-                    <div class="card-bottom-black">
-                        <a href="#" class="black-link">Petunjuk arah</a>
-                        <a href="#" class="black-link">Toko Kopi Woelandari terdekat</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mono-col links-col">
-                <h3 class="col-title">THE COLLECTIVE</h3>
-                <ul class="clean-list">
-                    <li><a href="#">Makna Angan</a></li>
-                    <li><a href="#">Karya Andanu</a></li>
-                    <li><a href="#">Toodz House</a></li>
-                    <li><a href="#">Beragam Rasa<br>Indonesia</a></li>
-                    <li><a href="#">Futago</a></li>
-                    <li><a href="#">Toho Cafe</a></li>
-                </ul>
-            </div>
-
-            <div class="mono-col links-col">
-                <h3 class="col-title">INFO KAMI</h3>
-                <ul class="clean-list">
-                    <li><a href="#">Tentang</a></li>
-                    <li><a href="#">Produk</a></li>
-                    <li><a href="#">Lokasi Toko</a></li>
-                    <li><a href="#">Surat Kabar</a></li>
-                    <li><a href="#">Galeri</a></li>
-                </ul>
-            </div>
-
-            <div class="mono-col contact-col">
-                <h3 class="col-title">JAGA IKATAN PERTETANGGAAN!</h3>
-                
-                <div class="social-icons">
-                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
-                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
-                </div>
-
-                <div class="contact-box-group">
-                    <div class="contact-box">
-                        <div class="contact-number">+62 811 8198 858</div>
-                        <div class="contact-label">INFORMASI LAYANAN</div>
-                    </div>
-
-                    <div class="contact-box">
-                        <div class="contact-number">+62 811 1808 858</div>
-                        <div class="contact-label">EVENT & POJOK WOELANDARI</div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="mono-footer-legal">
-            <a href="#">SYARAT DAN KETENTUAN</a>
-            <a href="#">KEBIJAKAN PRIVASI</a>
-            <span>©2024 PT KARYA TETANGGA WOELANDARI.</span>
-        </div>
+    <div class="lok-header-global">
+        <div class="lok-site">// TRACKING_SYSTEM: SITE_021_CIPETE</div>
+        <h2 class="lok-title-global">LOKASI LAB</h2>
     </div>
 
-</body>
-</html>
+    <div class="lokasi-grid">
+        
+        <div class="lok-col lok-left">
+            <div class="lok-photo-card">
+                <div class="card-header">LAB_SPECIMEN_03</div>
+                <div class="lok-img-box">
+                    <img src="assets/images/gambar-mentahan/about3.jpeg" alt="Woelandari Lab" class="lok-img">
+                    <div class="lok-status">STATUS: ONLINE</div>
+                </div>
+            </div>
+
+            <div class="lok-barcode">
+                <div class="barcode-lines"></div>
+                <span class="barcode-text">SYS_AUTH_099</span>
+            </div>
+        </div>
+
+        <div class="lok-col lok-center">
+            <div class="lok-address-card">
+                <div class="address-content">
+                    <div class="lok-label">COORDINATES</div>
+                    <h4 class="lok-city">JAKARTA SELATAN, ID</h4>
+                    <p class="lok-address">CIPETE RAYA NO. 12, GANDARIA SELATAN</p>
+                    
+                    <a href="#" class="lok-btn-maps-large">
+                        OPEN_IN_MAPS <i class="fa-solid fa-location-arrow"></i>
+                    </a>
+                </div>
+                <div class="map-grid-overlay"></div>
+            </div>
+        </div>
+
+        <div class="lok-col lok-right">
+            <div class="lok-socmed">
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+            </div>
+            
+            <div class="lok-contacts">
+                <a href="https://wa.me/628118198858" target="_blank" class="lok-wa-box">
+                    <div class="wa-text">
+                        <span class="wa-label">HOTLINE_SERVICE</span>
+                        <span class="wa-num">+62 811-8198-858</span>
+                    </div>
+                    <i class="fa-brands fa-whatsapp wa-icon"></i>
+                </a>
+                <a href="https://wa.me/628111808858" target="_blank" class="lok-wa-box">
+                    <div class="wa-text">
+                        <span class="wa-label">EVENT_INQUIRY</span>
+                        <span class="wa-num">+62 811-1808-858</span>
+                    </div>
+                    <i class="fa-brands fa-whatsapp wa-icon"></i>
+                </a>
+            </div>
+
+            <div class="lok-hours">
+                <div class="hours-title">OPERATIONAL_HOURS</div>
+                <div class="hours-val">MON - SUN // 08:00 - 22:00</div>
+            </div>
+        </div>
+
+    </div> <div class="lok-footer">
+        <div class="lok-copy">©2026 WOELANDARI_COFFEE.SYS</div>
+        <div class="lok-ref">STAY_CONNECTED // NO_REF: 8858</div>
+    </div>
+</div>

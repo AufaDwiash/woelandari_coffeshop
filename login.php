@@ -3,6 +3,17 @@ ob_start();
 session_start();
 include "config/koneksi.php"; 
 
+// Jika sudah login, redirect berdasarkan role
+if (isset($_SESSION['status']) && $_SESSION['status'] == 'login') {
+    if ($_SESSION['role'] == 'karyawan') {
+        header("Location: karyawan/dashboard_staff.php");
+    } else {
+        header("Location: admin/dashboard.php");
+    }
+    exit;
+}
+
+// Cek cookie remember me
 if (!isset($_SESSION['status']) && isset($_COOKIE['remember_user']) && !isset($_GET['logout'])) {
     $user_cookie = mysqli_real_escape_string($conn, $_COOKIE['remember_user']);
     $query_cookie = mysqli_query($conn, "SELECT * FROM user WHERE username='$user_cookie'");
@@ -12,8 +23,15 @@ if (!isset($_SESSION['status']) && isset($_COOKIE['remember_user']) && !isset($_
         $_SESSION['id_user']  = $data_cookie['id_user'];
         $_SESSION['username'] = $data_cookie['username'];
         $_SESSION['role']     = $data_cookie['role'];
+        $_SESSION['nama_lengkap'] = $data_cookie['nama_lengkap'];
         $_SESSION['status']   = "login";
-        header("Location: admin/dashboard.php");
+        
+        // Redirect berdasarkan role
+        if ($data_cookie['role'] == 'karyawan') {
+            header("Location: karyawan/dashboard_staff.php");
+        } else {
+            header("Location: admin/dashboard.php");
+        }
         exit;
     }
 }
@@ -22,26 +40,44 @@ $error = '';
 if (isset($_POST['login'])) {
     $username = mysqli_real_escape_string($conn, trim($_POST['username']));
     $password = $_POST['password'];
+    
+    // Debug: cek apakah username ada
     $query = mysqli_query($conn, "SELECT * FROM user WHERE username='$username'");
-    $data = mysqli_fetch_assoc($query);
-
-    if ($data && password_verify($password, $data['password'])) {
-        $_SESSION['id_user']  = $data['id_user'];
-        $_SESSION['username'] = $data['username'];
-        $_SESSION['role']     = $data['role'] ?? 'admin';
-        $_SESSION['status']   = "login";
-
-        if (isset($_POST['remember'])) {
-            $duration = time() + (3600 * 24 * 30); 
-            setcookie("remember_user", $data['username'], $duration, "/");
-        }
-        setcookie('last_user', $data['username'], time() + 3600, "/");
-
-        ob_clean();
-        header("Location: admin/dashboard.php"); 
-        exit();
+    
+    if (mysqli_num_rows($query) == 0) {
+        $error = "ERR_404: USERNAME TIDAK DITEMUKAN.";
     } else {
-        $error = "ERR_403: IDENTIFIER ATAU ACCESS CODE TIDAK VALID.";
+        $data = mysqli_fetch_assoc($query);
+        
+        // Cek password
+        if (password_verify($password, $data['password'])) {
+            // SET SESSION LENGKAP
+            $_SESSION['id_user']       = $data['id_user'];
+            $_SESSION['username']      = $data['username'];
+            $_SESSION['role']          = $data['role'];
+            $_SESSION['nama_lengkap']  = $data['nama_lengkap'];
+            $_SESSION['status']        = "login";
+            
+            // Set cookie remember me
+            if (isset($_POST['remember'])) {
+                $duration = time() + (3600 * 24 * 30); 
+                setcookie("remember_user", $data['username'], $duration, "/");
+            }
+            setcookie('last_user', $data['username'], time() + 3600, "/");
+            
+            ob_clean();
+            
+            // LOGIC REDIRECT BERDASARKAN ROLE
+            // PASTIKAN ROLE YANG TERSIMPAN DI SESSION
+            if ($data['role'] == 'karyawan') {
+                header("Location: karyawan/dashboard_staff.php");
+            } else {
+                header("Location: admin/dashboard.php");
+            }
+            exit();
+        } else {
+            $error = "ERR_403: PASSWORD SALAH.";
+        }
     }
 }
 ?>
@@ -58,6 +94,22 @@ if (isset($_POST['login'])) {
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="assets/css/login_style.css">
+    
+    <style>
+        /* Additional debug styles */
+        .debug-info {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: #0f0;
+            font-family: monospace;
+            font-size: 10px;
+            padding: 5px;
+            z-index: 9999;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
@@ -108,11 +160,14 @@ if (isset($_POST['login'])) {
             <div class="mb-1" style="font-weight:bold; font-size:0.75rem;">NOTE:</div>
             <p class="handwritten-text">Jaga kerahasiaan akses lab!</p>
         </div>
+        
+        <!-- Debug informasi (hapus setelah testing) -->
+        <div class="debug-info" id="debugInfo"></div>
     </div>
 </div>
 
 <script>
-    // 1. Script Ikon Mata (Terintegrasi tanpa memotong animasi input)
+    // Toggle Password
     const togglePassword = document.querySelector('#togglePassword');
     const passwordInput = document.querySelector('#password');
     const eyeIcon = document.querySelector('#eyeIcon');
@@ -125,7 +180,7 @@ if (isset($_POST['login'])) {
         eyeIcon.classList.toggle('fa-eye-slash');
     });
 
-    // 2. Interaksi Status Teks Terminal
+    // Interaksi Status Teks Terminal
     const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
     const statusBox = document.querySelector('.spec-status');
 
