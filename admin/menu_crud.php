@@ -134,7 +134,7 @@ if (isset($_GET['hapus'])) {
 <body>
 
 <aside class="sidebar">
-    <div class="brand">WOELANDARI STAFF</div>
+    <div class="brand">WOELANDARI ADMIN</div>
     <nav class="nav-list">
         <a href="dashboard.php" class="nav-item"><span>> DASHBOARD</span></a>
         <a href="menu_crud.php" class="nav-item active"><span>> KELOLA MENU</span></a>

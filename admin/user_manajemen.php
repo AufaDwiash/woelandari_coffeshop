@@ -149,7 +149,7 @@ if (isset($_GET['edit_user'])) {
 <body>
 
 <aside class="sidebar">
-    <div class="brand">WOELANDARI STAFF</div>
+    <div class="brand">WOELANDARI ADMIN</div>
     <nav class="nav-list">
         <a href="dashboard.php" class="nav-item"><span>> DASHBOARD</span></a>
         <a href="menu_crud.php" class="nav-item"><span>> KELOLA MENU</span></a>

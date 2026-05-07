@@ -1,7 +1,7 @@
 <?php
 ob_start();
 session_start();
-// Menggunakan path asli dari dashboard.php lo
+// Menggunakan path asli dari dashboard.php
 include "../config/koneksi.php";
 
 // Proteksi halaman
@@ -45,15 +45,14 @@ $result = mysqli_query($conn, $query);
     <!-- Fonts sesuai desain dashboard -->
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
     <!-- Link ke file CSS terpisah -->
-<!-- Perhatikan ../ untuk keluar dari folder admin dulu -->
-<link rel="stylesheet" href="../assets/css/admin/feedback_style.css">
+    <link rel="stylesheet" href="../assets/css/admin/feedback_style.css">
 </head>
 <body>
 
 <aside class="sidebar">
-    <div class="brand">WOELANDARI STAFF</div>
+    <div class="brand">WOELANDARI ADMIN</div>
     <nav class="nav-list">
-          <a href="dashboard.php" class="nav-item"><span>> DASHBOARD</span></a>
+        <a href="dashboard.php" class="nav-item"><span>> DASHBOARD</span></a>
         <a href="menu_crud.php" class="nav-item"><span>> KELOLA MENU</span></a>
         <a href="gallery_crud.php" class="nav-item"><span>> KELOLA GALLERY & EVENT</span></a>
         <a href="feedback.php" class="nav-item active"><span>> KELOLA FEEDBACK & RATING</span></a>
@@ -67,13 +66,9 @@ $result = mysqli_query($conn, $query);
 <main class="main-wrapper">
     <section class="paper">
         <div class="tape"></div>
-        <div class="sticky-note">
-            <p>USER: <?php echo $username; ?></p>
-            <p>STATUS: <span class="blink">ONLINE</span></p>
-        </div>
+        <!-- STICKY-NOTE DIHAPUS - tidak menampilkan USER dan STATUS ONLINE -->
         
         <div class="spec-header">
-          
             <span>DATE: <?php echo date('d/m/Y'); ?></span>
         </div>
 

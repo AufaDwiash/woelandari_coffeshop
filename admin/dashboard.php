@@ -214,13 +214,14 @@ $jml_feedback  = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as tota
 <body>
 
 <aside class="sidebar">
-    <div class="brand">WOELANDARI STAFF</div>
+    <div class="brand">WOELANDARI ADMIN</div>
     <nav class="nav-list">
         <a href="dashboard.php" class="nav-item active"><span>> DASHBOARD</span></a>
         <a href="menu_crud.php" class="nav-item"><span>> KELOLA MENU</span></a>
         <a href="gallery_crud.php" class="nav-item"><span>> KELOLA GALLERY & EVENT</span></a>
         <a href="feedback.php" class="nav-item"><span>> KELOLA FEEDBACK & RATING</span></a>
         <a href="user_manajemen.php" class="nav-item"><span>> KELOLA USER</span></a>
+        <a href="community_crud.php" class="nav-item"><span>> KELOLA KOMUNITAS</span></a>
         <div style="margin-top: auto;">
             <a href="../logout.php" class="nav-item" style="color: var(--red);"><span>KELUAR</span></a>
         </div>

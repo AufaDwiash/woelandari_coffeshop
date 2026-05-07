@@ -39,7 +39,7 @@ if (isset($_GET['edit_event'])) {
 
 if (isset($_GET['edit_gallery'])) {
     $edit_gal_mode = true;
-    $id_g = $_lGET['edit_gallery'];
+    $id_g = $_GET['edit_gallery']; // PERBAIKAN: typo $_lGET jadi $_GET
     $q_edit = mysqli_query($conn, "SELECT * FROM gallery WHERE id_gallery = '$id_g'");
     $d_g = mysqli_fetch_assoc($q_edit);
     if ($d_g) {
@@ -141,7 +141,7 @@ if (isset($_GET['hapus_gallery'])) {
 <body>
 
     <aside class="sidebar">
-        <div class="brand">WOELANDARI STAFF</div>
+        <div class="brand">WOELANDARI ADMIN</div>
         <nav class="nav-list">
             <a href="dashboard.php" class="nav-item"><span>> DASHBOARD</span></a>
             <a href="menu_crud.php" class="nav-item"><span>> KELOLA MENU</span></a>
@@ -167,10 +167,7 @@ if (isset($_GET['hapus_gallery'])) {
         </section>
 
         <section class="paper paper-style-2">
-            <div class="sticky-note">
-                <p>USER: <?php echo $username; ?></p>
-                <p>STATUS: <span class="blink">ONLINE</span></p>
-            </div>
+            <!-- STICKY NOTE DIHAPUS: tidak lagi menampilkan USER dan STATUS ONLINE -->
 
             <div class="spec-header">
                 <span>MODULE: <?php echo ($active_tab == 'gallery') ? 'VISUAL_ARCHIVE' : 'SCHEDULE_ARCHIVE'; ?></span>
@@ -228,7 +225,7 @@ if (isset($_GET['hapus_gallery'])) {
                                         <a href="?tab=event&hapus_event=<?php echo $r['id_event']; ?>" class="btn-action btn-del" onclick="return confirm('Hapus?');">DEL</a>
                                     </td>
                                 </tr>
-                        <?php endwhile;
+                            <?php endwhile;
                         endif; ?>
                     </tbody>
                 </table>
@@ -236,6 +233,7 @@ if (isset($_GET['hapus_gallery'])) {
         </section>
     </main>
 
+    <!-- MODAL GALLERY -->
     <div class="modal-overlay" id="modalGallery">
         <div class="paper" style="max-width: 500px; width: 100%; transform: rotate(0deg);">
             <div class="spec-header"><span>ACTION: <?= $edit_gal_mode ? 'UPDATE_GALLERY' : 'ADD_NEW_GALLERY' ?></span></div>
@@ -278,6 +276,7 @@ if (isset($_GET['hapus_gallery'])) {
         </div>
     </div>
 
+    <!-- MODAL EVENT -->
     <div class="modal-overlay" id="modalEvent">
         <div class="paper" style="max-width: 500px; width: 100%; transform: rotate(0deg);">
             <div class="spec-header"><span>ACTION: <?= $edit_event_mode ? 'UPDATE_EVENT' : 'ADD_NEW_EVENT' ?></span></div>
