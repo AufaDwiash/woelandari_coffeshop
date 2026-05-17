@@ -19,12 +19,17 @@
 }
 
 /* =========================================
-   ZIG-ZAG LAYOUT SYSTEM (50:50)
+   LAYOUT SPLIT (DESKTOP)
 ========================================= */
 .dossier-split {
     display: flex;
     width: 100%;
     min-height: 100vh;
+}
+
+/* Reverse layout untuk section cream (gambar di kanan, teks di kiri) */
+.dossier-split.reverse {
+    flex-direction: row-reverse;
 }
 
 .split-col {
@@ -46,9 +51,8 @@
 }
 
 /* =========================================
-   WARNA BACKGROUND (NAVY & CREAM)
+   WARNA BACKGROUND
 ========================================= */
-/* SECTION 1: NAVY */
 .section-navy {
     background-color: var(--ink-navy);
     background-image:
@@ -57,7 +61,6 @@
     background-size: 30px 30px;
 }
 
-/* SECTION 2: CREAM */
 .section-cream {
     background-color: var(--paper-cream);
     background-image:
@@ -66,7 +69,7 @@
     background-size: 30px 30px;
 }
 
-/* Utility Colors untuk Teks & Garis */
+/* Utility Colors */
 .text-cream { color: var(--paper-cream) !important; }
 .text-navy { color: var(--ink-navy) !important; }
 .bg-cream { background-color: var(--paper-cream) !important; }
@@ -124,8 +127,10 @@
 
 .pinned-photo img {
     width: 100%;
+    height: auto;
     border: 1px solid var(--ink-navy);
     filter: grayscale(20%);
+    display: block;
 }
 
 .red-tape {
@@ -154,23 +159,20 @@
 }
 
 /* =========================================
-   ANIMASI KHUSUS DESKTOP (> 992px)
+   ANIMASI DESKTOP
 ========================================= */
 @media (min-width: 993px) {
-    /* Keadaan awal teks */
     .anim-fade-up {
         opacity: 0;
         transform: translateY(40px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
 
-    /* Delay agar muncul berurutan */
     .delay-1 { transition-delay: 0.1s; }
     .delay-2 { transition-delay: 0.3s; }
     .delay-3 { transition-delay: 0.5s; }
     .delay-4 { transition-delay: 0.7s; }
 
-    /* Keadaan awal foto */
     .anim-photo-right {
         opacity: 0;
         transform: rotate(15deg) scale(0.8);
@@ -183,13 +185,11 @@
         transition: opacity 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    /* Target Animasi Aktif (Ditambahkan via JavaScript) */
     .is-visible {
         opacity: 1 !important;
         transform: translateY(0) !important;
     }
 
-    /* Kembalikan rotasi miring foto ke keadaan awalnya */
     .anim-photo-right.is-visible {
         transform: rotate(2deg) scale(1) !important;
     }
@@ -199,12 +199,12 @@
 }
 
 /* =========================================
-   RESPONSIVE (HP & TABLET)
+   RESPONSIVE TABLET & MOBILE
 ========================================= */
 @media (max-width: 992px) {
-    /* Merubah layout menjadi atas-bawah di HP */
-    .dossier-split {
-        flex-direction: column;
+    .dossier-split,
+    .dossier-split.reverse {
+        flex-direction: column !important; /* Paksa semua jadi kolom di mobile */
         min-height: auto;
     }
 
@@ -216,9 +216,55 @@
         padding: 10% 5%;
     }
 
-    /* Memastikan foto tidak terlalu besar di HP */
     .pinned-photo {
         max-width: 90%;
         margin: 0 auto;
     }
+}
+
+/* =========================================
+   PERBAIKAN UNTUK HP KECIL (<= 480px)
+========================================= */
+@media (max-width: 480px) {
+    .editorial-heading {
+        font-size: 2rem !important;
+    }
+    
+    .typewriter-body {
+        font-size: 0.85rem !important;
+        line-height: 1.5 !important;
+    }
+    
+    .split-col {
+        padding: 12% 6% !important;
+    }
+    
+    .content-offset {
+        max-width: 100% !important;
+    }
+    
+    .pinned-photo {
+        padding: 10px 10px 40px 10px !important;
+        max-width: 100% !important;
+    }
+    
+    .photo-meta {
+        font-size: 0.6rem !important;
+        bottom: 8px;
+    }
+    
+    .tech-label {
+        font-size: 0.7rem !important;
+    }
+    
+    .draft-divider {
+        width: 40px;
+        margin-bottom: 20px;
+    }
+}
+
+/* Mencegah overflow gambar */
+img {
+    max-width: 100%;
+    height: auto;
 }

@@ -9,7 +9,6 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* GANTI BODY MENJADI #home */
 #home {
     font-family: 'Montserrat', sans-serif;
     background-color: var(--cream);
@@ -17,19 +16,18 @@
                       linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
     background-size: 40px 40px;
     height: 100vh;
-    width: 100%; /* Ganti 100vw jadi 100% agar tidak lari ke kiri */
-    overflow: hidden; /* Mengunci karakter di home saja */
+    width: 100%;
+    overflow: hidden;
     position: relative;
 }
 
 .interactive-scene {
     position: relative;
-    width: 100%; /* Ganti 100vw jadi 100% */
+    width: 100%;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    cursor: pointer;
 }
 
 .layer {
@@ -47,13 +45,14 @@
 
 .character-group {
     position: absolute;
-    bottom: 0%; 
+    bottom: -2%; /* turunkan agar kaki menyentuh dasar */
     left: 50%;
     transform: translateX(-50%);
     z-index: 5;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-end;
     pointer-events: none;
     will-change: transform;
 }
@@ -63,19 +62,20 @@
 }
 
 .layer-orang {
-    height: 75vh; 
+    height: 75vh;
     width: auto;
     object-fit: contain;
+    display: block;
 }
 
 .lab-note {
     background: var(--white);
     color: var(--black);
-    border: 2px solid var(--black); 
+    border: 2px solid var(--black);
     padding: 12px 20px;
     margin-bottom: 20px;
-    box-shadow: 6px 6px 0 var(--red); 
-    font-family: 'Caveat', cursive; 
+    box-shadow: 6px 6px 0 var(--red);
+    font-family: 'Caveat', cursive;
     font-size: 1.5rem;
     max-width: 280px;
     text-align: center;
@@ -83,6 +83,8 @@
     transform: translateY(10px) scale(0.9);
     transition: opacity 0.15s ease, transform 0.15s ease;
     position: relative;
+    cursor: pointer;
+    pointer-events: auto;
 }
 
 .lab-note::after {
@@ -101,16 +103,44 @@
     transform: translateY(0) scale(1);
 }
 
-.click-hint {
-    position: absolute;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
-    z-index: 100;
-    font-family: 'Special Elite';
-    font-size: 0.7rem;
-    color: var(--navy);
-    opacity: 0.5;
-    letter-spacing: 2px;
-    pointer-events: none;
+/* =========================================
+   RESPONSIVE MOBILE (KARAKTER DIPERBESAR & TURUN)
+========================================= */
+@media (max-width: 768px) {
+    .character-group {
+        bottom: -5%; /* turunkan lebih banyak */
+    }
+    .layer-orang {
+        height: 70vh; /* perbesar */
+        max-width: 90vw;
+    }
+    .lab-note {
+        font-size: 1.3rem;
+        max-width: 280px;
+        padding: 10px 18px;
+        margin-bottom: 15px;
+    }
+    .lab-note::after {
+        border-width: 10px 10px 0;
+        bottom: -10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .character-group {
+        bottom: -8%;
+    }
+    .layer-orang {
+        height: 65vh; /* lebih besar dari sebelumnya */
+        max-width: 150vw;
+    }
+    .lab-note {
+        font-size: 1.1rem;
+        max-width: 260px;
+        padding: 8px 15px;
+    }
+    .lab-note::after {
+        border-width: 8px 8px 0;
+        bottom: -8px;
+    }
 }

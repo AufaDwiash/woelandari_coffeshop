@@ -1,143 +1,309 @@
-/* --- BLUEPRINT THEME --- */
+/* ==========================================================================
+   RESERVASI SECTION - PRESTIGE SYSTEM BLUEPRINT (ANTI-CLASH EDITION)
+   Sangat Presisi, Tajam, dan Selaras Sempurna dengan Halaman About (Navy & Cream)
+   ========================================================================== */
+
 :root {
-    --navy-deep: #002B5B;
-    --navy-grid: rgba(255, 255, 255, 0.07); /* Warna garis kotak-kotak */
-    --red: #EA4335;
-    --white: #FFFFFF;
-    --cream: #FDF5E6;
+    --res-navy: #0A1D37;       /* Deep Navy dari About Section */
+    --res-cream: #FDF6E3;      /* Paper Cream dari About Section */
+    --res-red: #D63D3D;        /* Accent Red dari About Section */
+    --res-white: #FFFFFF;
+    --res-border: #0A1D37;
 }
 
 #reservasi-section {
+    min-height: 100vh;
     padding: 100px 5%;
-    /* Latar Belakang Kotak-Kotak Biru Navy */
-    background-color: var(--navy-deep);
+    background-color: var(--res-navy);
+    /* Pola blueprint grid minimalis, bersih dan tidak membuat pusing */
     background-image: 
-        linear-gradient(var(--navy-grid) 1px, transparent 1px),
-        linear-gradient(90deg, var(--navy-grid) 1px, transparent 1px);
-    background-size: 30px 30px;
+        linear-gradient(rgba(253, 246, 227, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(253, 246, 227, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
     font-family: 'Courier Prime', monospace;
-    color: var(--white); /* Teks utama jadi putih agar terlihat di navy */
+    color: var(--res-cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
-.res-container { max-width: 1200px; margin: 0 auto; }
+.res-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
-/* HEADER */
-.res-header { margin-bottom: 50px; }
-.res-tag { font-size: 0.8rem; font-weight: bold; color: var(--red); letter-spacing: 3px; }
-.res-title { font-family: 'Special Elite', cursive; font-size: 2.8rem; margin: 10px 0; color: var(--white); }
-.res-line { width: 80px; height: 6px; background: var(--red); }
+/* ===== HEADER AREA (Clean Editorial Style) ===== */
+.res-header {
+    margin-bottom: 50px;
+    position: relative;
+}
 
-/* GRID - TINGGI RATA */
+.res-tag {
+    font-size: 0.75rem;
+    color: var(--res-red);
+    letter-spacing: 3px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.res-title {
+    font-family: 'Special Elite', cursive;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: var(--res-cream);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+.res-line {
+    width: 100px;
+    height: 3px;
+    background: var(--res-red);
+    margin-top: 15px;
+}
+
+/* ===== MAIN GRID SYSTEM ===== */
 .res-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 35px;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 50px;
     align-items: stretch;
 }
 
-/* CARDS STYLING */
-.res-main-card, .res-side-card {
-    background: var(--white);
-    border: 2px solid var(--white);
-    padding: 35px;
-    color: var(--navy-deep); /* Teks dalam card tetap navy */
-    box-shadow: 15px 15px 0 rgba(0, 0, 0, 0.2);
+/* ===== CARD UTAMA: FORM RESERVASI (Stark Solid Paper Look) ===== */
+.res-main-card {
+    background: var(--res-cream) !important;
+    border: 2px solid var(--res-border);
+    padding: 45px;
+    color: var(--res-navy);
+    /* Menghilangkan efek rotasi miring yang merusak alignment layout */
+    box-shadow: 12px 12px 0px rgba(0, 0, 0, 0.35);
     display: flex;
     flex-direction: column;
 }
 
-.card-label {
-    font-size: 0.65rem;
-    font-weight: 900;
-    margin-bottom: 25px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
-    letter-spacing: 2px;
-    color: #999;
+.res-main-card .card-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--res-navy);
+    opacity: 0.6;
+    border-bottom: 2px dashed rgba(10, 29, 55, 0.15);
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
 
-/* PROTOCOL CARD (CREAM) */
-.protocol-card {
-    background-color: var(--cream);
-    border: 2px dashed var(--navy-deep);
-    margin-top: 25px;
-    flex: 1; /* Biar rata tinggi */
-}
-.protocol-text { font-size: 0.95rem; font-weight: bold; line-height: 1.7; color: #5d5448; }
-
-/* FORM ELEMENTS */
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.input-group { margin-bottom: 25px; display: flex; flex-direction: column; gap: 8px; }
-.input-group label { font-size: 0.75rem; font-weight: 900; }
-.input-group input, .input-group select {
-    padding: 14px;
-    border: 1px solid #ddd;
-    font-family: 'Courier Prime', monospace;
-    font-size: 0.95rem;
-    outline: none;
-    transition: 0.3s;
-}
-.input-group input:focus { border-color: var(--red); box-shadow: 0 0 10px rgba(234, 67, 53, 0.1); }
-
-/* BUTTON EXECUTE */
-.btn-execute {
-    margin-top: auto;
-    padding: 22px;
-    background: var(--navy-deep);
-    color: white;
-    border: none;
-    font-weight: bold;
-    font-family: 'Courier Prime', monospace;
-    font-size: 1rem;
-    cursor: pointer;
+/* Form Layout Rows */
+.form-row {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    transition: 0.3s;
+    gap: 25px;
+    margin-bottom: 20px;
 }
-.btn-execute:hover { background: var(--red); transform: translateY(-5px); }
 
-/* INFO LIST & BARCODE */
-.res-side-panel { display: flex; flex-direction: column; }
-.res-info-list { padding-left: 20px; font-weight: bold; font-size: 0.9rem; }
-.res-info-list li { margin-bottom: 12px; }
-.res-info-list strong { color: var(--red); }
+.input-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
 
-/* --- PAKSA WARNA BARCODE JADI PUTIH TERANG --- */
-.barcode-wrapper { 
-    margin-top: auto; 
-    padding-top: 30px; 
-    opacity: 1 !important; /* Pastikan tidak transparan */
-    display: block !important;
+.input-group label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--res-navy);
+    letter-spacing: 0.5px;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--res-navy);
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.9rem;
+    background: var(--res-white);
+    color: var(--res-navy);
+    border-radius: 0; /* Desain brutalist kaku yang rapi */
+    transition: all 0.15s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    background: var(--res-white);
+    box-shadow: 4px 4px 0px var(--res-red);
+    transform: translate(-2px, -2px);
+}
+
+/* Jarak baris input terakhir sebelum tombol submit */
+.res-main-card > .input-group {
+    margin-bottom: 35px;
+}
+
+/* BUTTON SUBMIT (Industrial Command Button) */
+.btn-execute {
+    width: 100%;
+    padding: 16px;
+    background: var(--res-navy);
+    color: var(--res-cream);
+    border: 2px solid var(--res-navy);
+    font-family: 'Special Elite', cursive;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    box-shadow: 6px 6px 0px var(--res-red);
+    transition: all 0.2s ease;
+    margin-top: auto;
+}
+
+.btn-execute:hover {
+    background: var(--res-red);
+    color: var(--res-white);
+    border-color: var(--res-red);
+    box-shadow: 6px 6px 0px var(--res-navy);
+    transform: translate(-2px, -2px);
+}
+
+.btn-execute:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px var(--res-navy);
+}
+
+/* ===== PANEL KANAN: SIDE PANEL SYSTEM ===== */
+.res-side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Base style untuk semua side card agar balance dengan panel kiri */
+.res-side-card {
+    border: 2px solid rgba(253, 246, 227, 0.2);
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.res-side-card .card-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--res-cream);
+    opacity: 0.5;
+    border-bottom: 1px dotted rgba(253, 246, 227, 0.2);
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* Info Card (Wireframe Blueprint Look) */
+.info-card {
+    border-color: rgba(253, 246, 227, 0.2);
+}
+
+.res-info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.res-info-list li {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+    color: rgba(253, 246, 227, 0.8);
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed rgba(253, 246, 227, 0.1);
+    padding-bottom: 6px;
+}
+
+.res-info-list li strong {
+    color: var(--res-red);
+    font-weight: 700;
+}
+
+/* Protocol Card (Warning System Accent) */
+.protocol-card {
+    background: rgba(214, 61, 61, 0.05);
+    border: 2px dashed var(--res-red);
+}
+
+.protocol-text {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: rgba(253, 246, 227, 0.85);
+    margin: 0;
+}
+
+.protocol-text strong {
+    color: var(--res-cream);
+    background: var(--res-red);
+    padding: 2px 6px;
+}
+
+/* ===== BARCODE GRAPHIC (Clean Tech Blueprint Stamp) ===== */
+.barcode-wrapper {
+    margin-top: auto;
+    border: 2px solid rgba(253, 246, 227, 0.15);
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.15);
+    text-align: center;
 }
 
 .barcode-lines {
-    height: 45px; 
+    height: 50px;
     width: 100%;
-    /* Menggunakan warna putih murni #ffffff secara langsung */
     background: repeating-linear-gradient(
-        90deg, 
-        #ffffff 0px, 
-        #ffffff 2px, 
-        transparent 2px, 
-        transparent 8px
+        90deg,
+        var(--res-cream) 0px,
+        var(--res-cream) 2px,
+        transparent 2px,
+        transparent 8px,
+        var(--res-cream) 8px,
+        var(--res-cream) 11px,
+        transparent 11px,
+        transparent 13px
     ) !important;
+    opacity: 0.7;
 }
 
-.barcode-text { 
-    font-size: 0.65rem; 
-    text-align: center; 
-    margin-top: 10px; 
-    color: #ffffff !important; /* Paksa teks jadi putih */
-    font-weight: bold; 
-    letter-spacing: 6px; 
-    text-transform: uppercase;
-    display: block !important;
+.barcode-text {
+    font-size: 0.75rem;
+    margin-top: 12px;
+    color: var(--res-cream) !important;
+    font-weight: 700;
+    letter-spacing: 5px;
+    opacity: 0.6;
 }
 
-/* RESPONSIVE */
-@media (max-width: 950px) {
-    .res-grid { grid-template-columns: 1fr; }
-    .form-row { grid-template-columns: 1fr; }
+/* ===== RESPONSIVE MEDIA QUERIES ===== */
+@media (max-width: 992px) {
+    .res-grid {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+    #reservasi-section {
+        padding: 80px 4%;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .res-main-card {
+        padding: 30px 20px;
+    }
+    .res-title {
+        font-size: 1.8rem;
+    }
 }

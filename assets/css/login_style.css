@@ -1,243 +1,249 @@
-/* =========================================
-   WOELANDARI LAB - SOFT BRUTALISM (FADED VINTAGE)
-   ========================================= */
-
-:root { 
-    --bg-blueprint: #4A5568; /* Slate Blue-Gray (Lembut, tidak segelap biru malam) */
-    --paper-main: #E2DDD3;   /* Kertas usang berdebu (Dusty Parchment) */
-    --paper-back: #EBE7DF;   /* Kertas belakang sedikit lebih terang */
-    --ink-dark: #374151;     /* Tinta pensil/abu-abu tua (Bukan hitam pekat!) */
-    --red-tape: #C55A5A;     /* Merah bata pudar (Soft Terracotta) */
+/* login_style.css - sama seperti yang sudah Anda perbaiki, tambahkan error box */
+:root {
+    --bg-blueprint: #4A5568; 
+    --paper-main: #E2DDD3;   
+    --paper-back: #EBE7DF;   
+    --ink-dark: #374151;     
+    --red-tape: #C55A5A;     
 }
 
-body { 
-    background-color: var(--bg-blueprint); 
-    font-family: 'Courier Prime', monospace; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    min-height: 100vh; 
+* {
+    box-sizing: border-box;
+}
+
+body {
     margin: 0;
+    padding: 0;
+    background-color: var(--bg-blueprint);
+    font-family: 'Courier Prime', monospace;
     overflow: hidden;
     color: var(--ink-dark);
-    
-    /* Background Blueprint Grid - Dibuat sangat samar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
     background-image: 
         linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
     background-size: 30px 30px;
+    z-index: -2;
 }
 
-/* --- ANIMASI KEYFRAMES --- */
-@keyframes dropArchive {
-    0% { transform: translateY(-40px) rotate(-5deg); opacity: 0; box-shadow: 0 0 0 transparent; }
-    100% { 
-        transform: translateY(0) rotate(-1.5deg); 
-        opacity: 1; 
-        box-shadow: 10px 10px 0px var(--ink-dark), 20px 20px 30px rgba(0,0,0,0.2); 
-    }
+.cursor-glow {
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    transition: width 0.3s, height 0.3s;
 }
 
-@keyframes slideInUp {
-    0% { transform: translateY(10px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-}
-
-/* --- KARTU UTAMA --- */
-.login-card { 
-    background-color: var(--paper-main); 
-    background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
-    border: 2px solid var(--ink-dark); 
-    padding: 40px; 
+.login-container {
     width: 100%;
     max-width: 420px;
-    position: relative; 
-    z-index: 2;
-    transform: rotate(-1.5deg); 
-    animation: dropArchive 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-
-/* Tumpukan Kertas di Belakang */
-.login-card::before {
-    content: "";
-    position: absolute;
-    top: -2px; left: -2px; right: -2px; bottom: -2px;
-    background: var(--paper-back);
-    border: 2px solid var(--ink-dark);
-    z-index: -1;
-    transform: rotate(3deg) translate(3px, 3px);
-    box-shadow: 6px 6px 0px rgba(55, 65, 81, 0.5); 
-}
-
-/* Selotip Merah Pudar */
-.tape-red { 
-    position: absolute; 
-    width: 130px; 
-    height: 35px; 
-    background: var(--red-tape); 
-    top: -18px; 
-    right: -25px; 
-    transform: rotate(10deg); 
-    box-shadow: 2px 2px 0px rgba(55, 65, 81, 0.4); 
+    padding: 20px;
     z-index: 10;
+}
+
+.paper-stack {
+    position: relative;
+    background-color: var(--paper-back);
+    box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.2);
+    transform: rotate(-1.5deg);
+}
+
+.card-blueprint {
+    background-color: var(--paper-main);
+    padding: 35px 30px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transform: rotate(1.5deg);
+    position: relative;
+}
+
+.tape-red {
+    position: absolute;
+    top: -5px;
+    right: -25px;
+    width: 110px;
+    height: 32px;
+    background-color: var(--red-tape);
     opacity: 0.85;
-    border: 1px dashed rgba(255,255,255,0.4);
+    transform: rotate(38deg);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    border-left: 2px dashed rgba(0,0,0,0.1);
+    border-right: 2px dashed rgba(0,0,0,0.1);
+    z-index: 5;
 }
 
-.spec-header { 
-    font-size: 0.75rem; 
-    margin-bottom: 25px; 
+.spec-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    font-weight: bold;
+    border-bottom: 1.5px solid var(--ink-dark);
+    padding-bottom: 4px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 0.75rem;
+    margin-bottom: 25px;
+    font-weight: bold;
+    opacity: 0.8;
+}
+
+.form-group { 
+    margin-bottom: 18px; 
+}
+.form-label { 
+    display: block; 
+    font-size: 0.8rem; 
     font-weight: bold; 
-    border-bottom: 1.5px dashed var(--ink-dark);
-    padding-bottom: 10px;
+    margin-bottom: 6px; 
 }
 
-h1 { 
-    font-family: 'Special Elite', cursive; 
-    font-size: 1.8rem; 
-    margin-bottom: 30px; 
-    color: var(--ink-dark);
-    text-transform: uppercase;
-    transform: rotate(1deg); 
-}
-
-/* --- FORM & INPUT --- */
-.input-group-custom { animation: slideInUp 0.5s ease-out both; position: relative; }
-.input-group-custom:nth-child(1) { animation-delay: 0.3s; }
-.input-group-custom:nth-child(2) { animation-delay: 0.4s; }
-
-label.form-label { 
-    font-size: 0.85rem; 
-    font-weight: bold; 
-    letter-spacing: 1px;
-    color: var(--ink-dark);
-}
-
-.form-control { 
-    width: 100%;
-    padding: 12px 15px; 
-    border: 2px solid var(--ink-dark); 
-    border-radius: 0;
-    background: rgba(255,255,255,0.4);
-    font-family: 'Courier Prime', monospace; 
-    font-size: 1rem;
-    color: var(--ink-dark);
-    transition: all 0.2s ease;
-}
-
-/* Saat diketik, melompat dengan warna pudar */
-.form-control:focus {
-    background: #fff;
-    border-color: var(--red-tape);
-    box-shadow: 4px 4px 0 var(--red-tape);
-    transform: translate(-2px, -2px);
-    outline: none;
-}
-
-/* --- IKON MATA --- */
-.password-wrapper {
+.input-wrapper {
     position: relative;
     width: 100%;
 }
 
-.password-wrapper input {
-    padding-right: 45px; 
+.form-control {
+    width: 100%;
+    padding: 10px 35px 10px 10px;
+    background: transparent;
+    border: 2px solid var(--ink-dark);
+    font-family: 'Courier Prime', monospace;
+    outline: none;
+    box-sizing: border-box;
 }
 
-.eye-icon-btn {
+.form-control:focus {
+    box-shadow: 3px 3px 0 var(--ink-dark);
+}
+
+.password-toggle {
     position: absolute;
-    right: 12px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--ink-dark);
     cursor: pointer;
-    background: none;
-    border: none;
+    color: var(--ink-dark);
+    font-size: 1rem;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 0;
-    font-size: 1.1rem;
-    transition: 0.2s;
-    opacity: 0.6;
+    width: 24px;
+    height: 24px;
+    transition: color 0.2s;
 }
-
-.eye-icon-btn:hover, .eye-icon-btn:focus {
+.password-toggle:hover {
     color: var(--red-tape);
-    opacity: 1;
 }
 
-/* --- CHECKBOX --- */
-.form-check {
-    margin-top: 15px;
-    margin-bottom: 25px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    animation: slideInUp 0.5s ease-out 0.5s both;
+.action-buttons {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.form-check-input {
-    border: 2px solid var(--ink-dark);
-    border-radius: 0;
-    cursor: pointer;
-    width: 1.2em; height: 1.2em;
-    margin-top: 0.15em;
-    transition: 0.2s;
-}
-
-.form-check-input:checked {
-    background-color: var(--ink-dark);
-    border-color: var(--ink-dark);
-}
-
-.form-check-input:focus {
-    box-shadow: 2px 2px 0 var(--red-tape);
-}
-
-/* --- TOMBOL --- */
-.btn-login { 
+.btn-login {
     width: 100%;
-    padding: 14px; 
-    background: var(--ink-dark); 
-    color: var(--paper-main); 
-    border: 2px solid var(--ink-dark);
-    font-family: 'Special Elite', cursive; 
-    font-size: 1.1rem; 
-    cursor: pointer; 
-    transition: all 0.2s ease;
-    animation: slideInUp 0.5s ease-out 0.6s both;
+    padding: 12px;
+    background-color: var(--ink-dark);
+    color: var(--paper-main);
+    border: none;
+    font-family: 'Special Elite', cursive;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.15s ease;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
 }
 
-.btn-login:hover { 
-    background: var(--paper-back); 
-    color: var(--ink-dark);
-    transform: translate(-3px, -3px); 
-    box-shadow: 6px 6px 0 var(--red-tape); 
+.btn-login:hover {
+    background-color: var(--red-tape);
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0px rgba(0,0,0,0.3);
 }
 
 .btn-login:active {
-    transform: translate(0, 0); 
-    box-shadow: 0 0 0 transparent; 
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px 0px rgba(0,0,0,0);
 }
 
-/* --- ERROR & CATATAN --- */
-.error-box { 
-    background: rgba(197, 90, 90, 0.1); 
-    color: var(--red-tape); 
-    padding: 12px; 
-    font-size: 0.85rem; 
-    margin-bottom: 25px; 
-    border-left: 4px solid var(--red-tape); 
+.btn-return {
+    text-decoration: none;
+    color: var(--ink-dark);
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+    border: 1px dashed var(--ink-dark);
+    transition: all 0.2s;
+    display: inline-block;
 }
 
-.notebook-note { 
-    margin-top: 35px; 
-    border-top: 1.5px dashed var(--ink-dark); 
-    padding-top: 15px; 
-    animation: slideInUp 0.5s ease-out 0.7s both;
+.btn-return:hover {
+    background-color: rgba(0,0,0,0.05);
+    color: var(--red-tape);
+    border-style: solid;
 }
 
-.handwritten-text { 
-    font-family: 'Caveat', cursive; 
-    font-size: 1.3rem; 
-    color: #4b5563; 
-    transform: rotate(-3deg); 
-    margin: 0;
+.error-box {
+    background: rgba(197, 90, 90, 0.1);
+    border-left: 3px solid var(--red-tape);
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 0.75rem;
+    color: var(--red-tape);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.terminal-note {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--ink-dark);
+    font-size: 0.65rem;
+    line-height: 1.4;
+    opacity: 0.7;
+}
+
+@media (max-width: 480px) {
+    .card-blueprint { 
+        padding: 25px 20px; 
+    }
+    h1 { 
+        font-size: 1.5rem; 
+    }
+    .form-control {
+        padding: 8px 32px 8px 8px;
+    }
+    .password-toggle {
+        right: 8px;
+        font-size: 0.9rem;
+    }
 }

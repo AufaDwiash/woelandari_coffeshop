@@ -2,8 +2,8 @@
 
 :root {
     --bg-white: #FFFFFF;
-    --navy-blue: #002B5B; /* Samakan dengan Home */
-    --accent-red: #EA4335; /* Samakan dengan Home */
+    --navy-blue: #002B5B;
+    --accent-red: #EA4335;
     --black: #000000;
     --grid-grey: rgba(0, 0, 0, 0.05);
     --grid-light: rgba(255, 255, 255, 0.05);
@@ -18,11 +18,10 @@
         linear-gradient(90deg, var(--grid-grey) 1px, transparent 1px);
     background-size: 30px 30px;
     position: relative;
-    overflow: hidden; 
+    overflow: hidden;
     transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Background hanya berubah jadi Navy jika ada .person-card yang di-hover */
 #community-section:has(.person-card:hover) {
     background-color: var(--navy-blue);
     background-image: 
@@ -30,89 +29,88 @@
         linear-gradient(90deg, var(--grid-light) 1px, transparent 1px);
 }
 
-/* =========================================
-   HEADER (JUDUL KIRI & HINT TENGAH)
-========================================= */
+/* HEADER */
 .header-overlay {
     position: absolute;
-    top: 50px;
+    top: 30px;
     left: 0;
     width: 100%;
     padding: 0 5%;
     z-index: 10;
     pointer-events: none;
 }
-
 .main-title {
     font-family: 'Montserrat', sans-serif;
     font-weight: 900;
-    font-size: 3.5rem;
-    line-height: 1;
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    line-height: 1.1;
     text-transform: uppercase;
     color: var(--black);
     transition: color 0.6s;
 }
-
 .scroll-hint {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     font-weight: bold;
     color: var(--accent-red);
     letter-spacing: 2px;
     position: absolute;
-    top: 130px;
+    top: 100px;
     left: 50%;
     transform: translateX(-50%);
+    white-space: nowrap;
+    background: rgba(255,255,255,0.6);
+    padding: 4px 12px;
+    border-radius: 30px;
+    backdrop-filter: blur(4px);
 }
-
 #community-section:has(.person-card:hover) .main-title { 
     color: var(--bg-white); 
 }
+#community-section:has(.person-card:hover) .scroll-hint {
+    background: rgba(0,0,0,0.5);
+    color: white;
+}
 
-/* =========================================
-   AREA SCROLL FOTO (ANTI MENUMPUK)
-========================================= */
+/* SCROLL AREA */
 .horizontal-scroll-wrapper {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    overflow-x: auto; 
+    overflow-x: auto;
     overflow-y: hidden;
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: none;
     z-index: 5;
 }
-.horizontal-scroll-wrapper::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+.horizontal-scroll-wrapper::-webkit-scrollbar { display: none; }
 
 .people-strip {
     display: flex;
-    flex-wrap: nowrap; /* MEMAKSA ELEMEN TETAP DALAM 1 BARIS */
-    width: max-content; /* MEMAKSA WADAH MEMANJANG SESUAI ISI FOTO */
+    flex-wrap: nowrap;
+    width: max-content;
     height: 100%;
-    align-items: flex-end; /* Semua kaki menapak di garis bawah layar */
+    align-items: flex-end;
     padding-left: 5vw;
-    gap: -10px; /* Jarak rapat, bisa diubah jika kurang rapat/renggang */
+    gap: -5px;
 }
-
 .scroll-spacer {
-    width: 15vw; /* Ruang kosong ekstra di kanan saat di-scroll mentok */
+    width: 15vw;
     flex-shrink: 0;
 }
 
-/* =========================================
-   KARTU & FOTO KARAKTER
-========================================= */
+/* KARTU KARAKTER - tinggi lebih proporsional */
 .person-card {
-    flex: 0 0 auto; /* Kunci ukuran, tidak boleh mengecil/membesar */
-    height: 70vh; /* Tinggi seragam agar tidak berantakan */
+    flex: 0 0 auto;
+    height: 70vh;      /* tinggi 70% viewport */
+    min-height: 380px;
     position: relative;
     cursor: pointer;
 }
-
 .person-img {
     height: 100%;
-    width: auto; /* Lebar menyesuaikan tinggi (aspect ratio terjaga) */
+    width: auto;
     object-fit: contain;
     filter: grayscale(100%);
     transition: all 0.4s ease;
@@ -120,49 +118,38 @@
     z-index: 2;
     display: block;
 }
-
-/* EFEK HOVER: Warna nyala & Garis putih (TIDAK TERANGKAT) */
 .person-card:hover .person-img {
-    filter: 
-        grayscale(0%)
-        drop-shadow(4px 0px 0px #FFF) 
-        drop-shadow(-4px 0px 0px #FFF) 
-        drop-shadow(0px 4px 0px #FFF) 
-        drop-shadow(0px -4px 0px #FFF);
+    filter: grayscale(0%) drop-shadow(4px 0px 0px #FFF) drop-shadow(-4px 0px 0px #FFF) drop-shadow(0px 4px 0px #FFF) drop-shadow(0px -4px 0px #FFF);
     z-index: 10;
 }
 
-/* =========================================
-   KOTAK LABEL NAMA BRUTALIST
-========================================= */
+/* BADGE - LEBIH DEKAT KE BAWAH GAMBAR */
 .person-info {
     position: absolute;
-    bottom: 50%; /* Muncul tepat di area dada/perut karakter */
+    bottom: 2%;        /* sangat dekat dengan kaki karakter */
     left: 50%;
-    transform: translateX(-50%) translateY(20px);
+    transform: translateX(-50%);
     opacity: 0;
     transition: opacity 0.3s ease, transform 0.3s ease;
     pointer-events: none;
     z-index: 20;
     width: max-content;
+    max-width: 90%;
+    white-space: normal;
 }
-
 .person-card:hover .person-info {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(-50%) translateY(-5px);
 }
-
-/* Gaya Kotak Brutalist ala Home */
 .brutalist-badge {
     background-color: var(--bg-white);
     border: 2px solid var(--black);
-    padding: 10px 20px;
-    box-shadow: 6px 6px 0 var(--accent-red); /* Bayangan merah */
+    padding: 8px 18px;
+    box-shadow: 6px 6px 0 var(--accent-red);
     text-align: center;
     position: relative;
+    white-space: nowrap;
 }
-
-/* Segitiga Penunjuk ke Bawah */
 .brutalist-badge::after {
     content: '';
     position: absolute;
@@ -173,28 +160,128 @@
     border-style: solid;
     border-color: var(--black) transparent transparent transparent;
 }
-
 .brutalist-badge .role {
     display: block;
     font-family: 'Courier Prime', monospace;
     font-size: 0.75rem;
     font-weight: 700;
-    color: var(--black);
+    color: var(--accent-red);
     margin-bottom: 4px;
     letter-spacing: 1px;
 }
 
 .brutalist-badge .name {
     display: block;
-    font-family: 'Montserrat', sans-serif; /* FONT LEBIH JELAS */
+    font-family: 'Montserrat', sans-serif;
     font-size: 1.3rem;
     font-weight: 900;
     color: var(--black);
+    line-height: 1.2;
 }
 
-/* Responsif Layar HP */
+.brutalist-badge .quote {
+    display: block;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--navy-blue);
+    margin-top: 6px;
+    padding-top: 4px;
+    border-top: 1px dashed var(--grid-grey);
+    white-space: normal;
+    word-break: break-word;
+    max-width: 240px;
+}
+
+/* RESPONSIVE TABLET & MOBILE */
+@media (max-width: 1024px) {
+    .person-card {
+        height: 65vh;
+        min-height: 340px;
+    }
+    .person-info {
+        bottom: 1.5%;
+    }
+    .brutalist-badge {
+        padding: 6px 16px;
+        white-space: normal;
+    }
+    .brutalist-badge .name {
+        font-size: 1.1rem;
+    }
+    .brutalist-badge .role {
+        font-size: 0.7rem;
+    }
+    .brutalist-badge .quote {
+        font-size: 0.7rem;
+        max-width: 200px;
+    }
+}
+
 @media (max-width: 768px) {
-    .main-title { font-size: 2.2rem; }
-    .scroll-hint { top: 110px; font-size: 0.7rem; width: 100%; text-align: center; }
-    .person-card { height: 60vh; }
+    .header-overlay {
+        top: 15px;
+    }
+    .main-title {
+        font-size: 1.8rem;
+    }
+    .scroll-hint {
+        top: 80px;
+        font-size: 0.65rem;
+    }
+    .person-card {
+        height: 60vh;
+        min-height: 300px;
+    }
+    .people-strip {
+        padding-left: 4vw;
+    }
+    .person-info {
+        bottom: 1%;
+    }
+    .brutalist-badge {
+        padding: 6px 14px;
+        box-shadow: 4px 4px 0 var(--accent-red);
+    }
+    .brutalist-badge .name {
+        font-size: 1rem;
+    }
+    .brutalist-badge .role {
+        font-size: 0.7rem;
+    }
+    .brutalist-badge .quote {
+        font-size: 0.65rem;
+        max-width: 180px;
+    }
+    .brutalist-badge::after {
+        border-width: 8px 8px 0;
+        bottom: -8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .person-card {
+        height: 55vh;
+        min-height: 280px;
+    }
+    .scroll-hint {
+        font-size: 0.6rem;
+        top: 70px;
+    }
+    .person-info {
+        bottom: 0.5%;
+    }
+    .brutalist-badge {
+        padding: 5px 12px;
+    }
+    .brutalist-badge .name {
+        font-size: 0.9rem;
+    }
+    .brutalist-badge .role {
+        font-size: 0.65rem;
+    }
+    .brutalist-badge .quote {
+        font-size: 0.6rem;
+        max-width: 160px;
+    }
 }

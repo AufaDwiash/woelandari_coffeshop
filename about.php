@@ -1,5 +1,4 @@
-<?php // about.php - VERSI BERSIH TANPA TAG HTML/BODY ?>
-
+<?php // about.php - PERBAIKAN MOBILE ?>
 <section class="section-navy">
     <div class="dossier-split">
         <div class="split-col text-col">
@@ -23,7 +22,7 @@
         <div class="split-col image-col">
             <div class="pinned-photo tilt-right anim-photo-right">
                 <div class="red-tape"></div>
-                <img src="assets/images/gambar-mentahan/about1.jpg" alt="Lab Setup Woelandari">
+                <img src="assets/images/gambar-mentahan/about1.jpg" alt="Lab Setup Woelandari" onerror="this.src='assets/images/default.jpg'">
                 <div class="photo-meta">
                     <span>REF: PHI_01</span>
                     <span>LOC: GARAGE LAB</span>
@@ -34,7 +33,7 @@
 </section>
 
 <section class="section-cream">
-    <div class="dossier-split" style="flex-direction: row-reverse;">
+    <div class="dossier-split reverse"> <!-- REVERSE LAYOUT via class, bukan inline style -->
         <div class="split-col text-col">
             <div class="content-offset">
                 <div class="tech-mark anim-fade-up delay-1">
@@ -57,7 +56,7 @@
         <div class="split-col image-col">
             <div class="pinned-photo tilt-left anim-photo-left">
                 <div class="red-tape alt-pos"></div>
-                <img src="assets/images/gambar-mentahan/about2.jpg" alt="Early Garage Setup">
+                <img src="assets/images/gambar-mentahan/about2.jpg" alt="Early Garage Setup" onerror="this.src='assets/images/default.jpg'">
                 <div class="photo-meta">
                     <span>REF: HIS_01</span>
                     <span>LOC: ORIGIN SITE</span>
@@ -69,17 +68,23 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add("is-visible");
-                observer.unobserve(entry.target); // Hanya trigger 1x
-            }
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("is-visible");
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        document.querySelectorAll(".anim-fade-up, .anim-photo-right, .anim-photo-left").forEach(el => {
+            observer.observe(el);
         });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll(".anim-fade-up, .anim-photo-right, .anim-photo-left").forEach(el => {
-        observer.observe(el);
-    });
+    } else {
+        // Fallback
+        document.querySelectorAll(".anim-fade-up, .anim-photo-right, .anim-photo-left").forEach(el => {
+            el.classList.add("is-visible");
+        });
+    }
 });
 </script>

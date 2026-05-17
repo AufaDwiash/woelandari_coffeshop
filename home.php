@@ -1,3 +1,4 @@
+
 <section id="home">
 <div class="interactive-scene" id="scene" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">
     
@@ -97,3 +98,4 @@
     })();
 </script>
 </section>
+

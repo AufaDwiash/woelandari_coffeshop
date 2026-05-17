@@ -14,7 +14,7 @@ $today = date('Y-m-d');
     <link rel="stylesheet" href="assets/css/gallery_style.css?v=<?php echo time(); ?>">
 </head>
 <body>
-
+    <?php include 'components/navbar.php'; ?>
     <div class="header-gallery">
         <p class="doc-ref">WOELANDARI EXPERIENCE</p>
         <h1>VISUAL ARCHIVES</h1>
