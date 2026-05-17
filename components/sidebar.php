@@ -15,7 +15,7 @@ $isAdmin = ($role == 'admin' || $role == 'superadmin');
             <span>COFFEE LAB.</span>
         </div>
         <div class="brand-role">
-            <i class="fas fa-id-badge"></i> <?= $isAdmin ? 'ADMINISTRATOR' : 'STAFF / KARYAWAN' ?>
+        <i class="fas fa-id-badge"></i> <?= $isAdmin ? 'ADMIN' : 'KARYAWAN' ?>
         </div>
     </div>
 

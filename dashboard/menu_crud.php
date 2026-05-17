@@ -6,11 +6,9 @@ if (!isset($_SESSION['username'])) {
     header("Location: ../login.php");
     exit;
 }
-$role = $_SESSION['role'];
-if ($role != 'admin' && $role != 'superadmin') {
-    header("Location: dashboard.php");
-    exit;
-}
+
+// Semua role (admin, superadmin, karyawan) memiliki akses penuh
+// Hanya perlu memastikan user sudah login
 
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -46,6 +44,7 @@ if (isset($_GET['edit'])) {
     }
 }
 
+// Proses POST untuk semua role yang sudah login
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $action = $_POST['action'] ?? '';
     $id = isset($_POST['id_menu']) ? (int)$_POST['id_menu'] : 0;
@@ -68,11 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     if ($action == 'add') {
         if (!$foto_nama) $foto_nama = 'default.jpg';
-        // Query tanpa stok
         mysqli_query($conn, "INSERT INTO menu (nama_menu, kategori, harga, status, deskripsi, foto) VALUES ('$nama', '$kategori', $harga, '$status', '$deskripsi', '$foto_nama')");
         $msg = "Menu berhasil ditambahkan!";
     } elseif ($action == 'update') {
-        // Query tanpa stok
         mysqli_query($conn, "UPDATE menu SET nama_menu='$nama', kategori='$kategori', harga=$harga, status='$status', deskripsi='$deskripsi', foto='$foto_nama' WHERE id_menu=$id");
         $msg = "Menu berhasil diperbarui!";
     }
