@@ -12,8 +12,6 @@
     </div>
 
     <img src="assets/images/background/layer2.png" class="layer layer-pagar">
-
-    <div class="click-hint">KLIK UNTUK MASUK KE LAB</div>
 </div>
 
 <script>

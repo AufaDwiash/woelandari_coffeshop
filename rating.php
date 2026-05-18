@@ -28,7 +28,7 @@ if (isset($_GET['ajax'])) {
         }
 
         // Filter kata kasar (simple tapi cukup)
-        $kataKotor = ['anjing', 'bangsat', 'kontol', 'memek', 'jancok', 'asu', 'goblok', 'tolol', 'bego', 'sialan', 'brengsek', 'tai', 'kampret'];
+        $kataKotor = ['anjing', 'bangsat', 'kontol', 'memek', 'jancok', 'asu', 'goblok', 'tolol', 'bego', 'sialan', 'brengsek', 'tai', 'kampret', 'memeg','bajingan', 'bacot', 'brengsek', 'gila', 'idiot', 'kurang ajar', 'setan', 'cuki', 'patek', 'banci', 'brengsek', 'brengsek', 'boti',];
         $adaKataKotor = false;
         foreach ($kataKotor as $k) {
             if (preg_match('/\b' . preg_quote($k, '/') . '\b/i', $nama_raw) ||

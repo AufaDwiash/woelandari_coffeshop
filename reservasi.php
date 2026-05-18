@@ -53,7 +53,7 @@
                 </div>
 
                 <button type="button" onclick="executeBooking()" class="btn-execute">
-                    RESERVASI (Otomatis Via WA) <i class="fa-solid fa-flask-vial"></i>
+                    RESERVASI <i class="fa-solid fa-flask-vial"></i>
                 </button>
             </form>
 
@@ -100,7 +100,7 @@ function executeBooking() {
         return;
     }
 
-    const adminNum = "628118198858"; 
+    const adminNum = "6289677718775"; // Ganti dengan nomor WhatsApp admin yang valid (format internasional tanpa tanda +)
     const msg = `Halo Admin Woelandari Coffee Lab,%0A%0ASaya ingin mengajukan *LAB RESERVATION*:%0A%0A` +
                  `*Nama:* ${d.nama}%0A` +
                  `*WhatsApp:* ${d.wa}%0A` +

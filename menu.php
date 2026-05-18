@@ -44,7 +44,7 @@ $menu_json = json_encode($menu_data);
 
     <div class="list-section">
         <div class="search-wrapper">
-            <input type="text" id="menuSearch" class="search-input" placeholder="> CARI MENU...">
+            <input type="text" id="menuSearch" class="search-input" placeholder=" CARI MENU...">
         </div>
 
         <div class="filter-tabs">
@@ -57,7 +57,7 @@ $menu_json = json_encode($menu_data);
        
 
         <div class="menu-list-container" id="menuContainer">
-            <div id="empty-state" class="empty-state">// ERROR: Menu tidak ditemukan di inventaris.</div>
+            <div id="empty-state" class="empty-state">Menu tidak ditemukan.</div>
 
             <?php foreach($menu_data as $item): 
                 $is_sold_out = (isset($item['status']) && $item['status'] == 'Tidak Tersedia');

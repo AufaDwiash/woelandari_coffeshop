@@ -348,11 +348,11 @@ $query_users = mysqli_query($conn, "SELECT * FROM user $whereClause ORDER BY
     <section class="paper">
         <div class="tape"></div>
         <div class="spec-header">
-            <span><i class="fas fa-shield-alt"></i> USER MANAGEMENT_SYS</span>
+            <span><i class="fas fa-shield-alt"></i> KELOLA USER</span>
             <span>DATE: <?= date('d/m/Y') ?></span>
         </div>
         
-        <h1 class="title-main">DAFTAR SYSTEM USER</h1>
+        <h1 class="title-main">USER MANAGEMENT</h1>
 
         <?php if ($msg): ?>
             <div class="alert-msg"><i class="fas fa-info-circle"></i> <?= $msg ?></div>
@@ -376,10 +376,10 @@ $query_users = mysqli_query($conn, "SELECT * FROM user $whereClause ORDER BY
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th class="col-id">SYS_ID</th>
+                        <th class="col-id">ID</th>
                         <th class="col-user">USERNAME</th>
                         <th class="col-nama">NAMA LENGKAP</th>
-                        <th class="col-role">AUTHORITY LEVEL</th>
+                        <th class="col-role">SEBAGAI</th>
                         <th class="col-date">DIBUAT PADA</th>
                         <th class="col-action">AKSI</th>
                     </tr>

@@ -11,10 +11,12 @@
             <li class="woe-nav-item"><a href="index.php#home">HOME</a></li>
             <li class="woe-nav-item"><a href="index.php#menu">MENU</a></li>
             
-            <li class="woe-nav-item"><a href="gallery.php">GALLERY</a></li>
+           
             
             <li class="woe-nav-item"><a href="index.php#reservasi">RESERVASI</a></li>
-            <li class="woe-nav-item"><a href="index.php#lokasi">LOKASI</a></li>
+            <li class="woe-nav-item"><a href="index.php#rating">rating</a></li>
+             <li class="woe-nav-item"><a href="gallery.php">GALLERY</a></li>
+            <li class="woe-nav-item"><a href="lokasi_full.php">LOKASI</a></li>
         </ul>
 
         <!-- Mobile toggle button -->

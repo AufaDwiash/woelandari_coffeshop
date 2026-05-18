@@ -382,6 +382,8 @@ if (isset($_GET['msg'])) {
                         if (mysqli_num_rows($q) > 0):
                             while ($row = mysqli_fetch_assoc($q)):
                                 $status_class = ($row['status'] == 'active') ? 'status-active' : 'status-hidden';
+                                $toggle_icon = ($row['status'] == 'active') ? 'fa-eye' : 'fa-eye-slash';
+                                $toggle_title = ($row['status'] == 'active') ? 'Sembunyikan' : 'Tampilkan';
                         ?>
                             <tr>
                                 <td style="text-align: center;">
@@ -403,7 +405,9 @@ if (isset($_GET['msg'])) {
                                 <td>
                                     <div class="action-buttons">
                                         <a href="?edit=<?= $row['id'] ?>" class="btn btn-primary btn-sm">EDIT</a>
-                                        <a href="?toggle=<?= $row['id'] ?>&current=<?= $row['status'] ?>" class="btn btn-secondary btn-sm"><i class="fas fa-sync-alt"></i></a>
+                                        <a href="?toggle=<?= $row['id'] ?>&current=<?= $row['status'] ?>" class="btn btn-secondary btn-sm" title="<?= $toggle_title ?>">
+                                            <i class="fas <?= $toggle_icon ?>"></i>
+                                        </a>
                                         <a href="?delete=<?= $row['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('APAKAH ANDA YAKIN MENGHAPUS ANGGOTA INI?')">DEL</a>
                                     </div>
                                 </td>

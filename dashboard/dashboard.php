@@ -278,7 +278,7 @@ $recent = array_slice($recent, 0, 4);
         </div>
         
         <div class="spec-header">
-            <span><i class="fas fa-coffee"></i> WOELANDARI LAB_SYS</span>
+            <span><i class="fas fa-coffee"></i> DASHBOARD</span>
             <span>DATE: <?php echo date('d/m/Y'); ?></span>
         </div>
 
@@ -304,7 +304,7 @@ $recent = array_slice($recent, 0, 4);
         </div>
 
         <div class="log-section" style="margin-top:35px; border-top:2px dashed var(--navy); padding-top:20px;">
-            <p style="font-weight:bold; margin-bottom:15px; font-size:0.8rem; color:var(--red);">// RECENT SYSTEM ACTIVITY LOGS</p>
+            <p style="font-weight:bold; margin-bottom:15px; font-size:0.8rem; color:var(--red);">CATATAN AKTIVITAS TERBARU</p>
             <?php foreach ($recent as $log): ?>
             <div style="font-size:0.85rem; padding:8px 0; border-bottom:1px solid rgba(0,43,91,0.1); display: flex; gap: 10px;">
                 <span style="opacity:0.6; min-width: 45px;">[<?= date('H:i', strtotime($log['date'])) ?>]</span> 
@@ -319,12 +319,12 @@ $recent = array_slice($recent, 0, 4);
 
     <section class="paper paper-style-1">
         <div class="tape"></div>
-        <div class="spec-header"><span>// LATEST MENU DATABASE ENTRIES</span></div>
+        <div class="spec-header"><span>HISTORY MENU</span></div>
         
         <div class="table-container">
             <table class="menu-table">
                 <thead>
-                    <tr><th>SYS_ID</th><th>NAMA ITEM</th><th>KATEGORI</th><th>HARGA</th><th>STATUS</th></tr>
+                    <tr><th>ID</th><th>NAMA ITEM</th><th>KATEGORI</th><th>HARGA</th><th>STATUS</th></tr>
                 </thead>
                 <tbody>
                     <?php
@@ -336,11 +336,24 @@ $recent = array_slice($recent, 0, 4);
                         <td><?= htmlspecialchars($m['nama_menu']) ?></td>
                         <td><?= $m['kategori'] ?></td>
                         <td>Rp <?= number_format($m['harga'],0,',','.') ?></td>
-                        <td>
-                            <span style="background: <?= $m['status'] == 'tersedia' ? '#d4edda' : '#f8d7da' ?>; color: <?= $m['status'] == 'tersedia' ? '#155724' : '#721c24' ?>; padding: 3px 8px; border-radius: 3px; font-size: 0.8rem; font-weight: bold;">
-                                <?= strtoupper($m['status']) ?>
-                            </span>
-                        </td>
+                       <td>
+    <?php
+        $status = strtolower(trim($m['status']));
+        $warna = ($status == 'tersedia') ? '#28a745' : '#dc3545';
+    ?>
+
+    <span style="
+        background: <?= $warna ?>;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 3px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        display: inline-block;
+    ">
+        <?= strtoupper($m['status']) ?>
+    </span>
+</td>
                     </tr>
                     <?php endwhile; ?>
                 </tbody>

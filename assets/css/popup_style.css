@@ -1,0 +1,132 @@
+/* assets/css/popup_style.css */
+/* =======================================================
+   STYLE POP-UP KOLABORASI (GRAFFITI DOSSIER THEME)
+   ======================================================= */
+#collab-popup-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100vh;
+    background: rgba(10, 29, 55, 0.85); /* Navy Blur */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+#collab-popup-overlay.dossier-popup-hidden {
+    opacity: 0; visibility: hidden; pointer-events: none;
+}
+#collab-popup-overlay.dossier-popup-hidden .collab-popup-card {
+    transform: translateY(30px) rotate(-1deg); opacity: 0;
+}
+
+.collab-popup-card {
+    background: #FDF6E3; /* Kertas Cream */
+    border: 3px solid #0A1D37; /* Deep Navy */
+    padding: 40px;
+    max-width: 550px; width: 100%;
+    position: relative;
+    box-shadow: 12px 12px 0px rgba(0, 0, 0, 0.4);
+    transform: translateY(0) rotate(-1deg);
+    font-family: 'Courier Prime', monospace;
+    color: #0A1D37;
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.popup-red-tape {
+    position: absolute; top: -15px; left: 30px;
+    background: #D63D3D; color: #FFF; padding: 4px 15px;
+    font-family: 'Special Elite', cursive; font-size: 0.8rem;
+    font-weight: bold; letter-spacing: 2px;
+    transform: rotate(-3deg); box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+.popup-header { margin-bottom: 20px; text-align: center; }
+.popup-tag { font-size: 0.75rem; font-weight: bold; color: #D63D3D; letter-spacing: 2px; }
+.popup-title { font-family: 'Special Elite', cursive; font-size: 2rem; margin: 5px 0; color: #0A1D37; }
+.popup-divider { width: 80px; height: 3px; background: #D63D3D; margin: 10px auto 0 auto; }
+
+/* =======================================================
+   PERBAIKAN TATA LETAK LOGO (RASIO AMAN)
+   ======================================================= */
+.popup-logos-wrapper {
+    display: block; /* Menggunakan block standar untuk Weasy/Browser modern */
+    text-align: center;
+    margin: 25px 0;
+    padding: 20px;
+    background: rgba(10, 29, 55, 0.03);
+    border: 2px dashed rgba(10, 29, 55, 0.2);
+}
+
+/* Kotak Standar Penyelaras Rasio */
+.logo-box {
+    display: inline-block;
+    vertical-align: middle;
+    width: 90px;
+    height: 90px; /* Mengunci batas tinggi agar logo 1:1 dan 4:5 sejajar */
+    text-align: center;
+}
+
+.collab-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Mengunci agar gambar tidak ketarik/gepeng */
+    filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.1));
+    transition: transform 0.3s ease;
+}
+
+.logo-box:hover .collab-logo { transform: scale(1.1); }
+
+/* Custom SVG Graffiti X */
+.collab-x {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 15px;
+    transform: rotate(-5deg);
+    transition: transform 0.3s ease;
+}
+.collab-x:hover { transform: scale(1.15) rotate(5deg); }
+.collab-x svg { width: 45px; height: 45px; display: block; }
+
+/* ======================================================= */
+
+.popup-body .typewriter-text {
+    font-size: 0.95rem; line-height: 1.6; margin-bottom: 15px; color: #223344;
+    text-align: justify;
+}
+
+.popup-auth {
+    margin-top: 25px; padding-top: 15px; border-top: 2px dashed rgba(10, 29, 55, 0.2);
+    display: block; opacity: 0.6; font-size: 0.75rem; font-weight: bold;
+}
+.popup-auth span:first-child { float: left; }
+.popup-auth span:last-child { float: right; }
+.popup-auth::after { content: ""; display: table; clear: both; }
+
+.btn-popup-execute {
+    width: 100%; margin-top: 30px; padding: 15px;
+    background: #0A1D37; color: #FDF6E3; border: 2px solid #0A1D37;
+    font-family: 'Special Elite', cursive; font-size: 1.1rem;
+    cursor: pointer; box-shadow: 6px 6px 0px #D63D3D;
+    transition: all 0.2s ease; text-align: center;
+}
+
+.btn-popup-execute:hover {
+    background: #D63D3D; border-color: #D63D3D; color: #FFFFFF;
+    box-shadow: 6px 6px 0px #0A1D37; transform: translate(-2px, -2px);
+}
+
+@media (max-width: 600px) {
+    .collab-popup-card { padding: 30px 20px; transform: rotate(0deg); }
+    .popup-title { font-size: 1.6rem; }
+    .popup-logos-wrapper { padding: 15px; }
+    .logo-box { width: 70px; height: 70px; }
+    .collab-x svg { width: 35px; height: 35px; }
+    .collab-x { margin: 0 5px; }
+    .popup-auth span { float: none !important; display: block; text-align: center; margin-bottom: 5px; }
+}
