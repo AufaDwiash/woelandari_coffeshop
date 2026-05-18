@@ -17,7 +17,7 @@ $menu_json = json_encode($menu_data);
         
         <div class="menu-detail show" id="menu-detail">
             <div class="spec-header">
-                <span class="spec-id" id="detail-id">// REF: SELECT_ITEM</span>
+                <span class="spec-id" id="detail-id">menu SELECT_ITEM</span>
                 <span class="spec-status text-red" id="detail-status">SYSTEM_READY</span>
             </div>
             
@@ -29,14 +29,14 @@ $menu_json = json_encode($menu_data);
             </div>
 
             <div class="spec-table">
-                <div class="spec-row"><span class="spec-label">Name</span><span class="spec-value" id="spec-name">-</span></div>
-                <div class="spec-row"><span class="spec-label">Category</span><span class="spec-value" id="spec-category">-</span></div>
+                <div class="spec-row"><span class="spec-label">Nama Item</span><span class="spec-value" id="spec-name">-</span></div>
+                <div class="spec-row"><span class="spec-label">Kategori</span><span class="spec-value" id="spec-category">-</span></div>
                 <div class="spec-row"><span class="spec-label">Status</span><span class="spec-value" id="spec-stock">-</span></div>
-                <div class="spec-row"><span class="spec-label">Price</span><span class="spec-value text-red bold" id="spec-price">-</span></div>
+                <div class="spec-row"><span class="spec-label">Harga</span><span class="spec-value text-red bold" id="spec-price">-</span></div>
             </div>
 
             <div class="notebook-note">
-                <div class="note-title">Description :</div>
+                <div class="note-title">Deskripsi :</div>
                 <p id="detail-desc" class="handwritten-text">Arahkan kursor dan pilih menu di samping untuk melihat detail spesifikasi.</p>
             </div>
         </div>
@@ -84,9 +84,9 @@ $menu_json = json_encode($menu_data);
         </div>
         
         <div class="pagination-container">
-            <button id="prevMenuBtn" class="btn-pagination" disabled>← PREVIOUS</button>
+            <button id="prevMenuBtn" class="btn-pagination" disabled>← Sebelumnya</button>
             <span id="pageMenuInfo" class="page-info">PAGE 1 / 1</span>
-            <button id="nextMenuBtn" class="btn-pagination" disabled>NEXT →</button>
+            <button id="nextMenuBtn" class="btn-pagination" disabled>Selanjutnya →</button>
         </div>
     </div>
 
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function() {
             detail.classList.remove('show');
 
             setTimeout(() => {
-                document.getElementById('detail-id').innerText = `// REF: M-${String(data.id_menu).padStart(3, '0')}`;
+                document.getElementById('detail-id').innerText = `menu M-${String(data.id_menu).padStart(3, '0')}`;
                 document.getElementById('detail-title').innerText = data.nama_menu.toUpperCase();
                 
                 const imgFile = data.foto ? data.foto : 'default.jpg';
@@ -164,11 +164,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 if(isSoldOut) {
                     stamp.classList.remove('hidden');
-                    document.getElementById('detail-status').innerText = 'DEPLETED';
+                    document.getElementById('detail-status').innerText = 'TIDAK TERSEDIA';
                     document.getElementById('detail-status').style.color = 'var(--red)';
                 } else {
                     stamp.classList.add('hidden');
-                    document.getElementById('detail-status').innerText = 'AVAILABLE';
+                    document.getElementById('detail-status').innerText = 'TERSEDIA';
                     document.getElementById('detail-status').style.color = 'var(--navy)';
                 }
 

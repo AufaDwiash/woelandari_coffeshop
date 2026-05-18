@@ -330,11 +330,11 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
     <section class="paper">
         <div class="tape"></div>
         <div class="spec-header">
-            <span><i class="fas fa-folder-open"></i> ARCHIVE_SYS // MENU DB</span>
+            <span><i class="fas fa-folder-open"></i> Kelola Menu</span>
             <span>DATE: <?= date('d/m/Y') ?></span>
         </div>
         
-        <h1 class="title-main">DATABASE MENU</h1>
+        <h1 class="title-main">MENU</h1>
         
         <?php if ($msg_display): ?>
             <div class="alert-msg"><i class="fas fa-info-circle"></i> <?= $msg_display ?></div>

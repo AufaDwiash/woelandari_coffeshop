@@ -5,7 +5,7 @@ include "config/koneksi.php";
 <section id="community-section" class="tuku-style-section">
     
     <div class="header-overlay">
-        <h2 class="main-title">TEAM<br>DEVELOPER</h2>
+        <h2 class="main-title">KELUARGA <br>WOELANDARI</h2>
         <p class="scroll-hint"><< GESER UNTUK LIHAT LAINNYA >></p>
     </div>
 

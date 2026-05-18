@@ -273,11 +273,11 @@ $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) 
     <section class="paper">
         <div class="tape"></div>
         <div class="spec-header">
-            <span><i class="fas fa-folder-open"></i> ARCHIVE_SYS // FEEDBACK LOG</span>
+            <span><i class="fas fa-folder-open"></i>Kelola Rating</span>
             <span>DATE: <?= date('d/m/Y') ?></span>
         </div>
         
-        <h1 class="title-main">CLIENT FEEDBACK LOG</h1>
+        <h1 class="title-main">Feedback</h1>
 
         <div class="stat-grid">
             <div class="stat-card">
@@ -291,7 +291,7 @@ $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) 
                 </div>
             </div>
             <div class="stat-card">
-                <span class="stat-label" style="color: #856404;">MENUNGGU MODERASI</span>
+                <span class="stat-label" style="color: #856404;">PENDING</span>
                 <div class="stat-value" style="color: #856404;"><?= $total_pending ?></div>
             </div>
             <div class="stat-card">

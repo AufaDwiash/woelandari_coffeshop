@@ -123,8 +123,8 @@ $fullStars = round($avg);
         <div class="rating-header-card">
             <div class="rating-header-flex">
                 <div class="rating-left">
-                    <span class="doc-tag">// REVIEW_SYSTEM</span>
-                    <h2>CUSTOMER SAYS</h2>
+                    <span class="doc-tag">Sistem Rating</span>
+                    <h2>Rating</h2>
                     <div class="title-line"></div>
                     <p class="rating-subtitle">Suara pelanggan, cerminan rasa</p>
                 </div>
@@ -142,15 +142,15 @@ $fullStars = round($avg);
         <div class="rating-two-columns">
 
             <div class="form-card-panel">
-                <div class="card-label">// INPUT_REVIEW</div>
+                <div class="card-label">Form Pengisian Rating</div>
                 <div class="form-header">
                     <i class="fas fa-mug-hot"></i>
-                    <h3>Tulis Pengalaman</h3>
+                    <h3>Tulis Pengalamanmu</h3>
                 </div>
                 <div id="formAlert" class="alert-box" style="display:none;"></div>
                 <form id="ratingForm">
                     <div class="field">
-                        <label>Nama Lengkap</label>
+                        <label>Nama </label>
                         <input type="text" id="formNama" placeholder="Misal: Andi Wijaya" required>
                     </div>
                     <div class="field">
@@ -173,7 +173,7 @@ $fullStars = round($avg);
             </div>
 
             <div class="feed-card-panel">
-                <div class="card-label">// REVIEW_FEED</div>
+                <div class="card-label">Deretan Ulasan</div>
                 <div class="feed-controls">
                     <div class="filter-buttons" id="filterButtons">
                         <button data-filter="all" class="filter-btn active">SEMUA</button>

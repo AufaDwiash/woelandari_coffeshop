@@ -365,7 +365,7 @@ if (isset($_GET['hapus_event'])) {
     <section class="paper">
         <div class="tape"></div>
         <div class="spec-header">
-            <span><i class="fas fa-folder-open"></i> ARCHIVE_SYS // VISUAL & EVENTS</span>
+            <span><i class="fas fa-folder-open"></i> Kelola Gallery</span>
             <span>DATE: <?= date('d/m/Y') ?></span>
         </div>
 
@@ -397,7 +397,7 @@ if (isset($_GET['hapus_event'])) {
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th class="col-img">FOTO</th>
+                            <th class="col-img">COVER</th>
                             <th class="col-title">JUDUL & KETERANGAN</th>
                             <th class="col-status">KATEGORI EVENT</th>
                             <th class="col-action">AKSI</th>

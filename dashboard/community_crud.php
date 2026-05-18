@@ -349,7 +349,7 @@ if (isset($_GET['msg'])) {
     <section class="paper">
         <div class="tape"></div>
         <div class="spec-header">
-            <span><i class="fas fa-folder-open"></i> ARCHIVE_SYS // COMMUNITY DB</span>
+            <span><i class="fas fa-folder-open"></i> Kelola Komunitas</span>
             <span>DATE: <?= date('d/m/Y') ?></span>
         </div>
         

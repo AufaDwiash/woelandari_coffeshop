@@ -81,12 +81,12 @@ if (isset($_POST['login'])) {
                 <div class="tape-red"></div>
 
                 <div class="spec-header">
-                    <span>FORM_ID: WND-24</span>
+                    <span>Hai Gimana Harimu?</span>
                     <span class="spec-status">STANDBY</span>
                 </div>
 
-                <h1>AUTHENTICATION</h1>
-                <p class="subtitle">WOELANDARI COFFEE LAB // ARCHIVE SYSTEM</p>
+                <h1>Login</h1>
+                <p class="subtitle">WOELANDARI COFFEESHOP   SYSTEM</p>
 
                 <?php if($error != ''): ?>
                     <div class="error-box">
@@ -96,16 +96,16 @@ if (isset($_POST['login'])) {
 
                 <form action="" method="POST" autocomplete="off">
                     <div class="form-group">
-                        <label class="form-label">USER_ID</label>
+                        <label class="form-label">Username</label>
                         <div class="input-wrapper">
-                            <input type="text" name="username" id="username" class="form-control" placeholder="Input username..." required>
+                            <input type="text" name="username" id="username" class="form-control" placeholder="Masukkan username..." required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">PASS_CODE</label>
+                        <label class="form-label">Password</label>
                         <div class="input-wrapper">
-                            <input type="password" name="password" id="password" class="form-control" placeholder="Input password..." required>
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Masukkan password..." required>
                             <span class="password-toggle" id="togglePassword">
                                 <i class="fa-regular fa-eye" id="eyeIcon"></i>
                             </span>
@@ -115,15 +115,15 @@ if (isset($_POST['login'])) {
                     <div class="form-footer">
                         <div class="form-check">
                             <input type="checkbox" name="remember" id="remember" class="form-check-input">
-                            <label for="remember" class="form-check-label">REMEMBER_SESSION</label>
+                            <label for="remember" class="form-check-label">Remember Me</label>
                         </div>
                         
                         <div class="action-buttons">
                             <button type="submit" name="login" class="btn-login">
-                                <i class="fa-solid fa-power-off"></i> INITIALIZE
+                                <i class="fa-solid fa-power-off"></i> LOGIN
                             </button>
                             <a href="index.php" class="btn-return">
-                                <i class="fa-solid fa-rotate-left"></i> RETURN TO MAIN MENU
+                                <i class="fa-solid fa-rotate-left"></i> KEMBALI KE HALAMAN UTAMA
                             </a>
                         </div>
                     </div>
