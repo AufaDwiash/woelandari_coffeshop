@@ -200,7 +200,7 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
             gap: 8px;
             justify-content: center;
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
         }
         
         .btn-action {
@@ -218,6 +218,7 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
             text-decoration: none;
             white-space: nowrap;
             border-radius: 0;
+            min-width: 85px;
         }
         
         .btn-action i {
@@ -270,6 +271,29 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
             box-shadow: 1px 1px 0 var(--red);
         }
 
+        /* Rating Stars */
+        .rating-stars {
+            display: inline-flex;
+            gap: 3px;
+            font-size: 0.85rem;
+            background: rgba(0, 43, 91, 0.05);
+            padding: 4px 8px;
+            border-radius: 2px;
+            border: 1px solid rgba(0, 43, 91, 0.1);
+        }
+        
+        .rating-stars i {
+            font-size: 0.85rem;
+        }
+        
+        .fa-star.active {
+            color: #d4af37;
+        }
+        
+        .fa-star.inactive {
+            color: rgba(0, 43, 91, 0.2);
+        }
+
         /* Table */
         .table-container {
             width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
@@ -278,21 +302,21 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
         .table-container::-webkit-scrollbar { height: 8px; }
         .table-container::-webkit-scrollbar-thumb { background: var(--navy); border-radius: 4px; }
 
-        .data-table { width: 100%; border-collapse: collapse; min-width: 800px; }
-        .data-table th { background: var(--navy); color: white; padding: 14px 15px; text-align: left; font-family: 'Special Elite'; letter-spacing: 1px; }
+        .data-table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        .data-table th { background: var(--navy); color: white; padding: 14px 12px; text-align: left; font-family: 'Special Elite'; letter-spacing: 1px; }
         
-        .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 130px; font-size: 0.85rem; }
+        .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 120px; font-size: 0.85rem; }
         .data-table th:nth-child(2), .data-table td:nth-child(2) { width: 140px; font-weight: bold; }
-        .data-table th:nth-child(3), .data-table td:nth-child(3) { width: 110px; color: #d4af37; text-align: center; }
+        .data-table th:nth-child(3), .data-table td:nth-child(3) { width: 110px; text-align: center; }
         .data-table th:nth-child(4), .data-table td:nth-child(4) { width: auto; font-style: italic; }
-        .data-table th:nth-child(5), .data-table td:nth-child(5) { width: 110px; text-align: center; }
-        .data-table th:nth-child(6), .data-table td:nth-child(6) { width: 200px; text-align: center; }
+        .data-table th:nth-child(5), .data-table td:nth-child(5) { width: 100px; text-align: center; }
+        .data-table th:nth-child(6), .data-table td:nth-child(6) { width: 230px; text-align: center; }
 
-        .data-table td { padding: 12px 15px; border-bottom: 1px dashed rgba(0,43,91,0.2); vertical-align: middle; word-break: break-word; }
+        .data-table td { padding: 12px 12px; border-bottom: 1px dashed rgba(0,43,91,0.2); vertical-align: middle; word-break: break-word; }
         .data-table tbody tr:hover td { background: rgba(0, 43, 91, 0.04); }
 
         .status-badge {
-            padding: 4px 10px; border-radius: 2px; font-size: 0.75rem; font-weight: bold; border: 1px solid currentColor; display: inline-block;
+            padding: 4px 10px; border-radius: 2px; font-size: 0.7rem; font-weight: bold; border: 1px solid currentColor; display: inline-block;
         }
         .status-tampil { background: rgba(21, 87, 36, 0.08); color: #155724; }
         .status-pending { background: rgba(133, 100, 4, 0.08); color: #856404; }
@@ -393,6 +417,23 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
         .overlay.active { display: block; opacity: 1; }
         .mobile-header { display: none; }
 
+        @media (max-width: 992px) {
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .btn-action {
+                min-width: 75px;
+                padding: 5px 10px;
+                font-size: 0.65rem;
+            }
+            
+            .data-table th:nth-child(6), 
+            .data-table td:nth-child(6) { 
+                width: 200px; 
+            }
+        }
+
         @media (max-width: 768px) {
             .main-wrapper { margin-left: 0; width: 100%; padding: 15px; margin-top: 70px; gap: 25px;}
             .mobile-header {
@@ -419,13 +460,23 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
             
             .btn-action {
                 width: 100%;
+                min-width: unset;
                 padding: 5px 10px;
                 font-size: 0.65rem;
             }
             
             .data-table th:nth-child(6), 
             .data-table td:nth-child(6) { 
-                width: 110px; 
+                width: 120px; 
+            }
+            
+            .rating-stars {
+                font-size: 0.7rem;
+                padding: 3px 6px;
+            }
+            
+            .rating-stars i {
+                font-size: 0.7rem;
             }
         }
         
@@ -439,6 +490,15 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
             
             .btn-action i {
                 font-size: 0.65rem;
+            }
+            
+            .rating-stars {
+                font-size: 0.6rem;
+                gap: 2px;
+            }
+            
+            .rating-stars i {
+                font-size: 0.6rem;
             }
         }
     </style>
@@ -522,21 +582,23 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
                             $param = "?page=$page" . ($search ? "&search=".urlencode($search) : "") . "&id=".$row['id_feedback'];
                         ?>
                             <tr>
-                                <td><i class="far fa-calendar-alt"></i> <?= $row['tanggal'] ?></td>
-                                <td><?= htmlspecialchars($row['nama_pelanggan']) ?></td>
-                                <td>
-                                    <?php 
-                                        $rating = (int)$row['rating'];
-                                        for($i=1; $i<=5; $i++) {
-                                            if($i <= $rating) {
-                                                echo '<i class="fas fa-star" style="color: #d4af37;"></i>';
-                                            } else {
-                                                echo '<i class="far fa-star" style="color: rgba(0,43,91,0.2);"></i>';
+                                <td style="font-size: 0.8rem;"><i class="far fa-calendar-alt"></i> <?= $row['tanggal'] ?></td>
+                                <td><strong><?= htmlspecialchars($row['nama_pelanggan']) ?></strong></td>
+                                <td style="text-align: center;">
+                                    <div class="rating-stars">
+                                        <?php 
+                                            $rating = (int)$row['rating'];
+                                            for($i=1; $i<=5; $i++) {
+                                                if($i <= $rating) {
+                                                    echo '<i class="fas fa-star active"></i>';
+                                                } else {
+                                                    echo '<i class="fas fa-star inactive"></i>';
+                                                }
                                             }
-                                        }
-                                    ?>
+                                        ?>
+                                    </div>
                                 </td>
-                                <td>"<?= htmlspecialchars(substr($row['komentar'], 0, 100)) ?><?= strlen($row['komentar']) > 100 ? '...' : '' ?>"</td>
+                                <td style="font-style: italic; color: #555;">"<?= htmlspecialchars(substr($row['komentar'], 0, 100)) ?><?= strlen($row['komentar']) > 100 ? '...' : '' ?>"</td>
                                 <td style="text-align: center;">
                                     <span class="status-badge <?= $row['status_moderasi'] == 'tampil' ? 'status-tampil' : 'status-pending' ?>">
                                         <?= strtoupper($row['status_moderasi']) ?>

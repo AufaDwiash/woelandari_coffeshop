@@ -119,6 +119,7 @@ h1 {
 }
 
 .input-wrapper {
+    background-color: #ffffff;
     position: relative;
     width: 100%;
 }
