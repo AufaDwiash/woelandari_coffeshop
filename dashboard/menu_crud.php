@@ -211,6 +211,68 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
 
         .btn-sm { padding: 0 12px; font-size: 0.75rem; box-shadow: 3px 3px 0 rgba(0,0,0,0.15); height: 32px; }
 
+        /* ========== PERBAIKAN TOMBOL EDIT & DELETE ========== */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+        
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            font-family: 'Special Elite', cursive;
+            font-weight: bold;
+            border: 2px solid var(--navy);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            white-space: nowrap;
+            border-radius: 0;
+        }
+        
+        .btn-action i {
+            font-size: 0.85rem;
+        }
+        
+        .btn-edit-action {
+            background: var(--navy);
+            color: var(--white);
+            box-shadow: 3px 3px 0 var(--red);
+        }
+        
+        .btn-edit-action:hover {
+            background: var(--white);
+            color: var(--navy);
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--red);
+        }
+        
+        .btn-delete-action {
+            background: var(--white);
+            color: var(--red);
+            border-color: var(--red);
+            box-shadow: 3px 3px 0 var(--red);
+        }
+        
+        .btn-delete-action:hover {
+            background: var(--red);
+            color: var(--white);
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--navy);
+        }
+        
+        .btn-action:active {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0 var(--red);
+        }
+
         /* Custom Table */
         .table-container {
             width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
@@ -219,22 +281,21 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
         .table-container::-webkit-scrollbar { height: 8px; }
         .table-container::-webkit-scrollbar-thumb { background: var(--navy); border-radius: 4px; }
 
-        .menu-table { width: 100%; border-collapse: collapse; min-width: 750px; table-layout: fixed; }
+        .menu-table { width: 100%; border-collapse: collapse; min-width: 750px; }
         .menu-table th { background: var(--navy); color: white; padding: 14px 15px; text-align: left; font-family: 'Special Elite'; letter-spacing: 1px; }
         
         /* Definisi Lebar Kolom yang Konsisten */
-        .menu-table th:nth-child(1), .menu-table td:nth-child(1) { width: 95px; text-align: center; } /* Foto */
-        .menu-table th:nth-child(2), .menu-table td:nth-child(2) { width: auto; } /* Nama */
-        .menu-table th:nth-child(3), .menu-table td:nth-child(3) { width: 140px; } /* Kategori */
-        .menu-table th:nth-child(4), .menu-table td:nth-child(4) { width: 140px; } /* Harga */
-        .menu-table th:nth-child(5), .menu-table td:nth-child(5) { width: 150px; } /* Status */
-        .menu-table th:nth-child(6), .menu-table td:nth-child(6) { width: 150px; text-align: center; } /* Aksi */
+        .menu-table th:nth-child(1), .menu-table td:nth-child(1) { width: 90px; text-align: center; }
+        .menu-table th:nth-child(2), .menu-table td:nth-child(2) { width: auto; }
+        .menu-table th:nth-child(3), .menu-table td:nth-child(3) { width: 130px; }
+        .menu-table th:nth-child(4), .menu-table td:nth-child(4) { width: 130px; }
+        .menu-table th:nth-child(5), .menu-table td:nth-child(5) { width: 130px; }
+        .menu-table th:nth-child(6), .menu-table td:nth-child(6) { width: 200px; text-align: center; }
 
         .menu-table td { padding: 12px 15px; border-bottom: 1px dashed rgba(0,43,91,0.2); vertical-align: middle; word-break: break-word; }
         .menu-table tbody tr:hover td { background: rgba(0, 43, 91, 0.04); }
 
         .thumb-img { width: 60px; height: 50px; object-fit: cover; border: 2px solid var(--navy); padding: 1px; background: white; box-shadow: 2px 2px 0 var(--navy);}
-        .action-buttons { display: inline-flex; gap: 8px; justify-content: center; width: 100%; }
 
         .status-badge {
             padding: 4px 10px; border-radius: 2px; font-size: 0.75rem; font-weight: bold; border: 1px solid currentColor; display: inline-block;
@@ -292,6 +353,96 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
         .overlay.active { display: block; opacity: 1; }
         .mobile-header { display: none; }
 
+        /* ========== CUSTOM DELETE CONFIRMATION MODAL ========== */
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 43, 91, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .confirm-modal-content {
+            background: var(--white);
+            border: 4px solid var(--navy);
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            animation: slideUpFade 0.3s ease;
+            box-shadow: 16px 16px 0 var(--red);
+        }
+        
+        .confirm-modal-header {
+            background: var(--red);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--navy);
+        }
+        
+        .confirm-modal-header i {
+            font-size: 4rem;
+            color: var(--white);
+            text-shadow: 3px 3px 0 var(--navy);
+        }
+        
+        .confirm-modal-body {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .confirm-modal-body h3 {
+            font-family: 'Special Elite', cursive;
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 15px;
+        }
+        
+        .confirm-modal-body p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .menu-name-highlight {
+            background: rgba(234, 67, 53, 0.1);
+            color: var(--red);
+            font-weight: bold;
+            padding: 5px 12px;
+            display: inline-block;
+            margin: 10px 0;
+            border-left: 3px solid var(--red);
+            font-size: 1.1rem;
+        }
+        
+        .confirm-modal-footer {
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            border-top: 2px dashed rgba(0,43,91,0.2);
+        }
+        
+        .confirm-modal-footer .btn {
+            min-width: 120px;
+        }
+        
+        @keyframes shakeAnim {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .confirm-modal-content.warning-shake {
+            animation: shakeAnim 0.3s ease;
+        }
+
         @media (max-width: 768px) {
             .main-wrapper { margin-left: 0; width: 100%; padding: 15px; margin-top: 70px; gap: 25px;}
             .mobile-header {
@@ -308,6 +459,40 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
             .tape { width: 110px; }
             .pagination-area { flex-direction: column; gap: 15px; }
             .pagination-area .btn { width: auto; }
+            .confirm-modal-footer .btn { width: auto; min-width: 100px; }
+            
+            /* Responsive untuk action buttons */
+            .action-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .btn-action {
+                width: 100%;
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
+            
+            .menu-table th:nth-child(6), 
+            .menu-table td:nth-child(6) { 
+                width: 110px; 
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .btn-action {
+                padding: 5px 10px;
+                font-size: 0.65rem;
+            }
+            
+            .btn-action i {
+                font-size: 0.7rem;
+            }
+            
+            .menu-table th:nth-child(6), 
+            .menu-table td:nth-child(6) { 
+                width: 90px; 
+            }
         }
     </style>
 </head>
@@ -382,13 +567,29 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <a href="?edit=<?= $row['id_menu'] ?><?= $search ? '&search='.urlencode($search).'&page='.$page : '' ?>" class="btn btn-primary btn-sm">EDIT</a>
-                                <a href="?hapus=<?= $row['id_menu'] ?><?= $search ? '&search='.urlencode($search).'&page='.$page : '' ?>" class="btn btn-danger btn-sm" onclick="return confirm('APAKAH ANDA YAKIN INGIN MENGHAPUS DATA INI?')">DEL</a>
+                                <a href="?edit=<?= $row['id_menu'] ?><?= $search ? '&search='.urlencode($search).'&page='.$page : '' ?>" 
+                                   class="btn-action btn-edit-action" 
+                                   title="Edit menu">
+                                    <i class="fas fa-pencil-alt"></i> EDIT
+                                </a>
+                                <button type="button" 
+                                        class="btn-action btn-delete-action delete-btn" 
+                                        data-id="<?= $row['id_menu'] ?>"
+                                        data-name="<?= htmlspecialchars($row['nama_menu']) ?>"
+                                        data-search="<?= htmlspecialchars($search) ?>"
+                                        data-page="<?= $page ?>"
+                                        title="Hapus menu">
+                                    <i class="fas fa-trash-alt"></i> HAPUS
+                                </button>
                             </div>
                         </td>
                     </tr>
                     <?php endwhile; else: ?>
-                    <tr><td colspan="6" style="text-align:center; padding:40px; font-weight:bold; color:var(--red);">[ DATA TIDAK DITEMUKAN DALAM ARSIP ]</td></tr>
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding:40px; font-weight:bold; color:var(--red);">
+                            <i class="fas fa-database"></i> [ DATA TIDAK DITEMUKAN DALAM ARSIP ]
+                        </td>
+                    </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -403,6 +604,31 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
         <?php endif; ?>
     </section>
 </main>
+
+<!-- CUSTOM DELETE CONFIRMATION MODAL -->
+<div id="deleteConfirmModal" class="confirm-modal">
+    <div class="confirm-modal-content">
+        <div class="confirm-modal-header">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="confirm-modal-body">
+            <h3>HAPUS MENU?</h3>
+            <p>Apakah Anda yakin ingin menghapus menu berikut dari sistem?</p>
+            <div class="menu-name-highlight" id="menuNameToDelete"></div>
+            <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">
+                <i class="fas fa-info-circle"></i> Data yang dihapus tidak dapat dikembalikan!
+            </p>
+        </div>
+        <div class="confirm-modal-footer">
+            <button class="btn btn-secondary" id="cancelDeleteBtn">
+                <i class="fas fa-times"></i> BATAL
+            </button>
+            <a href="#" id="confirmDeleteBtn" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> HAPUS
+            </a>
+        </div>
+    </div>
+</div>
 
 <div id="crudModal" class="modal">
     <div class="modal-content">
@@ -516,6 +742,64 @@ $msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
         let s = document.getElementById('searchInput').value;
         window.location.href = `menu_crud.php?page=${page}${s ? '&search='+encodeURIComponent(s) : ''}`;
     }
+
+    // ========== DELETE CONFIRMATION MODAL ==========
+    const deleteModal = document.getElementById('deleteConfirmModal');
+    const menuNameSpan = document.getElementById('menuNameToDelete');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    let currentDeleteUrl = '';
+
+    // Event listener untuk semua tombol delete
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const menuId = this.dataset.id;
+            const menuName = this.dataset.name;
+            const search = this.dataset.search || '';
+            const page = this.dataset.page || '1';
+            
+            // Set nama menu yang akan dihapus
+            menuNameSpan.textContent = menuName;
+            
+            // Buat URL untuk delete
+            let deleteUrl = `?hapus=${menuId}`;
+            if (search) deleteUrl += `&search=${encodeURIComponent(search)}`;
+            if (page) deleteUrl += `&page=${page}`;
+            
+            currentDeleteUrl = deleteUrl;
+            confirmDeleteBtn.href = currentDeleteUrl;
+            
+            // Tampilkan modal dengan animasi
+            deleteModal.style.display = 'flex';
+            
+            // Tambah efek shake
+            const modalContent = document.querySelector('.confirm-modal-content');
+            modalContent.classList.add('warning-shake');
+            setTimeout(() => {
+                modalContent.classList.remove('warning-shake');
+            }, 300);
+        });
+    });
+    
+    // Cancel delete
+    cancelDeleteBtn.addEventListener('click', () => {
+        deleteModal.style.display = 'none';
+    });
+    
+    // Close modal klik di luar
+    deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+    });
+    
+    // Escape key untuk close modal
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && deleteModal.style.display === 'flex') {
+            deleteModal.style.display = 'none';
+        }
+    });
 
     // Modal Control
     const modal = document.getElementById('crudModal');

@@ -168,6 +168,11 @@ $query_users = mysqli_query($conn, "SELECT * FROM user $whereClause ORDER BY
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(-2px); }
         }
+        @keyframes shakeAnim {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
 
         .main-wrapper {
             margin-left: var(--sidebar-width);
@@ -243,8 +248,69 @@ $query_users = mysqli_query($conn, "SELECT * FROM user $whereClause ORDER BY
         
         .btn-danger { background: var(--white); color: var(--red); border-color: var(--red); box-shadow: 4px 4px 0 var(--red); }
         .btn-danger:hover { background: var(--red); color: var(--white); transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--navy); }
+
+        /* ========== PERBAIKAN TOMBOL ACTION ========== */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
         
-        .btn-sm { padding: 0 12px; font-size: 0.75rem; box-shadow: 3px 3px 0 rgba(0,0,0,0.15); height: 32px; }
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 12px;
+            font-size: 0.7rem;
+            font-family: 'Special Elite', cursive;
+            font-weight: bold;
+            border: 2px solid var(--navy);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            white-space: nowrap;
+            border-radius: 0;
+            min-width: 70px;
+        }
+        
+        .btn-action i {
+            font-size: 0.75rem;
+        }
+        
+        .btn-edit-action {
+            background: var(--navy);
+            color: var(--white);
+            box-shadow: 2px 2px 0 var(--red);
+        }
+        
+        .btn-edit-action:hover {
+            background: var(--white);
+            color: var(--navy);
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 var(--red);
+        }
+        
+        .btn-delete-action {
+            background: var(--white);
+            color: var(--red);
+            border-color: var(--red);
+            box-shadow: 2px 2px 0 var(--red);
+        }
+        
+        .btn-delete-action:hover {
+            background: var(--red);
+            color: var(--white);
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 var(--navy);
+        }
+        
+        .btn-action:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0 var(--red);
+        }
 
         /* TABLE */
         .table-container {
@@ -254,22 +320,20 @@ $query_users = mysqli_query($conn, "SELECT * FROM user $whereClause ORDER BY
         .table-container::-webkit-scrollbar { height: 8px; }
         .table-container::-webkit-scrollbar-thumb { background: var(--navy); border-radius: 4px; }
         
-        .data-table { width: 100%; border-collapse: collapse; min-width: 750px; table-layout: fixed; }
-        .data-table th { background: var(--navy); color: white; padding: 14px 15px; text-align: left; font-family: 'Special Elite'; letter-spacing: 1px; }
+        .data-table { width: 100%; border-collapse: collapse; min-width: 850px; }
+        .data-table th { background: var(--navy); color: white; padding: 14px 12px; text-align: left; font-family: 'Special Elite'; letter-spacing: 1px; }
         
-        .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 70px; text-align: center; } /* ID */
-        .data-table th:nth-child(2), .data-table td:nth-child(2) { width: 150px; font-weight: bold; } /* Username */
-        .data-table th:nth-child(3), .data-table td:nth-child(3) { width: auto; } /* Nama Lengkap */
-        .data-table th:nth-child(4), .data-table td:nth-child(4) { width: 150px; text-align: center; } /* Role */
-        .data-table th:nth-child(5), .data-table td:nth-child(5) { width: 140px; text-align: center; font-size: 0.8rem; } /* Tanggal */
-        .data-table th:nth-child(6), .data-table td:nth-child(6) { width: 160px; text-align: center; } /* Aksi */
+        .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 60px; text-align: center; }
+        .data-table th:nth-child(2), .data-table td:nth-child(2) { width: 140px; font-weight: bold; }
+        .data-table th:nth-child(3), .data-table td:nth-child(3) { width: auto; }
+        .data-table th:nth-child(4), .data-table td:nth-child(4) { width: 140px; text-align: center; }
+        .data-table th:nth-child(5), .data-table td:nth-child(5) { width: 120px; text-align: center; font-size: 0.8rem; }
+        .data-table th:nth-child(6), .data-table td:nth-child(6) { width: 180px; text-align: center; }
 
-        .data-table td { padding: 12px 15px; border-bottom: 1px dashed rgba(0,43,91,0.2); vertical-align: middle; word-break: break-word; }
+        .data-table td { padding: 12px 12px; border-bottom: 1px dashed rgba(0,43,91,0.2); vertical-align: middle; word-break: break-word; }
         .data-table tbody tr:hover td { background: rgba(0, 43, 91, 0.04); }
         
-        .action-buttons { display: inline-flex; gap: 8px; justify-content: center; width: 100%; }
-
-        .badge { padding: 4px 10px; border-radius: 2px; font-size: 0.75rem; font-weight: bold; display: inline-block; border: 1px solid currentColor;}
+        .badge { padding: 4px 10px; border-radius: 2px; font-size: 0.7rem; font-weight: bold; display: inline-block; border: 1px solid currentColor;}
         .badge-superadmin { background: rgba(139, 0, 0, 0.1); color: #8B0000; }
         .badge-admin { background: rgba(0, 43, 91, 0.1); color: var(--navy); }
         .badge-karyawan { background: rgba(45, 106, 79, 0.1); color: var(--green); }
@@ -306,9 +370,113 @@ $query_users = mysqli_query($conn, "SELECT * FROM user $whereClause ORDER BY
         }
         .form-input:focus, .form-select:focus { border-color: var(--red); }
 
+        /* DELETE CONFIRMATION MODAL */
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 43, 91, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .confirm-modal-content {
+            background: var(--white);
+            border: 4px solid var(--navy);
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            animation: slideUpFade 0.3s ease;
+            box-shadow: 16px 16px 0 var(--red);
+        }
+        
+        .confirm-modal-header {
+            background: var(--red);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--navy);
+        }
+        
+        .confirm-modal-header i {
+            font-size: 4rem;
+            color: var(--white);
+            text-shadow: 3px 3px 0 var(--navy);
+        }
+        
+        .confirm-modal-body {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .confirm-modal-body h3 {
+            font-family: 'Special Elite', cursive;
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 15px;
+        }
+        
+        .confirm-modal-body p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .user-name-highlight {
+            background: rgba(234, 67, 53, 0.1);
+            color: var(--red);
+            font-weight: bold;
+            padding: 5px 12px;
+            display: inline-block;
+            margin: 10px 0;
+            border-left: 3px solid var(--red);
+            font-size: 1rem;
+            max-width: 100%;
+            word-break: break-word;
+        }
+        
+        .user-role-highlight {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        .confirm-modal-footer {
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            border-top: 2px dashed rgba(0,43,91,0.2);
+        }
+        
+        .confirm-modal-footer .btn {
+            min-width: 120px;
+        }
+        
+        .confirm-modal-content.warning-shake {
+            animation: shakeAnim 0.3s ease;
+        }
+
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,43,91,0.5); backdrop-filter: blur(2px); z-index: 900; opacity: 0; transition: opacity 0.3s; }
         .overlay.active { display: block; opacity: 1; }
         .mobile-header { display: none; }
+
+        @media (max-width: 992px) {
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .btn-action {
+                min-width: 65px;
+                padding: 4px 8px;
+                font-size: 0.65rem;
+            }
+        }
 
         @media (max-width: 768px) {
             .main-wrapper { margin-left: 0; width: 100%; padding: 15px; margin-top: 70px; gap: 25px;}
@@ -326,6 +494,34 @@ $query_users = mysqli_query($conn, "SELECT * FROM user $whereClause ORDER BY
             .btn { width: 100%; }
             .pagination-area { flex-direction: column; gap: 15px; text-align: center; }
             .pagination-area .btn { width: auto; }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 6px;
+            }
+            
+            .btn-action {
+                width: 100%;
+                min-width: unset;
+                padding: 5px 10px;
+                font-size: 0.65rem;
+            }
+            
+            .data-table th:nth-child(6), 
+            .data-table td:nth-child(6) { 
+                width: 120px; 
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .btn-action {
+                padding: 4px 8px;
+                font-size: 0.6rem;
+            }
+            
+            .btn-action i {
+                font-size: 0.65rem;
+            }
         }
     </style>
 </head>
@@ -406,12 +602,26 @@ $query_users = mysqli_query($conn, "SELECT * FROM user $whereClause ORDER BY
                                 <td style="text-align: center;">
                                     <i class="far fa-clock"></i> <?= date('d/m/Y', strtotime($row['created_at'])) ?>
                                 </td>
-                                <td>
+                                <td style="text-align: center;">
                                     <div class="action-buttons">
-                                        <a href="?edit_user=<?= $row['id_user'] ?><?= $search ? '&search='.urlencode($search) : '' ?>&page=<?= $page ?>" class="btn btn-primary btn-sm">EDIT</a>
+                                        <a href="?edit_user=<?= $row['id_user'] ?><?= $search ? '&search='.urlencode($search) : '' ?>&page=<?= $page ?>" 
+                                           class="btn-action btn-edit-action" 
+                                           title="Edit user">
+                                            <i class="fas fa-pencil-alt"></i> EDIT
+                                        </a>
                                         
                                         <?php if($row['username'] !== $_SESSION['username']): ?>
-                                            <a href="?hapus_user=<?= $row['id_user'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('APAKAH ANDA YAKIN MENGHAPUS USER INI DARI SISTEM?')">DEL</a>
+                                            <button type="button" 
+                                                    class="btn-action btn-delete-action delete-btn" 
+                                                    data-id="<?= $row['id_user'] ?>"
+                                                    data-name="<?= htmlspecialchars($row['nama_lengkap']) ?>"
+                                                    data-username="<?= htmlspecialchars($row['username']) ?>"
+                                                    data-role="<?= $role_display ?>"
+                                                    data-search="<?= htmlspecialchars($search) ?>"
+                                                    data-page="<?= $page ?>"
+                                                    title="Hapus user">
+                                                <i class="fas fa-trash-alt"></i> HAPUS
+                                            </button>
                                         <?php endif; ?>
                                     </div>
                                 </td>
@@ -434,6 +644,32 @@ $query_users = mysqli_query($conn, "SELECT * FROM user $whereClause ORDER BY
 
     </section>
 </main>
+
+<!-- CUSTOM DELETE CONFIRMATION MODAL -->
+<div id="deleteConfirmModal" class="confirm-modal">
+    <div class="confirm-modal-content">
+        <div class="confirm-modal-header">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="confirm-modal-body">
+            <h3>HAPUS USER?</h3>
+            <p>Apakah Anda yakin ingin menghapus user berikut dari sistem?</p>
+            <div class="user-name-highlight" id="userNameToDelete"></div>
+            <div class="user-role-highlight" id="userRoleToDelete"></div>
+            <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">
+                <i class="fas fa-info-circle"></i> Data yang dihapus tidak dapat dikembalikan!
+            </p>
+        </div>
+        <div class="confirm-modal-footer">
+            <button class="btn btn-secondary" id="cancelDeleteBtn">
+                <i class="fas fa-times"></i> BATAL
+            </button>
+            <a href="#" id="confirmDeleteBtn" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> HAPUS
+            </a>
+        </div>
+    </div>
+</div>
 
 <div class="modal" id="modalUser">
     <div class="modal-content">
@@ -527,6 +763,65 @@ $query_users = mysqli_query($conn, "SELECT * FROM user $whereClause ORDER BY
         let s = document.getElementById('searchInput').value;
         window.location.href = `user_manajemen.php?page=${page}${s ? '&search='+encodeURIComponent(s) : ''}`;
     }
+
+    // ========== DELETE CONFIRMATION MODAL ==========
+    const deleteModal = document.getElementById('deleteConfirmModal');
+    const userNameSpan = document.getElementById('userNameToDelete');
+    const userRoleSpan = document.getElementById('userRoleToDelete');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    let currentDeleteUrl = '';
+
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const userId = this.dataset.id;
+            const userName = this.dataset.name;
+            const userUsername = this.dataset.username;
+            const userRole = this.dataset.role;
+            const search = this.dataset.search || '';
+            const page = this.dataset.page || '1';
+            
+            userNameSpan.innerHTML = `${userName} <span style="font-size:0.85rem; color:var(--navy);">(@${userUsername})</span>`;
+            if (userRole) {
+                userRoleSpan.textContent = `Role: ${userRole}`;
+                userRoleSpan.style.display = 'block';
+            } else {
+                userRoleSpan.style.display = 'none';
+            }
+            
+            let deleteUrl = `?hapus_user=${userId}`;
+            if (search) deleteUrl += `&search=${encodeURIComponent(search)}`;
+            if (page) deleteUrl += `&page=${page}`;
+            
+            currentDeleteUrl = deleteUrl;
+            confirmDeleteBtn.href = currentDeleteUrl;
+            
+            deleteModal.style.display = 'flex';
+            
+            const modalContent = document.querySelector('.confirm-modal-content');
+            modalContent.classList.add('warning-shake');
+            setTimeout(() => {
+                modalContent.classList.remove('warning-shake');
+            }, 300);
+        });
+    });
+    
+    cancelDeleteBtn.addEventListener('click', () => {
+        deleteModal.style.display = 'none';
+    });
+    
+    deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+    });
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && deleteModal.style.display === 'flex') {
+            deleteModal.style.display = 'none';
+        }
+    });
 </script>
 </body>
 </html>

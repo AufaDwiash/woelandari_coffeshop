@@ -23,7 +23,6 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
         mysqli_query($conn, "DELETE FROM feedback WHERE id_feedback=$id");
     }
     
-    // Redirect kembali ke halaman dan pencarian yang sama
     $redirectUrl = "rating_crud.php?page=$pg" . ($srch ? "&search=" . urlencode($srch) : "");
     header("Location: $redirectUrl");
     exit;
@@ -32,33 +31,32 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
 // Konfigurasi Search dan Pagination
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$limit = 10; // Jumlah feedback per halaman
+$limit = 10;
 $offset = ($page - 1) * $limit;
 
-// Filter Pencarian
 $whereClause = "";
 if ($search) {
     $safe_search = mysqli_real_escape_string($conn, $search);
     $whereClause = " WHERE nama_pelanggan LIKE '%$safe_search%' OR komentar LIKE '%$safe_search%'";
 }
 
-// Hitung total data untuk pagination
 $countQuery = "SELECT COUNT(*) as total FROM feedback" . $whereClause;
 $total_query = mysqli_fetch_assoc(mysqli_query($conn, $countQuery));
 $total_filtered = $total_query['total'] ?? 0;
 $totalPages = ceil($total_filtered / $limit);
 
-// Ambil data feedback dengan limit dan offset
 $query = "SELECT *, DATE_FORMAT(created_at, '%d %b %Y %H:%i') as tanggal FROM feedback" . $whereClause . " ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
 $result = mysqli_query($conn, $query);
 
-// Statistik Global (Tidak terpengaruh pencarian)
+// Statistik Global
 $total_feedback = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM feedback"))['total'] ?? 0;
 $total_pending = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM feedback WHERE status_moderasi='pending'"))['total'] ?? 0;
 $total_tampil = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM feedback WHERE status_moderasi='tampil'"))['total'] ?? 0;
 
 $avg_query = mysqli_fetch_assoc(mysqli_query($conn, "SELECT AVG(rating) as avg_rate FROM feedback"));
 $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) : '0.0';
+
+$msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
 ?>
 
 <!DOCTYPE html>
@@ -66,7 +64,7 @@ $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kelola Feedback</title>
+    <title>Kelola Feedback - Woelandari Coffee Lab</title>
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -100,6 +98,11 @@ $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) 
         @keyframes floatTape {
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(-2px); }
+        }
+        @keyframes shakeAnim {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         .main-wrapper {
@@ -148,6 +151,8 @@ $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) 
             padding-left: 20px;
         }
 
+        .alert-msg { background: #fff9c4; border: 2px dashed #e0d68c; padding: 10px 15px; margin-bottom: 25px; font-weight: bold; border-left: 5px solid var(--red); }
+
         /* Stat Grid */
         .stat-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -189,7 +194,81 @@ $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) 
         .btn-danger { background: var(--white); color: var(--red); border-color: var(--red); box-shadow: 3px 3px 0 var(--red); }
         .btn-danger:hover { background: var(--red); color: var(--white); transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--navy); }
 
-        .btn-sm { padding: 0 12px; font-size: 0.75rem; height: 32px; box-shadow: 3px 3px 0 rgba(0,0,0,0.15); }
+        /* ========== PERBAIKAN TOMBOL ACTION ========== */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 12px;
+            font-size: 0.7rem;
+            font-family: 'Special Elite', cursive;
+            font-weight: bold;
+            border: 2px solid var(--navy);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            white-space: nowrap;
+            border-radius: 0;
+        }
+        
+        .btn-action i {
+            font-size: 0.75rem;
+        }
+        
+        .btn-approve {
+            background: var(--navy);
+            color: var(--white);
+            box-shadow: 2px 2px 0 var(--red);
+        }
+        
+        .btn-approve:hover {
+            background: var(--white);
+            color: var(--navy);
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 var(--red);
+        }
+        
+        .btn-hide {
+            background: var(--white);
+            color: #856404;
+            border-color: #856404;
+            box-shadow: 2px 2px 0 #856404;
+        }
+        
+        .btn-hide:hover {
+            background: #856404;
+            color: var(--white);
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 var(--navy);
+        }
+        
+        .btn-delete-action {
+            background: var(--white);
+            color: var(--red);
+            border-color: var(--red);
+            box-shadow: 2px 2px 0 var(--red);
+        }
+        
+        .btn-delete-action:hover {
+            background: var(--red);
+            color: var(--white);
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 var(--navy);
+        }
+        
+        .btn-action:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0 var(--red);
+        }
 
         /* Table */
         .table-container {
@@ -199,20 +278,18 @@ $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) 
         .table-container::-webkit-scrollbar { height: 8px; }
         .table-container::-webkit-scrollbar-thumb { background: var(--navy); border-radius: 4px; }
 
-        .data-table { width: 100%; border-collapse: collapse; min-width: 800px; table-layout: fixed; }
+        .data-table { width: 100%; border-collapse: collapse; min-width: 800px; }
         .data-table th { background: var(--navy); color: white; padding: 14px 15px; text-align: left; font-family: 'Special Elite'; letter-spacing: 1px; }
         
-        .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 130px; font-size: 0.85rem; } /* Tanggal */
-        .data-table th:nth-child(2), .data-table td:nth-child(2) { width: 150px; font-weight: bold; } /* Pelanggan */
-        .data-table th:nth-child(3), .data-table td:nth-child(3) { width: 120px; color: #d4af37; text-align: center; } /* Rating */
-        .data-table th:nth-child(4), .data-table td:nth-child(4) { width: auto; font-style: italic; } /* Komentar */
-        .data-table th:nth-child(5), .data-table td:nth-child(5) { width: 120px; text-align: center; } /* Status */
-        .data-table th:nth-child(6), .data-table td:nth-child(6) { width: 170px; text-align: center; } /* Aksi */
+        .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 130px; font-size: 0.85rem; }
+        .data-table th:nth-child(2), .data-table td:nth-child(2) { width: 140px; font-weight: bold; }
+        .data-table th:nth-child(3), .data-table td:nth-child(3) { width: 110px; color: #d4af37; text-align: center; }
+        .data-table th:nth-child(4), .data-table td:nth-child(4) { width: auto; font-style: italic; }
+        .data-table th:nth-child(5), .data-table td:nth-child(5) { width: 110px; text-align: center; }
+        .data-table th:nth-child(6), .data-table td:nth-child(6) { width: 200px; text-align: center; }
 
         .data-table td { padding: 12px 15px; border-bottom: 1px dashed rgba(0,43,91,0.2); vertical-align: middle; word-break: break-word; }
         .data-table tbody tr:hover td { background: rgba(0, 43, 91, 0.04); }
-
-        .action-buttons { display: inline-flex; gap: 8px; justify-content: center; width: 100%; flex-wrap: wrap;}
 
         .status-badge {
             padding: 4px 10px; border-radius: 2px; font-size: 0.75rem; font-weight: bold; border: 1px solid currentColor; display: inline-block;
@@ -224,6 +301,92 @@ $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) 
         .pagination-area {
             display: flex; justify-content: space-between; align-items: center;
             margin-top: 25px; padding-top: 15px; border-top: 2px dashed var(--navy); font-weight: bold;
+        }
+
+        /* DELETE CONFIRMATION MODAL */
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 43, 91, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .confirm-modal-content {
+            background: var(--white);
+            border: 4px solid var(--navy);
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            animation: slideUpFade 0.3s ease;
+            box-shadow: 16px 16px 0 var(--red);
+        }
+        
+        .confirm-modal-header {
+            background: var(--red);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--navy);
+        }
+        
+        .confirm-modal-header i {
+            font-size: 4rem;
+            color: var(--white);
+            text-shadow: 3px 3px 0 var(--navy);
+        }
+        
+        .confirm-modal-body {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .confirm-modal-body h3 {
+            font-family: 'Special Elite', cursive;
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 15px;
+        }
+        
+        .confirm-modal-body p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .feedback-name-highlight {
+            background: rgba(234, 67, 53, 0.1);
+            color: var(--red);
+            font-weight: bold;
+            padding: 5px 12px;
+            display: inline-block;
+            margin: 10px 0;
+            border-left: 3px solid var(--red);
+            font-size: 1rem;
+            max-width: 100%;
+            word-break: break-word;
+        }
+        
+        .confirm-modal-footer {
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            border-top: 2px dashed rgba(0,43,91,0.2);
+        }
+        
+        .confirm-modal-footer .btn {
+            min-width: 120px;
+        }
+        
+        .confirm-modal-content.warning-shake {
+            animation: shakeAnim 0.3s ease;
         }
 
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,43,91,0.5); backdrop-filter: blur(2px); z-index: 900; opacity: 0; transition: opacity 0.3s; }
@@ -248,9 +411,35 @@ $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) 
             
             .pagination-area { flex-direction: column; gap: 15px; text-align: center; }
             .pagination-area .btn { width: auto; }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 6px;
+            }
+            
+            .btn-action {
+                width: 100%;
+                padding: 5px 10px;
+                font-size: 0.65rem;
+            }
+            
+            .data-table th:nth-child(6), 
+            .data-table td:nth-child(6) { 
+                width: 110px; 
+            }
         }
+        
         @media (max-width: 480px) {
             .stat-grid { grid-template-columns: 1fr; }
+            
+            .btn-action {
+                padding: 4px 8px;
+                font-size: 0.6rem;
+            }
+            
+            .btn-action i {
+                font-size: 0.65rem;
+            }
         }
     </style>
 </head>
@@ -273,11 +462,15 @@ $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) 
     <section class="paper">
         <div class="tape"></div>
         <div class="spec-header">
-            <span><i class="fas fa-folder-open"></i>Kelola Rating</span>
+            <span><i class="fas fa-folder-open"></i> Kelola Feedback & Rating</span>
             <span>DATE: <?= date('d/m/Y') ?></span>
         </div>
         
-        <h1 class="title-main">Feedback</h1>
+        <h1 class="title-main">Feedback Pelanggan</h1>
+
+        <?php if ($msg_display): ?>
+            <div class="alert-msg"><i class="fas fa-info-circle"></i> <?= $msg_display ?></div>
+        <?php endif; ?>
 
         <div class="stat-grid">
             <div class="stat-card">
@@ -336,27 +529,44 @@ $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) 
                                         $rating = (int)$row['rating'];
                                         for($i=1; $i<=5; $i++) {
                                             if($i <= $rating) {
-                                                echo '<i class="fas fa-star"></i>';
+                                                echo '<i class="fas fa-star" style="color: #d4af37;"></i>';
                                             } else {
                                                 echo '<i class="far fa-star" style="color: rgba(0,43,91,0.2);"></i>';
                                             }
                                         }
                                     ?>
                                 </td>
-                                <td>"<?= htmlspecialchars($row['komentar']) ?>"</td>
-                                <td>
+                                <td>"<?= htmlspecialchars(substr($row['komentar'], 0, 100)) ?><?= strlen($row['komentar']) > 100 ? '...' : '' ?>"</td>
+                                <td style="text-align: center;">
                                     <span class="status-badge <?= $row['status_moderasi'] == 'tampil' ? 'status-tampil' : 'status-pending' ?>">
                                         <?= strtoupper($row['status_moderasi']) ?>
                                     </span>
                                 </td>
-                                <td>
+                                <td style="text-align: center;">
                                     <div class="action-buttons">
                                         <?php if ($row['status_moderasi'] == 'pending'): ?>
-                                            <a href="rating_crud.php<?= $param ?>&action=approve" class="btn btn-primary btn-sm" title="Tampilkan">APP</a>
+                                            <a href="rating_crud.php<?= $param ?>&action=approve" 
+                                               class="btn-action btn-approve" 
+                                               title="Tampilkan di website">
+                                                <i class="fas fa-check-circle"></i> TAMPIL
+                                            </a>
                                         <?php else: ?>
-                                            <a href="rating_crud.php<?= $param ?>&action=reject" class="btn btn-secondary btn-sm" title="Sembunyikan">HIDE</a>
+                                            <a href="rating_crud.php<?= $param ?>&action=reject" 
+                                               class="btn-action btn-hide" 
+                                               title="Sembunyikan dari website">
+                                                <i class="fas fa-eye-slash"></i> SEMBUNYI
+                                            </a>
                                         <?php endif; ?>
-                                        <a href="rating_crud.php<?= $param ?>&action=delete" class="btn btn-danger btn-sm" onclick="return confirm('Hapus feedback ini dari arsip?');">DEL</a>
+                                        <button type="button" 
+                                                class="btn-action btn-delete-action delete-btn" 
+                                                data-id="<?= $row['id_feedback'] ?>"
+                                                data-name="<?= htmlspecialchars($row['nama_pelanggan']) ?>"
+                                                data-comment="<?= htmlspecialchars(substr($row['komentar'], 0, 50)) ?>"
+                                                data-page="<?= $page ?>"
+                                                data-search="<?= htmlspecialchars($search) ?>"
+                                                title="Hapus feedback">
+                                            <i class="fas fa-trash-alt"></i> HAPUS
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -383,6 +593,32 @@ $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) 
 
     </section>
 </main>
+
+<!-- CUSTOM DELETE CONFIRMATION MODAL -->
+<div id="deleteConfirmModal" class="confirm-modal">
+    <div class="confirm-modal-content">
+        <div class="confirm-modal-header">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="confirm-modal-body">
+            <h3>HAPUS FEEDBACK?</h3>
+            <p>Apakah Anda yakin ingin menghapus feedback berikut dari sistem?</p>
+            <div class="feedback-name-highlight" id="feedbackNameToDelete"></div>
+            <div style="font-size: 0.8rem; color: #999; margin-top: 5px;" id="feedbackCommentToDelete"></div>
+            <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">
+                <i class="fas fa-info-circle"></i> Data yang dihapus tidak dapat dikembalikan!
+            </p>
+        </div>
+        <div class="confirm-modal-footer">
+            <button class="btn btn-secondary" id="cancelDeleteBtn">
+                <i class="fas fa-times"></i> BATAL
+            </button>
+            <a href="#" id="confirmDeleteBtn" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> HAPUS
+            </a>
+        </div>
+    </div>
+</div>
 
 <script>
     // Logika Sidebar Mobile
@@ -418,6 +654,63 @@ $avg_rating = $avg_query['avg_rate'] ? number_format($avg_query['avg_rate'], 1) 
         let s = document.getElementById('searchInput').value;
         window.location.href = `rating_crud.php?page=${page}${s ? '&search='+encodeURIComponent(s) : ''}`;
     }
+
+    // ========== DELETE CONFIRMATION MODAL ==========
+    const deleteModal = document.getElementById('deleteConfirmModal');
+    const feedbackNameSpan = document.getElementById('feedbackNameToDelete');
+    const feedbackCommentSpan = document.getElementById('feedbackCommentToDelete');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    let currentDeleteUrl = '';
+
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const feedbackId = this.dataset.id;
+            const feedbackName = this.dataset.name;
+            const feedbackComment = this.dataset.comment || '';
+            const page = this.dataset.page || '1';
+            const search = this.dataset.search || '';
+            
+            feedbackNameSpan.textContent = feedbackName;
+            if (feedbackComment) {
+                feedbackCommentSpan.textContent = `"${feedbackComment}${feedbackComment.length >= 50 ? '...' : ''}"`;
+                feedbackCommentSpan.style.display = 'block';
+            } else {
+                feedbackCommentSpan.style.display = 'none';
+            }
+            
+            let deleteUrl = `rating_crud.php?page=${page}&id=${feedbackId}&action=delete`;
+            if (search) deleteUrl += `&search=${encodeURIComponent(search)}`;
+            
+            currentDeleteUrl = deleteUrl;
+            confirmDeleteBtn.href = currentDeleteUrl;
+            
+            deleteModal.style.display = 'flex';
+            
+            const modalContent = document.querySelector('.confirm-modal-content');
+            modalContent.classList.add('warning-shake');
+            setTimeout(() => {
+                modalContent.classList.remove('warning-shake');
+            }, 300);
+        });
+    });
+    
+    cancelDeleteBtn.addEventListener('click', () => {
+        deleteModal.style.display = 'none';
+    });
+    
+    deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+    });
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && deleteModal.style.display === 'flex') {
+            deleteModal.style.display = 'none';
+        }
+    });
 </script>
 </body>
 </html>

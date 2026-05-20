@@ -12,7 +12,7 @@ if (!isset($_SESSION['username'])) {
 $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'gallery';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$limit = 5; // Batas jumlah per halaman (konsisten 5 data)
+$limit = 5;
 $offset = ($page - 1) * $limit;
 
 // ==========================================
@@ -42,13 +42,12 @@ if (isset($_POST['simpan_gallery']) || isset($_POST['update_gallery'])) {
     $tipe = mysqli_real_escape_string($conn, $_POST['tipe']);
     $id_ev = !empty($_POST['id_event']) ? "'" . (int)$_POST['id_event'] . "'" : "NULL";
 
-    // Cek apakah ada hasil CROP BASE64
     $foto_isi = "";
     $query_foto = "";
     if (!empty($_POST['foto_cropped_gallery'])) {
         $img_parts = explode(";base64,", $_POST['foto_cropped_gallery']);
         $img_base64 = base64_decode($img_parts[1]);
-        $foto_isi = addslashes($img_base64); // Konversi Base64 ke format BLOB
+        $foto_isi = addslashes($img_base64);
         $query_foto = ", file_foto='$foto_isi'";
     } elseif (!empty($_FILES['file_foto']['tmp_name'])) {
         $foto_isi = addslashes(file_get_contents($_FILES['file_foto']['tmp_name']));
@@ -98,13 +97,12 @@ if (isset($_POST['simpan_event']) || isset($_POST['update_event'])) {
     $desk = mysqli_real_escape_string($conn, $_POST['deskripsi_event']);
     $status = mysqli_real_escape_string($conn, $_POST['status_event']);
 
-    // Cek apakah ada hasil CROP BASE64
     $foto_isi = "";
     $query_foto = "";
     if (!empty($_POST['foto_cropped_event'])) {
         $img_parts = explode(";base64,", $_POST['foto_cropped_event']);
         $img_base64 = base64_decode($img_parts[1]);
-        $foto_isi = addslashes($img_base64); // Konversi Base64 ke format BLOB
+        $foto_isi = addslashes($img_base64);
         $query_foto = ", foto_cover='$foto_isi'";
     } elseif (!empty($_FILES['foto_cover']['tmp_name'])) {
         $foto_isi = addslashes(file_get_contents($_FILES['foto_cover']['tmp_name']));
@@ -126,6 +124,8 @@ if (isset($_GET['hapus_event'])) {
     header("Location: gallery_crud.php?tab=event");
     exit;
 }
+
+$msg_display = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
 ?>
 
 <!DOCTYPE html>
@@ -133,7 +133,7 @@ if (isset($_GET['hapus_event'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gallery</title>
+    <title>Gallery & Events - Woelandari Coffee Lab</title>
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
@@ -169,6 +169,11 @@ if (isset($_GET['hapus_event'])) {
         @keyframes floatTape {
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(-2px); }
+        }
+        @keyframes shakeAnim {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         .main-wrapper {
@@ -216,6 +221,8 @@ if (isset($_GET['hapus_event'])) {
             padding-left: 20px;
         }
 
+        .alert-msg { background: #fff9c4; border: 2px dashed #e0d68c; padding: 10px 15px; margin-bottom: 25px; font-weight: bold; border-left: 5px solid var(--red); }
+
         /* TABS */
         .tab-buttons {
             display: flex; gap: 10px; margin-bottom: 30px; 
@@ -261,7 +268,68 @@ if (isset($_GET['hapus_event'])) {
         .btn-secondary:hover { background: #e0e0e0; transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--navy); }
         .btn-danger { background: var(--white); color: var(--red); border-color: var(--red); box-shadow: 4px 4px 0 var(--red); }
         .btn-danger:hover { background: var(--red); color: var(--white); transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--navy); }
-        .btn-sm { padding: 0 12px; font-size: 0.75rem; box-shadow: 3px 3px 0 rgba(0,0,0,0.15); height: 32px; }
+
+        /* ========== PERBAIKAN TOMBOL EDIT & DELETE ========== */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+        
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            font-family: 'Special Elite', cursive;
+            font-weight: bold;
+            border: 2px solid var(--navy);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            white-space: nowrap;
+            border-radius: 0;
+        }
+        
+        .btn-action i {
+            font-size: 0.85rem;
+        }
+        
+        .btn-edit-action {
+            background: var(--navy);
+            color: var(--white);
+            box-shadow: 3px 3px 0 var(--red);
+        }
+        
+        .btn-edit-action:hover {
+            background: var(--white);
+            color: var(--navy);
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--red);
+        }
+        
+        .btn-delete-action {
+            background: var(--white);
+            color: var(--red);
+            border-color: var(--red);
+            box-shadow: 3px 3px 0 var(--red);
+        }
+        
+        .btn-delete-action:hover {
+            background: var(--red);
+            color: var(--white);
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--navy);
+        }
+        
+        .btn-action:active {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0 var(--red);
+        }
 
         /* TABLE */
         .table-container {
@@ -271,20 +339,19 @@ if (isset($_GET['hapus_event'])) {
         .table-container::-webkit-scrollbar { height: 8px; }
         .table-container::-webkit-scrollbar-thumb { background: var(--navy); border-radius: 4px; }
         
-        .data-table { width: 100%; border-collapse: collapse; min-width: 750px; table-layout: fixed; }
+        .data-table { width: 100%; border-collapse: collapse; min-width: 750px; }
         .data-table th { background: var(--navy); color: white; padding: 14px 15px; text-align: left; font-family: 'Special Elite'; letter-spacing: 1px; }
         
         .data-table th.col-img { width: 100px; text-align: center; }
         .data-table th.col-title { width: auto; }
         .data-table th.col-date { width: 130px; }
         .data-table th.col-status { width: 140px; text-align: center; }
-        .data-table th.col-action { width: 160px; text-align: center; }
+        .data-table th.col-action { width: 200px; text-align: center; }
 
         .data-table td { padding: 12px 15px; border-bottom: 1px dashed rgba(0,43,91,0.2); vertical-align: middle; word-break: break-word; }
         .data-table tbody tr:hover td { background: rgba(0, 43, 91, 0.04); }
         
         .thumb-img { width: 60px; height: 60px; object-fit: cover; border: 2px solid var(--navy); padding: 2px; background: white; box-shadow: 2px 2px 0 var(--navy);}
-        .action-buttons { display: inline-flex; gap: 8px; justify-content: center; width: 100%; }
 
         .status-badge { padding: 4px 10px; border-radius: 2px; font-size: 0.75rem; font-weight: bold; border: 1px solid currentColor; display: inline-block; }
         .status-active { background: rgba(21, 87, 36, 0.08); color: #155724; }
@@ -322,6 +389,90 @@ if (isset($_GET['hapus_event'])) {
         }
         .form-input:focus, .form-select:focus, textarea:focus { border-color: var(--red); }
 
+        /* DELETE CONFIRMATION MODAL */
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 43, 91, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .confirm-modal-content {
+            background: var(--white);
+            border: 4px solid var(--navy);
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            animation: slideUpFade 0.3s ease;
+            box-shadow: 16px 16px 0 var(--red);
+        }
+        
+        .confirm-modal-header {
+            background: var(--red);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--navy);
+        }
+        
+        .confirm-modal-header i {
+            font-size: 4rem;
+            color: var(--white);
+            text-shadow: 3px 3px 0 var(--navy);
+        }
+        
+        .confirm-modal-body {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .confirm-modal-body h3 {
+            font-family: 'Special Elite', cursive;
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 15px;
+        }
+        
+        .confirm-modal-body p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .item-name-highlight {
+            background: rgba(234, 67, 53, 0.1);
+            color: var(--red);
+            font-weight: bold;
+            padding: 5px 12px;
+            display: inline-block;
+            margin: 10px 0;
+            border-left: 3px solid var(--red);
+            font-size: 1.1rem;
+        }
+        
+        .confirm-modal-footer {
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            border-top: 2px dashed rgba(0,43,91,0.2);
+        }
+        
+        .confirm-modal-footer .btn {
+            min-width: 120px;
+        }
+        
+        .confirm-modal-content.warning-shake {
+            animation: shakeAnim 0.3s ease;
+        }
+
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,43,91,0.5); backdrop-filter: blur(2px); z-index: 900; opacity: 0; transition: opacity 0.3s; }
         .overlay.active { display: block; opacity: 1; }
         .mobile-header { display: none; }
@@ -343,6 +494,30 @@ if (isset($_GET['hapus_event'])) {
             .btn { width: 100%; }
             .pagination-area { flex-direction: column; gap: 15px; text-align: center; }
             .pagination-area .btn { width: auto; }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .btn-action {
+                width: 100%;
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
+            
+            .data-table th.col-action { width: 110px; }
+        }
+        
+        @media (max-width: 480px) {
+            .btn-action {
+                padding: 5px 10px;
+                font-size: 0.65rem;
+            }
+            
+            .btn-action i {
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
@@ -365,9 +540,13 @@ if (isset($_GET['hapus_event'])) {
     <section class="paper">
         <div class="tape"></div>
         <div class="spec-header">
-            <span><i class="fas fa-folder-open"></i> Kelola Gallery</span>
+            <span><i class="fas fa-folder-open"></i> Kelola Gallery & Events</span>
             <span>DATE: <?= date('d/m/Y') ?></span>
         </div>
+
+        <?php if ($msg_display): ?>
+            <div class="alert-msg"><i class="fas fa-info-circle"></i> <?= $msg_display ?></div>
+        <?php endif; ?>
 
         <div class="tab-buttons">
             <a href="?tab=gallery" class="tab-btn <?= $active_tab == 'gallery' ? 'active' : '' ?>">
@@ -408,7 +587,6 @@ if (isset($_GET['hapus_event'])) {
                         $safe_search = mysqli_real_escape_string($conn, $search);
                         $where = $search ? "WHERE g.judul LIKE '%$safe_search%'" : "";
                         
-                        // Hitung total halaman
                         $count_q = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM gallery g $where"));
                         $totalPages = ceil($count_q['total'] / $limit);
 
@@ -435,8 +613,21 @@ if (isset($_GET['hapus_event'])) {
                                 </td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="?tab=gallery&edit_gallery=<?= $row['id_gallery'] ?><?= $search ? '&search='.urlencode($search) : '' ?>&page=<?= $page ?>" class="btn btn-primary btn-sm">EDIT</a>
-                                        <a href="?tab=gallery&hapus_gallery=<?= $row['id_gallery'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus gallery ini?')">DEL</a>
+                                        <a href="?tab=gallery&edit_gallery=<?= $row['id_gallery'] ?><?= $search ? '&search='.urlencode($search) : '' ?>&page=<?= $page ?>" 
+                                           class="btn-action btn-edit-action" 
+                                           title="Edit gallery">
+                                            <i class="fas fa-pencil-alt"></i> EDIT
+                                        </a>
+                                        <button type="button" 
+                                                class="btn-action btn-delete-action delete-btn" 
+                                                data-id="<?= $row['id_gallery'] ?>"
+                                                data-name="<?= htmlspecialchars($row['judul']) ?>"
+                                                data-type="gallery"
+                                                data-search="<?= htmlspecialchars($search) ?>"
+                                                data-page="<?= $page ?>"
+                                                title="Hapus gallery">
+                                            <i class="fas fa-trash-alt"></i> HAPUS
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -464,7 +655,6 @@ if (isset($_GET['hapus_event'])) {
                         $safe_search = mysqli_real_escape_string($conn, $search);
                         $where = $search ? "WHERE judul_event LIKE '%$safe_search%'" : "";
                         
-                        // Hitung total halaman
                         $count_q = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM events $where"));
                         $totalPages = ceil($count_q['total'] / $limit);
 
@@ -487,8 +677,21 @@ if (isset($_GET['hapus_event'])) {
                                 </td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="?tab=event&edit_event=<?= $row['id_event'] ?><?= $search ? '&search='.urlencode($search) : '' ?>&page=<?= $page ?>" class="btn btn-primary btn-sm">EDIT</a>
-                                        <a href="?tab=event&hapus_event=<?= $row['id_event'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus event ini?')">DEL</a>
+                                        <a href="?tab=event&edit_event=<?= $row['id_event'] ?><?= $search ? '&search='.urlencode($search) : '' ?>&page=<?= $page ?>" 
+                                           class="btn-action btn-edit-action" 
+                                           title="Edit event">
+                                            <i class="fas fa-pencil-alt"></i> EDIT
+                                        </a>
+                                        <button type="button" 
+                                                class="btn-action btn-delete-action delete-btn" 
+                                                data-id="<?= $row['id_event'] ?>"
+                                                data-name="<?= htmlspecialchars($row['judul_event']) ?>"
+                                                data-type="event"
+                                                data-search="<?= htmlspecialchars($search) ?>"
+                                                data-page="<?= $page ?>"
+                                                title="Hapus event">
+                                            <i class="fas fa-trash-alt"></i> HAPUS
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -510,6 +713,31 @@ if (isset($_GET['hapus_event'])) {
 
     </section>
 </main>
+
+<!-- CUSTOM DELETE CONFIRMATION MODAL -->
+<div id="deleteConfirmModal" class="confirm-modal">
+    <div class="confirm-modal-content">
+        <div class="confirm-modal-header">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="confirm-modal-body">
+            <h3>HAPUS DATA?</h3>
+            <p>Apakah Anda yakin ingin menghapus data berikut dari sistem?</p>
+            <div class="item-name-highlight" id="itemNameToDelete"></div>
+            <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">
+                <i class="fas fa-info-circle"></i> Data yang dihapus tidak dapat dikembalikan!
+            </p>
+        </div>
+        <div class="confirm-modal-footer">
+            <button class="btn btn-secondary" id="cancelDeleteBtn">
+                <i class="fas fa-times"></i> BATAL
+            </button>
+            <a href="#" id="confirmDeleteBtn" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> HAPUS
+            </a>
+        </div>
+    </div>
+</div>
 
 <div class="modal" id="modalGallery">
     <div class="modal-content">
@@ -682,7 +910,9 @@ if (isset($_GET['hapus_event'])) {
     }
 
     // Modal Form Logic
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function openModal(id) { 
+        document.getElementById(id).style.display = 'flex'; 
+    }
     function closeModal(id) { 
         document.getElementById(id).style.display = 'none'; 
         window.location.href = 'gallery_crud.php?tab=<?= $active_tab ?>'; 
@@ -707,56 +937,101 @@ if (isset($_GET['hapus_event'])) {
         window.location.href = `gallery_crud.php?tab=<?= $active_tab ?>&page=${page}${s ? '&search='+encodeURIComponent(s) : ''}`;
     }
 
+    // ========== DELETE CONFIRMATION MODAL ==========
+    const deleteModal = document.getElementById('deleteConfirmModal');
+    const itemNameSpan = document.getElementById('itemNameToDelete');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    let currentDeleteUrl = '';
+
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const itemId = this.dataset.id;
+            const itemName = this.dataset.name;
+            const itemType = this.dataset.type;
+            const search = this.dataset.search || '';
+            const page = this.dataset.page || '1';
+            
+            itemNameSpan.textContent = itemName;
+            
+            let deleteUrl = `?tab=<?= $active_tab ?>&hapus_${itemType}=${itemId}`;
+            if (search) deleteUrl += `&search=${encodeURIComponent(search)}`;
+            if (page) deleteUrl += `&page=${page}`;
+            
+            currentDeleteUrl = deleteUrl;
+            confirmDeleteBtn.href = currentDeleteUrl;
+            
+            deleteModal.style.display = 'flex';
+            
+            const modalContent = document.querySelector('.confirm-modal-content');
+            modalContent.classList.add('warning-shake');
+            setTimeout(() => {
+                modalContent.classList.remove('warning-shake');
+            }, 300);
+        });
+    });
+    
+    cancelDeleteBtn.addEventListener('click', () => {
+        deleteModal.style.display = 'none';
+    });
+    
+    deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+    });
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && deleteModal.style.display === 'flex') {
+            deleteModal.style.display = 'none';
+        }
+    });
+
     // ==========================================
     // CROPPER LOGIC (Base64 Murni) 1:1
     // ==========================================
     let cropper;
-    let targetCropType = ''; // 'gallery' atau 'event'
+    let targetCropType = '';
     
-    const cropModal = document.getElementById('cropModal');
-    const cropImage = document.getElementById('cropImage');
-    const cropTitle = document.getElementById('cropTitle');
-    const cropConfirmBtn = document.getElementById('cropConfirmBtn');
-    const cancelCropBtn = document.getElementById('cancelCropBtn');
+    const cropModalEl = document.getElementById('cropModal');
+    const cropImageEl = document.getElementById('cropImage');
+    const cropTitleEl = document.getElementById('cropTitle');
+    const cropConfirmBtnEl = document.getElementById('cropConfirmBtn');
+    const cancelCropBtnEl = document.getElementById('cancelCropBtn');
 
-    // Fungsi Trigger Cropper
     function initCropper(file, targetType) {
         const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
         if (!allowedTypes.includes(file.type)) { 
-            alert('Hanya format JPG, PNG, WEBP yang diperbolehkan!'); return; 
+            alert('Hanya format JPG, PNG, WEBP yang diperbolehkan!'); 
+            return; 
         }
 
         targetCropType = targetType;
         const reader = new FileReader();
         
         reader.onload = function(e) {
-            cropImage.src = e.target.result;
-            cropModal.style.display = 'flex';
+            cropImageEl.src = e.target.result;
+            cropModalEl.style.display = 'flex';
             
             if (cropper) cropper.destroy();
             
-            // Set Aspect Ratio ke 1:1 untuk semuanya (Gallery & Event)
-            let ratio = 1;
-            cropTitle.innerText = targetType === 'gallery' ? 'CROP FOTO GALLERY (1:1)' : 'CROP COVER EVENT (1:1)';
-
-            cropper = new Cropper(cropImage, { aspectRatio: ratio, viewMode: 1 });
+            cropTitleEl.innerText = targetType === 'gallery' ? 'CROP FOTO GALLERY (1:1)' : 'CROP COVER EVENT (1:1)';
+            cropper = new Cropper(cropImageEl, { aspectRatio: 1, viewMode: 1 });
         };
         reader.readAsDataURL(file);
     }
 
-    // Listener Input File
-    document.getElementById('file_foto_gallery').addEventListener('change', function(e) {
+    document.getElementById('file_foto_gallery')?.addEventListener('change', function(e) {
         if(e.target.files[0]) initCropper(e.target.files[0], 'gallery');
     });
     
-    document.getElementById('foto_cover_event').addEventListener('change', function(e) {
+    document.getElementById('foto_cover_event')?.addEventListener('change', function(e) {
         if(e.target.files[0]) initCropper(e.target.files[0], 'event');
     });
 
-    // Tombol Konfirmasi Crop
-    cropConfirmBtn.addEventListener('click', () => {
+    cropConfirmBtnEl.addEventListener('click', () => {
         if (cropper) {
-            // Ukuran hasil potongan diatur menjadi bujur sangkar 600x600 px
             const canvas = cropper.getCroppedCanvas({ width: 600, height: 600 });
             const base64 = canvas.toDataURL('image/jpeg', 0.9);
             
@@ -772,14 +1047,13 @@ if (isset($_GET['hapus_event'])) {
                 document.getElementById('foto_cover_event').removeAttribute('required');
             }
             
-            cropModal.style.display = 'none';
+            cropModalEl.style.display = 'none';
             cropper.destroy();
         }
     });
 
-    // Tombol Batal Crop
-    cancelCropBtn.addEventListener('click', () => {
-        cropModal.style.display = 'none';
+    cancelCropBtnEl.addEventListener('click', () => {
+        cropModalEl.style.display = 'none';
         if (cropper) cropper.destroy();
         
         if (targetCropType === 'gallery') {

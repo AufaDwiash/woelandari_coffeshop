@@ -18,14 +18,12 @@ if (isset($_POST['add_human'])) {
 
     $foto_nama = '';
     
-    // Proses gambar hasil crop (Base64)
     if (!empty($_POST['foto_cropped'])) {
         $img_parts = explode(";base64,", $_POST['foto_cropped']);
         $img_base64 = base64_decode($img_parts[1]);
         $foto_nama = 'human_' . time() . '_' . uniqid() . '.png';
         file_put_contents('../assets/images/community/' . $foto_nama, $img_base64);
     } 
-    // Fallback jika upload biasa tanpa crop
     elseif (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
         $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
         $foto_nama = 'human_' . time() . '_' . uniqid() . '.' . $ext;
@@ -51,14 +49,12 @@ if (isset($_POST['update_human'])) {
     
     $foto_nama = $foto_lama;
 
-    // Jika ada gambar baru yang dicrop
     if (!empty($_POST['foto_cropped'])) {
         $img_parts = explode(";base64,", $_POST['foto_cropped']);
         $img_base64 = base64_decode($img_parts[1]);
         $foto_nama = 'human_' . time() . '_' . uniqid() . '.png';
         file_put_contents('../assets/images/community/' . $foto_nama, $img_base64);
         
-        // Hapus foto lama
         if ($foto_lama && $foto_lama != 'default.jpg' && file_exists('../assets/images/community/' . $foto_lama)) {
             unlink('../assets/images/community/' . $foto_lama);
         }
@@ -88,7 +84,7 @@ if (isset($_GET['toggle']) && isset($_GET['current'])) {
     $current = $_GET['current'];
     $new = ($current == 'active') ? 'hidden' : 'active';
     mysqli_query($conn, "UPDATE human_archive SET status='$new' WHERE id='$id'");
-    header("Location: community_crud.php");
+    header("Location: community_crud.php?msg=toggle");
     exit;
 }
 
@@ -129,6 +125,7 @@ if (isset($_GET['msg'])) {
     elseif ($_GET['msg'] == 'update') $msg_display = "Data Anggota berhasil diperbarui!";
     elseif ($_GET['msg'] == 'delete') $msg_display = "Data Anggota berhasil dihapus dari arsip!";
     elseif ($_GET['msg'] == 'order') $msg_display = "Urutan tampil berhasil diperbarui!";
+    elseif ($_GET['msg'] == 'toggle') $msg_display = "Status anggota berhasil diubah!";
     elseif ($_GET['msg'] == 'error') $msg_display = "Terjadi kesalahan pada sistem!";
 }
 ?>
@@ -173,6 +170,11 @@ if (isset($_GET['msg'])) {
         @keyframes floatTape {
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(-2px); }
+        }
+        @keyframes shakeAnim {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         .main-wrapper {
@@ -238,7 +240,82 @@ if (isset($_GET['msg'])) {
         .btn-danger { background: var(--white); color: var(--red); border-color: var(--red); box-shadow: 4px 4px 0 var(--red); }
         .btn-danger:hover { background: var(--red); color: var(--white); transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--navy); }
 
-        .btn-sm { padding: 0 12px; font-size: 0.75rem; box-shadow: 3px 3px 0 rgba(0,0,0,0.15); height: 32px; }
+        /* ========== PERBAIKAN TOMBOL ACTION ========== */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+        
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 12px;
+            font-size: 0.7rem;
+            font-family: 'Special Elite', cursive;
+            font-weight: bold;
+            border: 2px solid var(--navy);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            white-space: nowrap;
+            border-radius: 0;
+            min-width: 75px;
+        }
+        
+        .btn-action i {
+            font-size: 0.75rem;
+        }
+        
+        .btn-edit-action {
+            background: var(--navy);
+            color: var(--white);
+            box-shadow: 2px 2px 0 var(--red);
+        }
+        
+        .btn-edit-action:hover {
+            background: var(--white);
+            color: var(--navy);
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 var(--red);
+        }
+        
+        .btn-toggle-action {
+            background: var(--white);
+            color: #856404;
+            border-color: #856404;
+            box-shadow: 2px 2px 0 #856404;
+        }
+        
+        .btn-toggle-action:hover {
+            background: #856404;
+            color: var(--white);
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 var(--navy);
+        }
+        
+        .btn-delete-action {
+            background: var(--white);
+            color: var(--red);
+            border-color: var(--red);
+            box-shadow: 2px 2px 0 var(--red);
+        }
+        
+        .btn-delete-action:hover {
+            background: var(--red);
+            color: var(--white);
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 var(--navy);
+        }
+        
+        .btn-action:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0 var(--red);
+        }
 
         .table-container {
             width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
@@ -247,29 +324,28 @@ if (isset($_GET['msg'])) {
         .table-container::-webkit-scrollbar { height: 8px; }
         .table-container::-webkit-scrollbar-thumb { background: var(--navy); border-radius: 4px; }
 
-        .data-table { width: 100%; border-collapse: collapse; min-width: 750px; table-layout: fixed; }
-        .data-table th { background: var(--navy); color: white; padding: 14px 15px; text-align: left; font-family: 'Special Elite'; letter-spacing: 1px; }
+        .data-table { width: 100%; border-collapse: collapse; min-width: 850px; }
+        .data-table th { background: var(--navy); color: white; padding: 14px 12px; text-align: left; font-family: 'Special Elite'; letter-spacing: 1px; }
         
-        .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 95px; text-align: center; } /* Foto */
-        .data-table th:nth-child(2), .data-table td:nth-child(2) { width: auto; } /* Nama/Role */
-        .data-table th:nth-child(3), .data-table td:nth-child(3) { width: 120px; text-align: center; } /* Urutan */
-        .data-table th:nth-child(4), .data-table td:nth-child(4) { width: 130px; text-align: center; } /* Status */
-        .data-table th:nth-child(5), .data-table td:nth-child(5) { width: 220px; text-align: center; } /* Aksi */
+        .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 85px; text-align: center; }
+        .data-table th:nth-child(2), .data-table td:nth-child(2) { width: auto; }
+        .data-table th:nth-child(3), .data-table td:nth-child(3) { width: 85px; text-align: center; }
+        .data-table th:nth-child(4), .data-table td:nth-child(4) { width: 105px; text-align: center; }
+        .data-table th:nth-child(5), .data-table td:nth-child(5) { width: 280px; text-align: center; }
 
-        .data-table td { padding: 12px 15px; border-bottom: 1px dashed rgba(0,43,91,0.2); vertical-align: middle; word-break: break-word; }
+        .data-table td { padding: 12px 12px; border-bottom: 1px dashed rgba(0,43,91,0.2); vertical-align: middle; word-break: break-word; }
         .data-table tbody tr:hover td { background: rgba(0, 43, 91, 0.04); }
 
-        .thumb-img { width: 60px; height: 60px; object-fit: cover; border: 2px solid var(--navy); padding: 1px; background: white; box-shadow: 2px 2px 0 var(--navy);}
-        .action-buttons { display: inline-flex; gap: 8px; justify-content: center; width: 100%; flex-wrap: wrap;}
+        .thumb-img { width: 55px; height: 55px; object-fit: cover; border: 2px solid var(--navy); padding: 1px; background: white; box-shadow: 2px 2px 0 var(--navy);}
 
         .status-badge {
-            padding: 4px 10px; border-radius: 2px; font-size: 0.75rem; font-weight: bold; border: 1px solid currentColor; display: inline-block;
+            padding: 4px 10px; border-radius: 2px; font-size: 0.7rem; font-weight: bold; border: 1px solid currentColor; display: inline-block;
         }
         .status-active { background: rgba(21, 87, 36, 0.08); color: #155724; }
         .status-hidden { background: rgba(114, 28, 36, 0.08); color: #721c24; }
 
         .order-input {
-            width: 60px; text-align: center; padding: 6px; border: 2px solid var(--navy);
+            width: 55px; text-align: center; padding: 5px; border: 2px solid var(--navy);
             font-family: 'Courier Prime', monospace; font-weight: bold; background: #fff;
             outline: none; box-shadow: inset 2px 2px 0 rgba(0,0,0,0.05);
         }
@@ -309,12 +385,115 @@ if (isset($_GET['msg'])) {
             border: 2px dashed var(--navy); margin-top: 10px; margin-bottom: 5px; text-align: center;
         }
 
+        /* DELETE CONFIRMATION MODAL */
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 43, 91, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .confirm-modal-content {
+            background: var(--white);
+            border: 4px solid var(--navy);
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            animation: slideUpFade 0.3s ease;
+            box-shadow: 16px 16px 0 var(--red);
+        }
+        
+        .confirm-modal-header {
+            background: var(--red);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--navy);
+        }
+        
+        .confirm-modal-header i {
+            font-size: 4rem;
+            color: var(--white);
+            text-shadow: 3px 3px 0 var(--navy);
+        }
+        
+        .confirm-modal-body {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .confirm-modal-body h3 {
+            font-family: 'Special Elite', cursive;
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 15px;
+        }
+        
+        .confirm-modal-body p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .member-name-highlight {
+            background: rgba(234, 67, 53, 0.1);
+            color: var(--red);
+            font-weight: bold;
+            padding: 5px 12px;
+            display: inline-block;
+            margin: 10px 0;
+            border-left: 3px solid var(--red);
+            font-size: 1rem;
+            max-width: 100%;
+            word-break: break-word;
+        }
+        
+        .confirm-modal-footer {
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            border-top: 2px dashed rgba(0,43,91,0.2);
+        }
+        
+        .confirm-modal-footer .btn {
+            min-width: 120px;
+        }
+        
+        .confirm-modal-content.warning-shake {
+            animation: shakeAnim 0.3s ease;
+        }
+
         .overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,43,91,0.5); backdrop-filter: blur(2px); z-index: 900; opacity: 0; transition: opacity 0.3s;
         }
         .overlay.active { display: block; opacity: 1; }
         .mobile-header { display: none; }
+
+        @media (max-width: 992px) {
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .btn-action {
+                min-width: 70px;
+                padding: 4px 8px;
+                font-size: 0.65rem;
+            }
+            
+            .data-table th:nth-child(5), 
+            .data-table td:nth-child(5) { 
+                width: 240px; 
+            }
+        }
 
         @media (max-width: 768px) {
             .main-wrapper { margin-left: 0; width: 100%; padding: 15px; margin-top: 70px; gap: 25px;}
@@ -327,6 +506,34 @@ if (isset($_GET['msg'])) {
             .btn { width: 100%; }
             .title-main { font-size: 1.6rem; }
             .tape { width: 110px; }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 6px;
+            }
+            
+            .btn-action {
+                width: 100%;
+                min-width: unset;
+                padding: 5px 10px;
+                font-size: 0.65rem;
+            }
+            
+            .data-table th:nth-child(5), 
+            .data-table td:nth-child(5) { 
+                width: 130px; 
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .btn-action {
+                padding: 4px 8px;
+                font-size: 0.6rem;
+            }
+            
+            .btn-action i {
+                font-size: 0.65rem;
+            }
         }
     </style>
 </head>
@@ -369,7 +576,7 @@ if (isset($_GET['msg'])) {
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>FOTO</th>
+                            <th style="text-align: center;">FOTO</th>
                             <th>NAMA & PERAN</th>
                             <th style="text-align: center;">URUTAN</th>
                             <th style="text-align: center;">STATUS</th>
@@ -384,6 +591,7 @@ if (isset($_GET['msg'])) {
                                 $status_class = ($row['status'] == 'active') ? 'status-active' : 'status-hidden';
                                 $toggle_icon = ($row['status'] == 'active') ? 'fa-eye' : 'fa-eye-slash';
                                 $toggle_title = ($row['status'] == 'active') ? 'Sembunyikan' : 'Tampilkan';
+                                $toggle_text = ($row['status'] == 'active') ? 'SEMBUNYI' : 'TAMPIL';
                         ?>
                             <tr>
                                 <td style="text-align: center;">
@@ -402,13 +610,22 @@ if (isset($_GET['msg'])) {
                                 <td style="text-align: center;">
                                     <span class="status-badge <?= $status_class ?>"><?= strtoupper($row['status']) ?></span>
                                 </td>
-                                <td>
+                                <td style="text-align: center;">
                                     <div class="action-buttons">
-                                        <a href="?edit=<?= $row['id'] ?>" class="btn btn-primary btn-sm">EDIT</a>
-                                        <a href="?toggle=<?= $row['id'] ?>&current=<?= $row['status'] ?>" class="btn btn-secondary btn-sm" title="<?= $toggle_title ?>">
-                                            <i class="fas <?= $toggle_icon ?>"></i>
+                                        <a href="?edit=<?= $row['id'] ?>" class="btn-action btn-edit-action" title="Edit anggota">
+                                            <i class="fas fa-pencil-alt"></i> EDIT
                                         </a>
-                                        <a href="?delete=<?= $row['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('APAKAH ANDA YAKIN MENGHAPUS ANGGOTA INI?')">DEL</a>
+                                        <a href="?toggle=<?= $row['id'] ?>&current=<?= $row['status'] ?>" class="btn-action btn-toggle-action" title="<?= $toggle_title ?>">
+                                            <i class="fas <?= $toggle_icon ?>"></i> <?= $toggle_text ?>
+                                        </a>
+                                        <button type="button" 
+                                                class="btn-action btn-delete-action delete-btn" 
+                                                data-id="<?= $row['id'] ?>"
+                                                data-name="<?= htmlspecialchars($row['name']) ?>"
+                                                data-role="<?= htmlspecialchars($row['role']) ?>"
+                                                title="Hapus anggota">
+                                            <i class="fas fa-trash-alt"></i> HAPUS
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -419,7 +636,7 @@ if (isset($_GET['msg'])) {
                 </table>
             </div>
             
-            <div style="text-align: left;">
+            <div style="text-align: left; margin-top: 15px;">
                 <button type="submit" name="update_order" class="btn btn-secondary" style="width: auto;">
                     <i class="fas fa-save"></i> SIMPAN URUTAN TAMPIL
                 </button>
@@ -427,6 +644,32 @@ if (isset($_GET['msg'])) {
         </form>
     </section>
 </main>
+
+<!-- CUSTOM DELETE CONFIRMATION MODAL -->
+<div id="deleteConfirmModal" class="confirm-modal">
+    <div class="confirm-modal-content">
+        <div class="confirm-modal-header">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="confirm-modal-body">
+            <h3>HAPUS ANGGOTA?</h3>
+            <p>Apakah Anda yakin ingin menghapus anggota berikut dari sistem?</p>
+            <div class="member-name-highlight" id="memberNameToDelete"></div>
+            <div style="font-size: 0.8rem; color: #999; margin-top: 5px;" id="memberRoleToDelete"></div>
+            <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">
+                <i class="fas fa-info-circle"></i> Data yang dihapus tidak dapat dikembalikan!
+            </p>
+        </div>
+        <div class="confirm-modal-footer">
+            <button class="btn btn-secondary" id="cancelDeleteBtn">
+                <i class="fas fa-times"></i> BATAL
+            </button>
+            <a href="#" id="confirmDeleteBtn" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> HAPUS
+            </a>
+        </div>
+    </div>
+</div>
 
 <div id="modalCommunity" class="modal">
     <div class="modal-content">
@@ -544,16 +787,68 @@ if (isset($_GET['msg'])) {
     if(showModalBtn) showModalBtn.onclick = openModal;
     <?php if ($edit_mode) echo "openModal();"; ?>
 
-    // CROPPER LOGIC (Metode Base64 yang lebih handal, tanpa AJAX)
+    // ========== DELETE CONFIRMATION MODAL ==========
+    const deleteModal = document.getElementById('deleteConfirmModal');
+    const memberNameSpan = document.getElementById('memberNameToDelete');
+    const memberRoleSpan = document.getElementById('memberRoleToDelete');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    let currentDeleteUrl = '';
+
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const memberId = this.dataset.id;
+            const memberName = this.dataset.name;
+            const memberRole = this.dataset.role || '';
+            
+            memberNameSpan.textContent = memberName;
+            if (memberRole) {
+                memberRoleSpan.textContent = `[${memberRole}]`;
+                memberRoleSpan.style.display = 'block';
+            } else {
+                memberRoleSpan.style.display = 'none';
+            }
+            
+            currentDeleteUrl = `?delete=${memberId}`;
+            confirmDeleteBtn.href = currentDeleteUrl;
+            
+            deleteModal.style.display = 'flex';
+            
+            const modalContent = document.querySelector('.confirm-modal-content');
+            modalContent.classList.add('warning-shake');
+            setTimeout(() => {
+                modalContent.classList.remove('warning-shake');
+            }, 300);
+        });
+    });
+    
+    cancelDeleteBtn.addEventListener('click', () => {
+        deleteModal.style.display = 'none';
+    });
+    
+    deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+    });
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && deleteModal.style.display === 'flex') {
+            deleteModal.style.display = 'none';
+        }
+    });
+
+    // CROPPER LOGIC
     let cropper;
     const imageInput = document.getElementById('imageInput');
-    const cropModal = document.getElementById('cropModal');
-    const cropImage = document.getElementById('cropImage');
-    const cropBtn = document.getElementById('cropBtn');
-    const cancelCropBtn = document.getElementById('cancelCropBtn');
-    const previewArea = document.getElementById('previewArea');
-    const previewImage = document.getElementById('previewImage');
-    const fotoCropped = document.getElementById('fotoCropped');
+    const cropModalEl = document.getElementById('cropModal');
+    const cropImageEl = document.getElementById('cropImage');
+    const cropBtnEl = document.getElementById('cropBtn');
+    const cancelCropBtnEl = document.getElementById('cancelCropBtn');
+    const previewAreaEl = document.getElementById('previewArea');
+    const previewImageEl = document.getElementById('previewImage');
+    const fotoCroppedEl = document.getElementById('fotoCropped');
 
     imageInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -573,42 +868,37 @@ if (isset($_GET['msg'])) {
 
         const reader = new FileReader();
         reader.onload = function(event) {
-            cropImage.src = event.target.result;
-            cropModal.style.display = 'flex';
+            cropImageEl.src = event.target.result;
+            cropModalEl.style.display = 'flex';
             if (cropper) cropper.destroy();
-            // Inisialisasi cropper dengan rasio 1:1
-            cropper = new Cropper(cropImage, { aspectRatio: 1, viewMode: 1 });
+            cropper = new Cropper(cropImageEl, { aspectRatio: 1, viewMode: 1 });
         };
         reader.readAsDataURL(file);
     });
 
-    cropBtn.addEventListener('click', () => {
+    cropBtnEl.addEventListener('click', () => {
         if (cropper) {
             const canvas = cropper.getCroppedCanvas({ width: 500, height: 500 });
             const croppedBase64 = canvas.toDataURL('image/png', 0.9);
             
-            // Masukkan ke input hidden untuk dikirim via form submit PHP
-            fotoCropped.value = croppedBase64;
+            fotoCroppedEl.value = croppedBase64;
+            previewImageEl.src = croppedBase64;
+            previewAreaEl.style.display = 'block';
             
-            // Tampilkan preview
-            previewImage.src = croppedBase64;
-            previewArea.style.display = 'block';
-            
-            cropModal.style.display = 'none';
+            cropModalEl.style.display = 'none';
             cropper.destroy();
         }
     });
 
-    cancelCropBtn.addEventListener('click', () => {
-        cropModal.style.display = 'none';
+    cancelCropBtnEl.addEventListener('click', () => {
+        cropModalEl.style.display = 'none';
         if (cropper) cropper.destroy();
         imageInput.value = '';
     });
 
-    // Validasi submit form jika ada gambar baru tapi belum dicrop
     document.getElementById('mainForm').addEventListener('submit', function(e) {
         const file = imageInput.files[0];
-        if (file && !fotoCropped.value) {
+        if (file && !fotoCroppedEl.value) {
             e.preventDefault();
             alert('Harap menyelesaikan proses CROP foto sebelum menyimpan!');
         }

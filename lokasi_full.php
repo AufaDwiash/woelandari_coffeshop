@@ -19,7 +19,7 @@ include 'components/navbar.php';
         
         <div class="lok-header-matrix">
             <div class="lok-tag">LOKASI KAMI</div>
-            <h2 class="lok-title-matrix">KOORDINASI TITIK TEMU.</h2>
+            <h2 class="lok-title-matrix">KORDINAT TITIK KOEMPOEL.</h2>
             <div class="draft-divider"></div>
         </div>
 
@@ -28,14 +28,14 @@ include 'components/navbar.php';
             <div class="lok-col-narrative">
                 
                 <div class="dossier-card narrative-card">
-                    <div class="red-stamp">VERIFIED SITE</div>
+                  
                     <p class="typewriter-text">
                         Bukan sekadar deretan angka bujur dan lintang pada peta satelit. Ruang ini dibangun sebagai laboratorium interaksi organik.
                     </p>
                     <p class="typewriter-text">
                         Tempat di mana seduhan kopi mempertemukan ragam cerita, perdebatan ide, dan kolaborasi manusia. Lebih dari sekadar kedai, ini adalah titik koordinat tempat gagasan diekstraksi. Kami menantimu di titik ini.
                     </p>
-                    <div class="tech-label">CATATAN EKSTRAKSI</div>
+                    <div class="tech-label">CATATAN KECIL</div>
                 </div>
 
                 <div class="dossier-card photo-card">
@@ -51,9 +51,7 @@ include 'components/navbar.php';
                         <div class="hours-row"><span>MON - SAT</span><span>08:00 - 22:00</span></div>
                         <div class="hours-row highlight-weekend"><span>SUNDAY</span><span>08:00 - 22:00</span></div>
                     </div>
-                    <div class="status-indicator">
-                        <span class="pulse-dot"></span> STATUS SISTEM: ONLINE & BREWING
-                    </div>
+                  
                 </div>
 
             </div>
@@ -61,7 +59,7 @@ include 'components/navbar.php';
             <div class="lok-col-data">
                 
                 <div class="dossier-card maps-card">
-                    <div class="card-label">// RADAR LOKASI</div>
+                    <div class="card-label">MAPS</div>
                     <div class="map-iframe-wrapper">
                         <iframe 
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3954.195726227181!2d112.9031263!3d-7.6611369!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7c5fc11c6d321%3A0x6b490d1bf4bbf25d!2sJl.%20Panglima%20Sudirman%20VII%20No.12%2C%20Purworejo%2C%20Kec.%20Purworejo%2C%20Kota%20Pasuruan%2C%20Jawa%20Timur%2067115!5e0!3m2!1sid!2sid!4v1710000000000!5m2!1sid!2sid" 
@@ -75,7 +73,7 @@ include 'components/navbar.php';
                         <div class="map-grid-overlay"></div>
                     </div>
                     <a href="https://share.google/UqJrJp2XknIhXRBhv" target="_blank" rel="noopener noreferrer" class="btn-maps-redirect">
-                        MULAI NAVIGASI <i class="fa-solid fa-satellite-dish"></i>
+                         BUKA DI GMAPS <i class="fa-solid fa-satellite-dish"></i>
                     </a>
                 </div>
 
