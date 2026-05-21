@@ -1,14 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap');
 
 :root {
-    /* Skema Warna Cream/Beige */
     --espresso: #3E2723;
     --terracotta: #D35400;
     --bg-cream: #EFEBE0;
     --grid-line: #DCD5C4;
     --card-surface: #FFFFFF;
-
-    /* Warna Status */
     --status-done: #C0392B;
     --status-soon: #27AE60;
 }
@@ -22,9 +19,7 @@
 body {
     font-family: 'Courier Prime', monospace;
     background-color: var(--bg-cream);
-    background-image:
-        linear-gradient(var(--grid-line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 30px 30px;
     color: var(--espresso);
     min-height: 100vh;
@@ -35,7 +30,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Light Effect */
 body::after {
     content: "";
     position: fixed;
@@ -45,7 +39,7 @@ body::after {
     z-index: -1;
 }
 
-/* --- HEADER --- */
+/* HEADER */
 .header-gallery {
     text-align: center;
     width: 100%;
@@ -98,7 +92,7 @@ body::after {
     opacity: 0.8;
 }
 
-/* --- TAB CONTROLS --- */
+/* TAB CONTROLS */
 .tab-controls {
     display: flex;
     justify-content: center;
@@ -130,7 +124,7 @@ body::after {
     border-color: var(--terracotta);
 }
 
-/* --- ✅ SOLUSI 1: GRID PONDASI RAPAT --- */
+/* TAB CONTENT GRID */
 .tab-content {
     display: none;
     width: 100%;
@@ -140,7 +134,6 @@ body::after {
 
 .tab-content.active {
     display: grid;
-    /* Grid terkontrol, tidak akan saling menumpuk absolute */
     grid-template-columns: repeat(auto-fit, minmax(250px, 250px));
     justify-content: center;
     gap: 35px;
@@ -148,63 +141,39 @@ body::after {
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- ✅ SOLUSI 6: POLAROID FEEL (KOTAK PUTIH) --- */
+/* ARCHIVE CARD (POLAROID STYLE) */
 .archive-card {
     background: var(--card-surface);
     border: 2px solid var(--espresso);
-    /* Padding bawah lebih tebal ala polaroid */
     padding: 15px 15px 25px 15px;
     display: flex;
     flex-direction: column;
     box-shadow: 3px 5px 15px rgba(0, 0, 0, 0.08);
-    transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s, border-color 0.3s;
     position: relative;
     cursor: pointer;
 }
 
-/* --- ✅ SOLUSI 2 & 3: ACAK YANG TERKONTROL --- */
-.archive-card:nth-child(odd) {
-    transform: rotate(-2deg);
-}
+.archive-card:nth-child(odd) { transform: rotate(-2deg); }
+.archive-card:nth-child(even) { transform: rotate(2deg); }
+.archive-card:nth-child(3n) { transform: rotate(-1deg) scale(0.98); }
+.archive-card:nth-child(5n) { transform: rotate(1.5deg) scale(1.02); }
 
-.archive-card:nth-child(even) {
-    transform: rotate(2deg);
-}
-
-.archive-card:nth-child(3n) {
-    transform: rotate(-1deg) scale(0.98);
-}
-
-.archive-card:nth-child(5n) {
-    transform: rotate(1.5deg) scale(1.02);
-}
-
-/* --- ✅ SOLUSI 7: HOVER BIAR HIDUP --- */
 .archive-card:hover {
     transform: rotate(0deg) scale(1.05);
-    /* Lurus dan membesar */
     z-index: 10;
-    /* Berada di atas saat di hover */
     box-shadow: 8px 8px 0 var(--terracotta);
     border-color: var(--terracotta);
 }
 
-/* --- ✅ SOLUSI 5: GAMBAR WAJIB PERSEGI (KONSISTEN) --- */
+/* IMAGE WRAPPER (SQUARE) */
 .card-img-wrapper {
     width: 100%;
     aspect-ratio: 1 / 1;
-    /* MEMAKSA GAMBAR JADI PERSEGI (KOTAK) */
     border: 2px solid var(--espresso);
     margin-bottom: 15px;
     position: relative;
@@ -215,9 +184,8 @@ body::after {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Mencegah gambar gepeng */
     filter: sepia(20%);
-    transition: 0.5s;
+    transition: filter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s;
 }
 
 .archive-card:hover .card-img-wrapper img {
@@ -225,7 +193,7 @@ body::after {
     transform: scale(1.05);
 }
 
-/* STATUS BADGE */
+/* EVENT STATUS BADGE */
 .event-status {
     position: absolute;
     top: 10px;
@@ -240,15 +208,10 @@ body::after {
     box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
 }
 
-.status-selesai {
-    background-color: var(--status-done);
-}
+.status-selesai { background-color: var(--status-done); }
+.status-mendatang { background-color: var(--status-soon); }
 
-.status-mendatang {
-    background-color: var(--status-soon);
-}
-
-/* TEXT INFO */
+/* CARD INFO */
 .card-info {
     flex: 1;
     display: flex;
@@ -276,9 +239,7 @@ body::after {
     text-transform: uppercase;
 }
 
-.archive-card:hover .card-title {
-    color: var(--terracotta);
-}
+.archive-card:hover .card-title { color: var(--terracotta); }
 
 .card-desc {
     font-size: 0.85rem;
@@ -286,6 +247,7 @@ body::after {
     line-height: 1.4;
 }
 
+/* BUTTON BACK */
 .btn-back {
     display: inline-block;
     margin-top: 40px;
@@ -307,187 +269,59 @@ body::after {
     transform: translateY(-2px);
 }
 
+/* ===== GRAYSCALE EFFECT FOR FINISHED EVENTS (SMOOTH ANIMATION) ===== */
+.archive-card.event-selesai .card-img-wrapper img,
+.archive-card.event-selesai .event-status {
+    filter: grayscale(100%) sepia(0%);
+    transition: filter 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: filter;
+}
+
+.archive-card.event-selesai:hover .card-img-wrapper img,
+.archive-card.event-selesai:hover .event-status {
+    filter: grayscale(0%) sepia(20%); /* kembali ke gaya normal gallery */
+}
+
+/* Opsional: pastikan kartu event selesai tetap memiliki efek hover yang halus */
+.archive-card.event-selesai {
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
-    body {
-        padding: 25px 15px;
-    }
-    
-    .header-gallery {
-        padding: 25px 15px;
-        margin-bottom: 30px;
-        box-shadow: 6px 6px 0 var(--terracotta);
-    }
-    
-    .header-gallery::before {
-        top: -12px;
-        width: 120px;
-        height: 25px;
-    }
-    
-    .header-gallery h1 {
-        font-size: 2rem;
-        letter-spacing: 1px;
-    }
-    
-    .subtitle {
-        font-size: 0.8rem;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-    }
-    
-    .tab-controls {
-        gap: 10px;
-    }
-    
-    .btn-tab {
-        padding: 8px 18px;
-        font-size: 0.9rem;
-    }
-    
-    .tab-content.active {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 25px;
-        padding-top: 15px;
-    }
-    
-    .archive-card {
-        padding: 12px 12px 20px 12px;
-    }
-    
-    .card-title {
-        font-size: 1rem;
-    }
-    
-    .card-desc {
-        font-size: 0.8rem;
-    }
-    
-    .btn-back {
-        padding: 10px 20px;
-        box-shadow: 4px 4px 0 var(--terracotta);
-        margin-top: 30px;
-    }
-    
-    .doc-ref {
-        font-size: 0.8rem;
-    }
+    body { padding: 25px 15px; }
+    .header-gallery { padding: 25px 15px; margin-bottom: 30px; box-shadow: 6px 6px 0 var(--terracotta); }
+    .header-gallery::before { top: -12px; width: 120px; height: 25px; }
+    .header-gallery h1 { font-size: 2rem; }
+    .subtitle { font-size: 0.8rem; margin-bottom: 20px; padding-bottom: 15px; }
+    .btn-tab { padding: 8px 18px; font-size: 0.9rem; }
+    .tab-content.active { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
+    .archive-card { padding: 12px 12px 20px 12px; }
+    .card-title { font-size: 1rem; }
+    .card-desc { font-size: 0.8rem; }
+    .btn-back { padding: 10px 20px; box-shadow: 4px 4px 0 var(--terracotta); margin-top: 30px; }
 }
 
 @media (max-width: 480px) {
-    body {
-        padding: 15px 10px;
-    }
-    
-    .header-gallery {
-        padding: 15px 12px;
-        margin-bottom: 20px;
-        border: 2px solid var(--espresso);
-        box-shadow: 4px 4px 0 var(--terracotta);
-    }
-    
-    .header-gallery::before {
-        display: none;
-    }
-    
-    .header-gallery h1 {
-        font-size: 1.4rem;
-        letter-spacing: 0px;
-        margin-bottom: 8px;
-    }
-    
-    .doc-ref {
-        font-size: 0.7rem;
-        margin-bottom: 8px;
-        letter-spacing: 1px;
-    }
-    
-    .subtitle {
-        font-size: 0.7rem;
-        margin-bottom: 12px;
-        padding-bottom: 10px;
-    }
-    
-    .tab-controls {
-        gap: 8px;
-        width: 100%;
-    }
-    
-    .btn-tab {
-        padding: 7px 14px;
-        font-size: 0.8rem;
-        border: 1.5px solid var(--espresso);
-    }
-    
-    .btn-tab.active {
-        box-shadow: 3px 3px 0 var(--terracotta);
-        transform: translateY(-1px);
-    }
-    
-    .tab-content.active {
-        grid-template-columns: 1fr;
-        gap: 15px;
-        padding-top: 10px;
-        width: 100%;
-    }
-    
-    .archive-card {
-        padding: 10px 10px 15px 10px;
-    }
-    
-    .archive-card:nth-child(odd) {
-        transform: rotate(-1deg);
-    }
-    
-    .archive-card:nth-child(even) {
-        transform: rotate(1deg);
-    }
-    
-    .archive-card:nth-child(3n) {
-        transform: rotate(-0.5deg) scale(0.99);
-    }
-    
-    .archive-card:nth-child(5n) {
-        transform: rotate(0.5deg) scale(1.01);
-    }
-    
-    .archive-card:hover {
-        transform: rotate(0deg) scale(1.02);
-        box-shadow: 3px 3px 0 var(--terracotta);
-    }
-    
-    .card-img-wrapper {
-        margin-bottom: 10px;
-        border: 1.5px solid var(--espresso);
-    }
-    
-    .card-meta {
-        font-size: 0.75rem;
-        padding-bottom: 6px;
-        margin-bottom: 8px;
-    }
-    
-    .card-title {
-        font-size: 0.95rem;
-        margin-bottom: 6px;
-    }
-    
-    .card-desc {
-        font-size: 0.75rem;
-    }
-    
-    .event-status {
-        padding: 4px 8px;
-        font-size: 0.7rem;
-        top: 8px;
-        right: 8px;
-        border: 1.5px solid var(--espresso);
-    }
-    
-    .btn-back {
-        padding: 8px 16px;
-        font-size: 0.9rem;
-        box-shadow: 3px 3px 0 var(--terracotta);
-        margin-top: 20px;
-    }
+    body { padding: 15px 10px; }
+    .header-gallery { padding: 15px 12px; margin-bottom: 20px; border: 2px solid var(--espresso); box-shadow: 4px 4px 0 var(--terracotta); }
+    .header-gallery::before { display: none; }
+    .header-gallery h1 { font-size: 1.4rem; margin-bottom: 8px; }
+    .doc-ref { font-size: 0.7rem; margin-bottom: 8px; }
+    .subtitle { font-size: 0.7rem; margin-bottom: 12px; padding-bottom: 10px; }
+    .btn-tab { padding: 7px 14px; font-size: 0.8rem; border: 1.5px solid var(--espresso); }
+    .btn-tab.active { box-shadow: 3px 3px 0 var(--terracotta); transform: translateY(-1px); }
+    .tab-content.active { grid-template-columns: 1fr; gap: 15px; }
+    .archive-card { padding: 10px 10px 15px 10px; }
+    .archive-card:nth-child(odd) { transform: rotate(-1deg); }
+    .archive-card:nth-child(even) { transform: rotate(1deg); }
+    .archive-card:nth-child(3n) { transform: rotate(-0.5deg) scale(0.99); }
+    .archive-card:nth-child(5n) { transform: rotate(0.5deg) scale(1.01); }
+    .archive-card:hover { transform: rotate(0deg) scale(1.02); box-shadow: 3px 3px 0 var(--terracotta); }
+    .card-img-wrapper { margin-bottom: 10px; border: 1.5px solid var(--espresso); }
+    .card-meta { font-size: 0.75rem; padding-bottom: 6px; margin-bottom: 8px; }
+    .card-title { font-size: 0.95rem; margin-bottom: 6px; }
+    .card-desc { font-size: 0.75rem; }
+    .event-status { padding: 4px 8px; font-size: 0.7rem; top: 8px; right: 8px; border: 1.5px solid var(--espresso); }
+    .btn-back { padding: 8px 16px; font-size: 0.9rem; box-shadow: 3px 3px 0 var(--terracotta); margin-top: 20px; }
 }
