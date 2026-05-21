@@ -1,6 +1,6 @@
 
 <section id="home">
-<div class="interactive-scene" id="scene" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">
+<div class="interactive-scene" id="scene">
     
     <img src="assets/images/background/layer1.png" class="layer layer-bg">
 

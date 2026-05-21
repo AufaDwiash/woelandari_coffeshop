@@ -435,7 +435,7 @@ if (isset($_GET['msg'])) {
             color: var(--navy);
             margin-bottom: 15px;
         }
-        
+        //// Perbaikan
         .confirm-modal-body p {
             font-size: 0.9rem;
             color: #666;
@@ -871,7 +871,7 @@ if (isset($_GET['msg'])) {
             cropImageEl.src = event.target.result;
             cropModalEl.style.display = 'flex';
             if (cropper) cropper.destroy();
-            cropper = new Cropper(cropImageEl, { aspectRatio: 1, viewMode: 1 });
+            cropper = new Cropper(cropImageEl, { aspectRatio: NaN, viewMode: 1 });
         };
         reader.readAsDataURL(file);
     });

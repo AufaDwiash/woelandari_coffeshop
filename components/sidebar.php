@@ -11,11 +11,6 @@ $isKaryawan = ($role == 'karyawan');
         <div class="brand-logo-container">
             <img src="/woelandari_coffeshop/assets/images/gambar-mentahan/logo.png" alt="Woelandari Coffee Lab Logo" class="brand-logo">
         </div>
-        
-        <div class="brand-role <?= $isAdmin ? 'role-admin' : 'role-karyawan' ?>">
-            <i class="<?= $isAdmin ? 'fas fa-user-shield' : 'fas fa-user' ?>"></i> 
-            <span><?= $isAdmin ? 'Admin' : 'Karyawan' ?></span>
-        </div>
     </div>
 
     <nav class="nav-list">
@@ -38,7 +33,7 @@ $isKaryawan = ($role == 'karyawan');
         <!-- Menu AKUN STAFF - Hanya untuk KARYAWAN -->
         <?php if ($isKaryawan): ?>
         <a href="../dashboard/akun_staff.php" class="nav-item <?= ($current_page == 'akun_staff.php') ? 'active' : '' ?>">
-            <i class="fas fa-id-card"></i> <span>AKUN STAFF</span>
+            <i class="fas fa-id-card"></i> <span>AKUN</span>
         </a>
         <?php endif; ?>
         
