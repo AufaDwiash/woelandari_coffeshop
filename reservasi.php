@@ -9,7 +9,7 @@
         <div class="res-grid">
             <form id="labForm" class="res-main-card">
                 <div class="card-label">Isi Form Jika Ingin Reservasi</div>
-                
+
                 <div class="form-row">
                     <div class="input-group">
                         <label>Nama</label>
@@ -38,7 +38,7 @@
                         <input type="text" id="res-durasi" placeholder="MISAL: 2 JAM" required>
                     </div>
                     <div class="input-group">
-                        <label>Pilih Aerea</label>
+                        <label>Pilih Area</label>
                         <select id="res-area" required>
                             <option value="" disabled selected>PILIH AREA...</option>
                             <option value="INDOOR (AC)">INDOOR </option>
@@ -49,11 +49,11 @@
 
                 <div class="input-group">
                     <label>Jumlah Orang</label>
-                    <input type="number" id="res-jumlah" min="1" placeholder="ESTIMASI JUMLAH ORANG..." required>
+                    <input type="number" id="res-jumlah" min="1" placeholder="MASUKKAN JUMLAH ORANG..." required>
                 </div>
 
                 <button type="button" onclick="executeBooking()" class="btn-execute">
-                    RESERVASI <i class="fa-solid fa-flask-vial"></i>
+                    RESERVASI
                 </button>
             </form>
 
@@ -62,7 +62,7 @@
                     <div class="card-label">Ketentuan Reservasi</div>
                     <ul class="res-info-list">
                         <li><strong>Durasi Maksimal:</strong> 120 Menit</li>
-                        <li><strong>Minimal Pemesanan:</strong> 1 BEVERAGE / PAX</li>
+                        <li><strong>Minimal Pemesanan:</strong>1 Minuman / Orang</li>
                         <li><strong>Waktu Terakhir Pemesanan:</strong> 21:00 WIB</li>
                     </ul>
                 </div>
@@ -84,33 +84,33 @@
 </section>
 
 <script>
-function executeBooking() {
-    const d = {
-        nama: document.getElementById('res-nama').value,
-        wa: document.getElementById('res-wa').value,
-        tgl: document.getElementById('res-tanggal').value,
-        jam: document.getElementById('res-jam').value,
-        dur: document.getElementById('res-durasi').value,
-        area: document.getElementById('res-area').value,
-        pax: document.getElementById('res-jumlah').value
-    };
+    function executeBooking() {
+        const d = {
+            nama: document.getElementById('res-nama').value,
+            wa: document.getElementById('res-wa').value,
+            tgl: document.getElementById('res-tanggal').value,
+            jam: document.getElementById('res-jam').value,
+            dur: document.getElementById('res-durasi').value,
+            area: document.getElementById('res-area').value,
+            pax: document.getElementById('res-jumlah').value
+        };
 
-    if(!d.nama || !d.tgl || !d.jam || !d.dur || !d.area || !d.pax) {
-        alert("Harap lengkapi semua data laboratorium!");
-        return;
+        if (!d.nama || !d.tgl || !d.jam || !d.dur || !d.area || !d.pax) {
+            alert("Harap lengkapi semua data laboratorium!");
+            return;
+        }
+
+        const adminNum = "6289677718775"; // Ganti dengan nomor WhatsApp admin yang valid (format internasional tanpa tanda +)
+        const msg = `Halo Admin Woelandari Coffee Lab,%0A%0ASaya ingin mengajukan *LAB RESERVATION*:%0A%0A` +
+            `*Nama:* ${d.nama}%0A` +
+            `*WhatsApp:* ${d.wa}%0A` +
+            `*Tanggal:* ${d.tgl}%0A` +
+            `*Jam Datang:* ${d.jam}%0A` +
+            `*Durasi:* ${d.dur}%0A` +
+            `*Area:* ${d.area}%0A` +
+            `*Jumlah:* ${d.pax} Orang%0A%0A` +
+            `Mohon dicek ketersediaan slotnya. Terima kasih!`;
+
+        window.open(`https://wa.me/${adminNum}?text=${msg}`, '_blank');
     }
-
-    const adminNum = "6289677718775"; // Ganti dengan nomor WhatsApp admin yang valid (format internasional tanpa tanda +)
-    const msg = `Halo Admin Woelandari Coffee Lab,%0A%0ASaya ingin mengajukan *LAB RESERVATION*:%0A%0A` +
-                 `*Nama:* ${d.nama}%0A` +
-                 `*WhatsApp:* ${d.wa}%0A` +
-                 `*Tanggal:* ${d.tgl}%0A` +
-                 `*Jam Datang:* ${d.jam}%0A` +
-                 `*Durasi:* ${d.dur}%0A` +
-                 `*Area:* ${d.area}%0A` +
-                 `*Jumlah:* ${d.pax} Orang%0A%0A` +
-                 `Mohon dicek ketersediaan slotnya. Terima kasih!`;
-
-    window.open(`https://wa.me/${adminNum}?text=${msg}`, '_blank');
-}
 </script>

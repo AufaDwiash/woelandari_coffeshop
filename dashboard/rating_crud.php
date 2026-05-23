@@ -18,13 +18,13 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
 
     if ($action === 'approve') {
         mysqli_query($conn, "UPDATE feedback SET status_moderasi='tampil' WHERE id_feedback=$id");
-        $msg = "✅ Feedback berhasil disetujui dan ditampilkan.";
+        $msg = " Feedback berhasil disetujui dan ditampilkan.";
     } elseif ($action === 'reject') {
         mysqli_query($conn, "UPDATE feedback SET status_moderasi='pending' WHERE id_feedback=$id");
-        $msg = "⚠️ Feedback disembunyikan (status pending).";
+        $msg = " Feedback disembunyikan (status pending).";
     } elseif ($action === 'delete') {
         mysqli_query($conn, "DELETE FROM feedback WHERE id_feedback=$id");
-        $msg = "🗑️ Feedback berhasil dihapus permanen.";
+        $msg = " Feedback berhasil dihapus permanen.";
     }
     
     $redirectUrl = "rating_crud.php?page=$pg" . ($srch ? "&search=" . urlencode($srch) : "") . "&msg=" . urlencode($msg);

@@ -14,11 +14,11 @@ $today = date('Y-m-d');
     <?php include 'components/navbar.php'; ?>
     <div class="header-gallery">
         <p class="doc-ref">WOELANDARI EXPERIENCE</p>
-        <h1>VISUAL ARCHIVES</h1>
+        <h1>ARSIP VISUAL</h1>
         <p class="subtitle">BERKUMPUL UNTUK BERBAGI, BERKARYA UNTUK TUMBUH, DAN MENCIPTAKAN CERITA YANG BERMAKNA</p>
         <div class="tab-controls">
-            <button class="btn-tab active" onclick="switchTab(event, 'tab-gallery')">COLLECTION</button>
-            <button class="btn-tab" onclick="switchTab(event, 'tab-event')">BIG EVENTS</button>
+            <button class="btn-tab active" onclick="switchTab(event, 'tab-gallery')">GALLERY</button>
+            <button class="btn-tab" onclick="switchTab(event, 'tab-event')">EVENT</button>
         </div>
     </div>
 
@@ -75,7 +75,7 @@ $today = date('Y-m-d');
                 </div>
                 <div class="card-info">
                     <div class="card-meta">
-                        <span>// DATE LOG :</span>
+                        <span>Tanggal :</span>
                         <span><?php echo date('d M Y', strtotime($tgl_event)); ?></span>
                         <?php if($is_featured): ?>
                             <span style="margin-left: 8px; color: gold; font-size:0.7rem;">★ FEATURED</span>
@@ -93,7 +93,7 @@ $today = date('Y-m-d');
         ?>
     </div>
 
-    <a href="index.php" class="btn-back">← RETURN TO MAIN MENU</a>
+    <a href="index.php" class="btn-back">← KEMBAL KE HALAMAN UTAMA</a>
 
     <script>
         function switchTab(evt, tabName) {

@@ -89,7 +89,7 @@ if (isset($_POST['update_human'])) {
 
     mysqli_query($conn, "UPDATE human_archive SET name='$name', role='$role', quote='$quote', display_order='$order', image='$foto_nama' WHERE id=$id");
     
-    $msg = "✏️ Data Anggota berhasil diperbarui!";
+    $msg = " Data Anggota berhasil diperbarui!";
     $redirect = "community_crud.php?msg=" . urlencode($msg) . "&page=$page" . ($search ? "&search=" . urlencode($search) : "") . ($status_filter ? "&status=" . urlencode($status_filter) : "");
     header("Location: $redirect");
     exit;
@@ -103,7 +103,7 @@ if (isset($_POST['update_order'])) {
             $order_val = (int)$order_val;
             mysqli_query($conn, "UPDATE human_archive SET display_order='$order_val' WHERE id='$id'");
         }
-        $msg = "🔄 Urutan tampil berhasil diperbarui!";
+        $msg = " Urutan tampil berhasil diperbarui!";
     }
     $redirect = "community_crud.php?msg=" . urlencode($msg) . "&page=$page" . ($search ? "&search=" . urlencode($search) : "") . ($status_filter ? "&status=" . urlencode($status_filter) : "");
     header("Location: $redirect");
@@ -130,7 +130,7 @@ if (isset($_GET['delete'])) {
         unlink('../assets/images/community/' . $f['image']);
     }
     mysqli_query($conn, "DELETE FROM human_archive WHERE id=$id");
-    $msg = "🗑️ Data Anggota berhasil dihapus dari arsip!";
+    $msg = " Data Anggota berhasil dihapus dari arsip!";
     $redirect = "community_crud.php?msg=" . urlencode($msg) . "&page=$page" . ($search ? "&search=" . urlencode($search) : "") . ($status_filter ? "&status=" . urlencode($status_filter) : "");
     header("Location: $redirect");
     exit;

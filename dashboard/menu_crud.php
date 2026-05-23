@@ -73,10 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($action == 'add') {
         if (!$foto_nama) $foto_nama = 'default.jpg';
         mysqli_query($conn, "INSERT INTO menu (nama_menu, kategori, harga, status, deskripsi, foto) VALUES ('$nama', '$kategori', $harga, '$status', '$deskripsi', '$foto_nama')");
-        $msg = "✅ Menu berhasil ditambahkan!";
+        $msg = " Menu berhasil ditambahkan!";
     } elseif ($action == 'update') {
         mysqli_query($conn, "UPDATE menu SET nama_menu='$nama', kategori='$kategori', harga=$harga, status='$status', deskripsi='$deskripsi', foto='$foto_nama' WHERE id_menu=$id");
-        $msg = "✏️ Menu berhasil diperbarui!";
+        $msg = " Menu berhasil diperbarui!";
     }
     
     $redirect = "menu_crud.php?msg=" . urlencode($msg);
@@ -95,7 +95,7 @@ if (isset($_GET['hapus'])) {
         unlink('../assets/images/menu/'.$q['foto']);
     mysqli_query($conn, "DELETE FROM menu WHERE id_menu=$id");
     
-    $msg = "🗑️ Menu berhasil dihapus permanen!";
+    $msg = " Menu berhasil dihapus permanen!";
     $redirect = "menu_crud.php?msg=" . urlencode($msg);
     if ($search) $redirect .= "&search=" . urlencode($search);
     if ($category) $redirect .= "&kategori=" . urlencode($category);

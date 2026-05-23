@@ -708,13 +708,13 @@ $query_users = mysqli_query($conn, "SELECT * FROM user $whereClause ORDER BY
                     </div>
                 </div>
                 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label class="form-label">PASSWORD <?= $edit_mode ? "(KOSONGKAN JIKA TIDAK DIUBAH)" : "" ?></label>
                     <input type="password" name="password" class="form-input" <?= $edit_mode ? '' : 'required' ?>>
                     <?php if ($edit_mode): ?>
                         <p style="font-size:0.75rem; font-weight:bold; color:var(--red); margin-top:5px;">* Hanya isi jika ingin mereset password pengguna.</p>
                     <?php endif; ?>
-                </div>
+                </div> -->
                 
                 <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 25px; padding-bottom: 5px;">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">BATAL</button>

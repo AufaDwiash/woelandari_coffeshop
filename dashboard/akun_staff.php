@@ -41,11 +41,11 @@ if (isset($_POST['update_profil'])) {
         if (mysqli_query($conn, $query_update)) {
             $_SESSION['username'] = $username_baru;
             $_SESSION['nama_lengkap'] = $nama_baru;
-            
+
             $query_reset = "UPDATE user SET is_first_login = 0, password_default = NULL WHERE id_user = '$id_user'";
             mysqli_query($conn, $query_reset);
             unset($_SESSION['first_login_notification_shown']);
-            
+
             $success_msg = "Profil berhasil diperbarui!";
             $query_user = mysqli_query($conn, "SELECT * FROM user WHERE id_user = '$id_user'");
             $data_user = mysqli_fetch_assoc($query_user);
@@ -131,17 +131,43 @@ if (isset($_POST['ganti_password'])) {
         }
 
         @keyframes slideUpFade {
-            0% { opacity: 0; transform: translateY(30px); }
-            100% { opacity: 1; transform: translateY(0) rotate(-0.2deg); }
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotate(-0.2deg);
+            }
         }
+
         @keyframes floatTape {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-2px); }
+
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            50% {
+                transform: translateX(-50%) translateY(-2px);
+            }
         }
+
         @keyframes shakeAnim {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
         }
 
         /* --- MAIN WRAPPER --- */
@@ -372,7 +398,7 @@ if (isset($_POST['ganti_password'])) {
             align-items: center;
             padding: 20px;
         }
-        
+
         .confirm-modal-content {
             background: var(--white);
             border: 4px solid var(--navy);
@@ -382,38 +408,38 @@ if (isset($_POST['ganti_password'])) {
             animation: slideUpFade 0.3s ease;
             box-shadow: 16px 16px 0 var(--red);
         }
-        
+
         .confirm-modal-header {
             background: var(--red);
             padding: 20px;
             text-align: center;
             border-bottom: 2px solid var(--navy);
         }
-        
+
         .confirm-modal-header i {
             font-size: 4rem;
             color: var(--white);
             text-shadow: 3px 3px 0 var(--navy);
         }
-        
+
         .confirm-modal-body {
             padding: 30px;
             text-align: center;
         }
-        
+
         .confirm-modal-body h3 {
             font-family: 'Special Elite', cursive;
             font-size: 1.5rem;
             color: var(--navy);
             margin-bottom: 15px;
         }
-        
+
         .confirm-modal-body p {
             font-size: 0.9rem;
             color: #666;
             margin-bottom: 10px;
         }
-        
+
         .user-name-highlight {
             background: rgba(234, 67, 53, 0.1);
             color: var(--red);
@@ -426,19 +452,19 @@ if (isset($_POST['ganti_password'])) {
             max-width: 100%;
             word-break: break-word;
         }
-        
+
         .confirm-modal-footer {
             padding: 20px;
             display: flex;
             gap: 15px;
             justify-content: center;
-            border-top: 2px dashed rgba(0,43,91,0.2);
+            border-top: 2px dashed rgba(0, 43, 91, 0.2);
         }
-        
+
         .confirm-modal-footer .btn {
             min-width: 120px;
         }
-        
+
         .confirm-modal-content.warning-shake {
             animation: shakeAnim 0.3s ease;
         }
@@ -456,10 +482,12 @@ if (isset($_POST['ganti_password'])) {
             opacity: 0;
             transition: opacity 0.3s;
         }
+
         .overlay.active {
             display: block;
             opacity: 1;
         }
+
         .mobile-header {
             display: none;
         }
@@ -473,6 +501,7 @@ if (isset($_POST['ganti_password'])) {
                 margin-top: 70px;
                 gap: 25px;
             }
+
             .mobile-header {
                 display: flex;
                 position: fixed;
@@ -488,11 +517,13 @@ if (isset($_POST['ganti_password'])) {
                 align-items: center;
                 justify-content: space-between;
             }
+
             .mobile-header .logo-mobile {
                 font-family: 'Special Elite', cursive;
                 color: var(--navy);
                 font-size: 1.2rem;
             }
+
             .hamburger {
                 background: none;
                 border: none;
@@ -500,21 +531,26 @@ if (isset($_POST['ganti_password'])) {
                 color: var(--navy);
                 cursor: pointer;
             }
+
             .paper {
                 padding: 25px 20px;
             }
+
             .title-main {
                 font-size: 1.5rem;
                 margin-bottom: 20px;
             }
+
             .spec-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
+
             .form-grid {
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
+
             .btn-submit {
                 width: 100%;
             }
@@ -525,6 +561,7 @@ if (isset($_POST['ganti_password'])) {
                 font-size: 1.2rem;
                 padding-left: 12px;
             }
+
             .info-card {
                 flex-direction: column;
                 text-align: center;
@@ -535,291 +572,280 @@ if (isset($_POST['ganti_password'])) {
 
 <body>
 
-<div class="overlay" id="sidebarOverlay"></div>
+    <div class="overlay" id="sidebarOverlay"></div>
 
-<?php include "../components/sidebar.php"; ?>
+    <?php include "../components/sidebar.php"; ?>
 
-<main class="main-wrapper">
-    <!-- MOBILE HEADER + HAMBURGER -->
-    <div class="mobile-header">
-        <div class="logo-mobile">
-            <i class="fas fa-user-circle" style="color: var(--red);"></i> WOELANDARI
-        </div>
-        <button class="hamburger" id="hamburgerBtn">
-            <i class="fas fa-bars"></i>
-        </button>
-    </div>
-
-    <section class="paper">
-        <div class="tape"></div>
-
-        <div class="spec-header">
-            <span><i class="fas fa-user-circle"></i> AKUN STAFF — WOELANDARI COFFEE LAB</span>
-            <span>DATE: <?php echo date('d/m/Y'); ?></span>
-        </div>
-
-        <h1 class="title-main">PENGATURAN AKUN</h1>
-
-        <!-- Alert Messages -->
-        <?php if ($success_msg): ?>
-            <div class="alert-success">
-                <i class="fas fa-check-circle"></i> <?php echo $success_msg; ?>
+    <main class="main-wrapper">
+        <!-- MOBILE HEADER + HAMBURGER -->
+        <div class="mobile-header">
+            <div class="logo-mobile">
+                <i class="fas fa-user-circle" style="color: var(--red);"></i> WOELANDARI
             </div>
-        <?php endif; ?>
-
-        <?php if ($error_msg): ?>
-            <div class="alert-error">
-                <i class="fas fa-exclamation-triangle"></i> <?php echo $error_msg; ?>
-            </div>
-        <?php endif; ?>
-
-        <!-- Info Card -->
-        <div class="info-card">
-            <i class="fas fa-shield-alt"></i>
-            <div>
-                <strong>Informasi Keamanan</strong><br>
-                <small>Jaga kerahasiaan akun Anda. Jangan berikan password kepada siapapun.</small>
-            </div>
-        </div>
-
-        <!-- ========== FORM EDIT PROFIL ========== -->
-        <form method="POST" action="">
-            <h2 style="font-family: 'Special Elite'; font-size: 1.3rem; margin-bottom: 20px; border-left: 4px solid var(--red); padding-left: 15px;">
-                <i class="fas fa-id-card"></i> DATA PROFIL
-            </h2>
-
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">ID USER</label>
-                    <input type="text" class="form-input" value="#<?php echo $data_user['id_user']; ?>" disabled>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ROLE / AKSES</label>
-                    <input type="text" class="form-input" value="<?php echo strtoupper($data_user['role']); ?>" disabled>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">NAMA LENGKAP</label>
-                    <input type="text" name="nama_lengkap" class="form-input"
-                        value="<?php echo htmlspecialchars($data_user['nama_lengkap']); ?>" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">USERNAME</label>
-                    <input type="text" name="username" class="form-input"
-                        value="<?php echo htmlspecialchars($data_user['username']); ?>" required>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">TANGGAL BERGABUNG</label>
-                <input type="text" class="form-input"
-                    value="<?php echo date('d F Y H:i', strtotime($data_user['created_at'])); ?>" disabled>
-            </div>
-
-            <button type="submit" name="update_profil" class="btn-submit">
-                <i class="fas fa-save"></i> UPDATE PROFIL
+            <button class="hamburger" id="hamburgerBtn">
+                <i class="fas fa-bars"></i>
             </button>
-        </form>
+        </div>
 
-        <div class="divider"></div>
+        <section class="paper">
+            <div class="tape"></div>
 
-        <!-- ========== FORM GANTI PASSWORD ========== -->
-        <form method="POST" action="">
-            <h2 style="font-family: 'Special Elite'; font-size: 1.3rem; margin-bottom: 20px; border-left: 4px solid var(--red); padding-left: 15px;">
-                <i class="fas fa-key"></i> GANTI PASSWORD
-            </h2>
+            <div class="spec-header">
+                <span><i class="fas fa-user-circle"></i> AKUN STAFF TOKO KOPI WOELANDARI</span>
+                <span>DATE: <?php echo date('d/m/Y'); ?></span>
+            </div>
 
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">PASSWORD LAMA</label>
-                    <div class="password-wrapper">
-                        <input type="password" name="password_lama" class="form-input" id="password_lama" required>
-                        <button type="button" class="toggle-password" onclick="togglePassword('password_lama')">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
+            <h1 class="title-main">PENGATURAN AKUN</h1>
+
+            <!-- Alert Messages -->
+            <?php if ($success_msg): ?>
+                <div class="alert-success">
+                    <i class="fas fa-check-circle"></i> <?php echo $success_msg; ?>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">PASSWORD BARU</label>
-                    <div class="password-wrapper">
-                        <input type="password" name="password_baru" class="form-input" id="password_baru" required>
-                        <button type="button" class="toggle-password" onclick="togglePassword('password_baru')">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                    <small style="font-size: 0.65rem; color: #666;">Minimal 4 karakter</small>
+            <?php endif; ?>
+
+            <?php if ($error_msg): ?>
+                <div class="alert-error">
+                    <i class="fas fa-exclamation-triangle"></i> <?php echo $error_msg; ?>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">KONFIRMASI PASSWORD BARU</label>
-                    <div class="password-wrapper">
-                        <input type="password" name="konfirmasi_password" class="form-input" id="konfirmasi_password" required>
-                        <button type="button" class="toggle-password" onclick="togglePassword('konfirmasi_password')">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
+            <?php endif; ?>
+
+            <!-- Info Card -->
+            <div class="info-card">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>Informasi Keamanan</strong><br>
+                    <small>Jaga kerahasiaan akun Anda. Jangan berikan password kepada siapapun.</small>
                 </div>
             </div>
 
-            <div class="info-card" style="margin-top: 10px;">
-                <i class="fas fa-info-circle"></i>
-                <div>
-                    <small>Password minimal 4 karakter. Gunakan kombinasi huruf dan angka untuk keamanan yang lebih baik.</small>
-                </div>
-            </div>
+            <!-- ========== FORM EDIT PROFIL ========== -->
+            <form method="POST" action="">
+                <h2 style="font-family: 'Special Elite'; font-size: 1.3rem; margin-bottom: 20px; border-left: 4px solid var(--red); padding-left: 15px;">
+                    <i class="fas fa-id-card"></i> DATA PROFIL
+                </h2>
 
-            <button type="submit" name="ganti_password" class="btn-submit">
-                <i class="fas fa-lock"></i> GANTI PASSWORD
-            </button>
-        </form>
-
-        <!-- Logout Warning -->
-        <div style="margin-top: 30px; padding: 15px; background: rgba(234, 67, 53, 0.08); border: 2px dashed var(--red);">
-            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: space-between;">
-                <div>
-                    <i class="fas fa-sign-out-alt" style="color: var(--red);"></i>
-                    <strong style="margin-left: 5px;">Keluar dari Sistem?</strong>
-                    <small style="display: block; margin-top: 5px;">Pastikan Anda telah menyimpan semua perubahan sebelum keluar.</small>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">ID USER</label>
+                        <input type="text" class="form-input" value="#<?php echo $data_user['id_user']; ?>" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ROLE / AKSES</label>
+                        <input type="text" class="form-input" value="<?php echo strtoupper($data_user['role']); ?>" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">NAMA LENGKAP</label>
+                        <input type="text" name="nama_lengkap" class="form-input"
+                            value="<?php echo htmlspecialchars($data_user['nama_lengkap']); ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">USERNAME</label>
+                        <input type="text" name="username" class="form-input"
+                            value="<?php echo htmlspecialchars($data_user['username']); ?>" required>
+                    </div>
                 </div>
-                <button type="button" id="logoutBtn" class="btn-secondary" style="background: var(--red); color: white; border: none; box-shadow: 4px 4px 0 var(--navy);">
-                    <i class="fas fa-sign-out-alt"></i> LOGOUT
+
+                <div class="form-group">
+                    <label class="form-label">TANGGAL BERGABUNG</label>
+                    <input type="text" class="form-input"
+                        value="<?php echo date('d F Y H:i', strtotime($data_user['created_at'])); ?>" disabled>
+                </div>
+
+                <button type="submit" name="update_profil" class="btn-submit">
+                    <i class="fas fa-save"></i> UPDATE PROFIL
                 </button>
+            </form>
+
+            <div class="divider"></div>
+
+            <!-- ========== FORM GANTI PASSWORD ========== -->
+            <form method="POST" action="">
+                <h2 style="font-family: 'Special Elite'; font-size: 1.3rem; margin-bottom: 20px; border-left: 4px solid var(--red); padding-left: 15px;">
+                    <i class="fas fa-key"></i> GANTI PASSWORD
+                </h2>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">PASSWORD LAMA</label>
+                        <div class="password-wrapper">
+                            <input type="password" name="password_lama" class="form-input" id="password_lama" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('password_lama')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">PASSWORD BARU</label>
+                        <div class="password-wrapper">
+                            <input type="password" name="password_baru" class="form-input" id="password_baru" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('password_baru')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <small style="font-size: 0.65rem; color: #666;">Minimal 4 karakter</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">KONFIRMASI PASSWORD BARU</label>
+                        <div class="password-wrapper">
+                            <input type="password" name="konfirmasi_password" class="form-input" id="konfirmasi_password" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('konfirmasi_password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card" style="margin-top: 10px;">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <small>Password minimal 4 karakter. Gunakan kombinasi huruf dan angka untuk keamanan yang lebih baik.</small>
+                    </div>
+                </div>
+
+                <button type="submit" name="ganti_password" class="btn-submit">
+                    <i class="fas fa-lock"></i> GANTI PASSWORD
+                </button>
+            </form>
+
+        
+        </section>
+    </main>
+
+    <!-- CUSTOM LOGOUT CONFIRMATION MODAL -->
+    <div id="logoutConfirmModal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <div class="confirm-modal-header">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <div class="confirm-modal-body">
+                <h3>KELUAR DARI SISTEM?</h3>
+                <p>Apakah Anda yakin ingin keluar dari akun ini?</p>
+                <div class="user-name-highlight" id="userNameDisplay"></div>
+                <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">
+                    <i class="fas fa-info-circle"></i> Pastikan semua perubahan sudah disimpan sebelum keluar.
+                </p>
+            </div>
+            <div class="confirm-modal-footer">
+                <button class="btn-secondary" id="cancelLogoutBtn" style="box-shadow: 3px 3px 0 var(--navy);">
+                    <i class="fas fa-times"></i> BATAL
+                </button>
+                <a href="../logout.php" id="confirmLogoutBtn" class="btn-secondary" style="background: var(--red); color: white; border: none; box-shadow: 4px 4px 0 var(--navy);">
+                    <i class="fas fa-sign-out-alt"></i> LOGOUT
+                </a>
             </div>
         </div>
-    </section>
-</main>
-
-<!-- CUSTOM LOGOUT CONFIRMATION MODAL -->
-<div id="logoutConfirmModal" class="confirm-modal">
-    <div class="confirm-modal-content">
-        <div class="confirm-modal-header">
-            <i class="fas fa-sign-out-alt"></i>
-        </div>
-        <div class="confirm-modal-body">
-            <h3>KELUAR DARI SISTEM?</h3>
-            <p>Apakah Anda yakin ingin keluar dari akun ini?</p>
-            <div class="user-name-highlight" id="userNameDisplay"></div>
-            <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">
-                <i class="fas fa-info-circle"></i> Pastikan semua perubahan sudah disimpan sebelum keluar.
-            </p>
-        </div>
-        <div class="confirm-modal-footer">
-            <button class="btn-secondary" id="cancelLogoutBtn" style="box-shadow: 3px 3px 0 var(--navy);">
-                <i class="fas fa-times"></i> BATAL
-            </button>
-            <a href="../logout.php" id="confirmLogoutBtn" class="btn-secondary" style="background: var(--red); color: white; border: none; box-shadow: 4px 4px 0 var(--navy);">
-                <i class="fas fa-sign-out-alt"></i> LOGOUT
-            </a>
-        </div>
     </div>
-</div>
 
-<script>
-    // ========== MOBILE SIDEBAR TOGGLE ==========
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const sidebar = document.getElementById('mainSidebar');
-    const overlay = document.getElementById('sidebarOverlay');
+    <script>
+        // ========== MOBILE SIDEBAR TOGGLE ==========
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebar = document.getElementById('mainSidebar');
+        const overlay = document.getElementById('sidebarOverlay');
 
-    function openSidebar() {
-        sidebar.classList.add('open');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeSidebar() {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    function toggleSidebar() {
-        if (sidebar.classList.contains('open')) {
-            closeSidebar();
-        } else {
-            openSidebar();
+        function openSidebar() {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-    }
 
-    if (hamburgerBtn) {
-        hamburgerBtn.addEventListener('click', toggleSidebar);
-    }
-    if (overlay) {
-        overlay.addEventListener('click', closeSidebar);
-    }
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
-    window.addEventListener('resize', function() {
-        if (window.innerWidth > 768) {
+        function toggleSidebar() {
             if (sidebar.classList.contains('open')) {
                 closeSidebar();
+            } else {
+                openSidebar();
             }
         }
-    });
 
-    // Tutup sidebar saat link diklik di mode mobile
-    const navLinks = document.querySelectorAll('#mainSidebar .nav-item');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            if (window.innerWidth <= 768) {
-                closeSidebar();
+        if (hamburgerBtn) {
+            hamburgerBtn.addEventListener('click', toggleSidebar);
+        }
+        if (overlay) {
+            overlay.addEventListener('click', closeSidebar);
+        }
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                }
             }
         });
-    });
 
-    // Toggle password visibility
-    function togglePassword(fieldId) {
-        const field = document.getElementById(fieldId);
-        const btn = field.nextElementSibling;
-        const icon = btn.querySelector('i');
-        
-        if (field.type === 'password') {
-            field.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            field.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    }
-
-    // ========== LOGOUT CONFIRMATION MODAL ==========
-    const logoutModal = document.getElementById('logoutConfirmModal');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
-    const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
-    const userNameDisplay = document.getElementById('userNameDisplay');
-
-    // Set nama user di modal
-    const userName = '<?php echo htmlspecialchars($nama_lengkap); ?>';
-    userNameDisplay.textContent = userName;
-
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            logoutModal.style.display = 'flex';
-            
-            const modalContent = document.querySelector('#logoutConfirmModal .confirm-modal-content');
-            modalContent.classList.add('warning-shake');
-            setTimeout(() => {
-                modalContent.classList.remove('warning-shake');
-            }, 300);
+        // Tutup sidebar saat link diklik di mode mobile
+        const navLinks = document.querySelectorAll('#mainSidebar .nav-item');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    closeSidebar();
+                }
+            });
         });
-    }
 
-    cancelLogoutBtn.addEventListener('click', function() {
-        logoutModal.style.display = 'none';
-    });
+        // Toggle password visibility
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const btn = field.nextElementSibling;
+            const icon = btn.querySelector('i');
 
-    logoutModal.addEventListener('click', function(e) {
-        if (e.target === logoutModal) {
-            logoutModal.style.display = 'none';
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
         }
-    });
 
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && logoutModal.style.display === 'flex') {
-            logoutModal.style.display = 'none';
+        // ========== LOGOUT CONFIRMATION MODAL ==========
+        const logoutModal = document.getElementById('logoutConfirmModal');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+        const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
+        const userNameDisplay = document.getElementById('userNameDisplay');
+
+        // Set nama user di modal
+        const userName = '<?php echo htmlspecialchars($nama_lengkap); ?>';
+        userNameDisplay.textContent = userName;
+
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                logoutModal.style.display = 'flex';
+
+                const modalContent = document.querySelector('#logoutConfirmModal .confirm-modal-content');
+                modalContent.classList.add('warning-shake');
+                setTimeout(() => {
+                    modalContent.classList.remove('warning-shake');
+                }, 300);
+            });
         }
-    });
-</script>
+
+        cancelLogoutBtn.addEventListener('click', function() {
+            logoutModal.style.display = 'none';
+        });
+
+        logoutModal.addEventListener('click', function(e) {
+            if (e.target === logoutModal) {
+                logoutModal.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && logoutModal.style.display === 'flex') {
+                logoutModal.style.display = 'none';
+            }
+        });
+    </script>
 
 </body>
+
 </html>
